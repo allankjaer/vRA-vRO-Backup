@@ -1,0 +1,1 @@
+{"schema":{"vmName":{"id":"vmName","type":{"dataType":"string"},"label":"vmName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_sfx87im5","title":"General","sections":[{"id":"section_4dmgdsk5","fields":[{"id":"vmName","display":"textField","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}
