@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="61f9f13b-1845-474f-bd22-dc997d6c2527" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Create Security Group in OU</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="ou" type="AD:OrganizationalUnit"/>
+        <param name="name" type="string"/>
+    </input>
+    <output>
+        <param name="newUsergroupFinished" type="AD:UserGroup"/>
+    </output>
+    <attrib name="newUsergroup" type="AD:UserGroup">
+        <value encoded="n"/>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="520.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>fix PreWin-2000 Name</display-name>
+        <script encoded="false">newUsergroup.setAttribute("sAMAccountName", name);&#13;
+newUsergroupFinished = newUsergroup;</script>
+        <in-binding>
+            <bind name="newUsergroup" type="AD:UserGroup" export-name="newUsergroup"/>
+            <bind name="name" type="string" export-name="name"/>
+        </in-binding>
+        <out-binding>
+            <bind name="newUsergroupFinished" type="AD:UserGroup" export-name="newUsergroupFinished"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="380.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="link" linked-workflow-id="978080808080808080808080808080809A80808001175609873343b6bbd2e3eea" comparator="0">
+        <display-name>Create a user group in an organizational unit</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="ou" type="AD:OrganizationalUnit" export-name="ou">
+                <description>Organizational unit</description>
+            </bind>
+            <bind name="name" type="string" export-name="name">
+                <description>Name for the new user group</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="newUsergroup" type="AD:UserGroup" export-name="newUsergroup"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

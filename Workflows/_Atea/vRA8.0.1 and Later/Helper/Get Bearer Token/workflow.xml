@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="4548c969-8cac-49e2-9aa1-d5d30cc48921" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Bearer Token</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="bearerToken" type="string"/>
+    </output>
+    <attrib name="userName" type="string" conf-id="d38c4f9a-aa7c-419e-a043-d99abca147b8" conf-key="userName"/>
+    <attrib name="vraHost" type="REST:RESTHost" conf-id="d38c4f9a-aa7c-419e-a043-d99abca147b8" conf-key="vraHost"/>
+    <attrib name="password" type="SecureString" conf-id="d38c4f9a-aa7c-419e-a043-d99abca147b8" conf-key="password"/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">//Get refreshtoken&#13;
+var request = vraHost.createRequest("POST", "/csp/gateway/am/api/login?access_token",'{"username": "' + userName + '", "password": "' + password +'"}');&#13;
+request.setHeader("Content-Type","application/json");&#13;
+request.setHeader("Accept","application/json");&#13;
+var response = request.execute();&#13;
+var responseJSON = JSON.parse(response.contentAsString);&#13;
+var refreshtokenstring = "{\"refreshToken\"\: \"" + responseJSON.refresh_token + "\"}";&#13;
+//System.log (refreshtokenstring);&#13;
+//Authenticate&#13;
+//var request = vraHost.createRequest("POST","/iaas/login",'{"refreshToken": "VCzq7TE4VhRIvIbGHX3JE9BjGCu5dQYJGsN37RZnWFpdlidFbZtbgdS9vCTWPtOO"}');&#13;
+var request = vraHost.createRequest("POST","/iaas/login", refreshtokenstring);&#13;
+request.setHeader("Content-Type","application/json");&#13;
+request.setHeader("Accept","application/json");&#13;
+var response = request.execute();&#13;
+var responseJSON = JSON.parse(response.contentAsString);&#13;
+var token = responseJSON.token;&#13;
+//System.log("Aquired vRA Token: " + token);&#13;
+bearerToken = "Bearer " + token;</script>
+        <in-binding>
+            <bind name="userName" type="string" export-name="userName"/>
+            <bind name="password" type="SecureString" export-name="password"/>
+            <bind name="vraHost" type="REST:RESTHost" export-name="vraHost"/>
+        </in-binding>
+        <out-binding>
+            <bind name="bearerToken" type="string" export-name="bearerToken"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="166.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

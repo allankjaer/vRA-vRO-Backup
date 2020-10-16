@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="768ecd36-f062-44fd-9233-4455fc68ea09" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Project ID</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="projectId" type="Array/string"/>
+    </output>
+    <attrib name="vraHost" type="REST:RESTHost" conf-id="d38c4f9a-aa7c-419e-a043-d99abca147b8" conf-key="vraHost"/>
+    <attrib name="bearerToken" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="410.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="4548c969-8cac-49e2-9aa1-d5d30cc48921" comparator="0">
+        <display-name>Workflow element</display-name>
+        <script encoded="false"></script>
+        <in-binding/>
+        <out-binding>
+            <bind name="bearerToken" type="string" export-name="bearerToken"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var projectId = new Array();&#13;
+&#13;
+var request = vraHost.createRequest("GET","/iaas/api/projects");&#13;
+request.setHeader("Content-Type","application/json");&#13;
+request.setHeader("Accept","application/json");&#13;
+request.setHeader("Authorization", bearerToken);&#13;
+var projects = request.execute();&#13;
+var statusCode = projects.statusCode;&#13;
+System.log("Status code: " + statusCode);&#13;
+System.log ("pro: " + projects.contentAsString);&#13;
+var projectsJSON = JSON.parse(projects.contentAsString);&#13;
+&#13;
+for each(proj in projectsJSON.content){&#13;
+    System.log ("project = " + proj.id);&#13;
+    projectId.push(proj.id);&#13;
+}&#13;
+</script>
+        <in-binding>
+            <bind name="vraHost" type="REST:RESTHost" export-name="vraHost"/>
+            <bind name="bearerToken" type="string" export-name="bearerToken"/>
+        </in-binding>
+        <out-binding>
+            <bind name="projectId" type="Array/string" export-name="projectId"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="59.5" x="258.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

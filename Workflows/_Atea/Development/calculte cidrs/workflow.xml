@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="c64aacc5-c3cd-455a-9025-245eb59fe0be" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>calculte cidrs</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="gateway" type="string"/>
+        <param name="mask" type="string"/>
+    </input>
+    <output>
+        <param name="cidr" type="string"/>
+    </output>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var maskParts = mask.split(".");&#13;
+var numberOfBits = maskParts&#13;
+    //For each part calculate the number of ones&#13;
+    .map(function(maskPart) {&#13;
+        //var numberOfBits = parseInt(maskPart, 10).toString(2).replace("0","").length;&#13;
+        var numberOfBits = parseInt(maskPart, 10).toString(2).replace(/0/g,"").length;      &#13;
+        return parseInt(numberOfBits, 10);        &#13;
+    })&#13;
+    //count the number of ones in the whole array&#13;
+    .reduce(function(previous, current) {&#13;
+        return previous + current;&#13;
+    });&#13;
+    &#13;
+//Split the 4 parts of the ip into an array&#13;
+var ipParts = gateway.split(".");&#13;
+networkNumber = ipParts&#13;
+    //Do a bitwise AND between each ip part and the match subnetmask part to get the network number&#13;
+    .map(function(ipPart, index) {&#13;
+        return parseInt(ipPart, 10) &amp; parseInt(maskParts[index], 10);&#13;
+    })&#13;
+    //join array back together in dot notation&#13;
+    .reduce(function(previous, current) {&#13;
+        return previous + "." + current;&#13;
+    });&#13;
+ &#13;
+//Create the CIDR notation&#13;
+cidr = networkNumber + "/" + numberOfBits;&#13;
+ &#13;
+//change line below to: return cidr&#13;
+//if you're putting this in an action&#13;
+System.log(cidr);</script>
+        <in-binding>
+            <bind name="gateway" type="string" export-name="gateway"/>
+            <bind name="mask" type="string" export-name="mask"/>
+        </in-binding>
+        <out-binding>
+            <bind name="cidr" type="string" export-name="cidr"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

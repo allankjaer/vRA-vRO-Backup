@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="9438e51f-94f8-40c5-9438-961492ab8d24" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get E-Mail from AD</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="adhost" type="AD:AdHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='%23_v2_%23%2C%23RootItem%23%2C%23caadcbcf-ec74-4246-a152-b7ab35b8ee6c%23'&amp;dunesName='AD:AdHost'</value>
+    </attrib>
+    <attrib name="userName" type="string">
+        <value encoded="n">adminank</value>
+    </attrib>
+    <attrib name="email" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="400.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var users = ActiveDirectory.search("User", userName, adhost);&#13;
+user = users[0];&#13;
+var attribs = user.allAttributes;  &#13;
+for each (attrib in attribs){  &#13;
+  &#13;
+  &#13;
+    if (attrib.name == "mail") {  &#13;
+  email = user.getAttribute(attrib.name)&#13;
+  }  &#13;
+} </script>
+        <in-binding>
+            <bind name="adhost" type="AD:AdHost" export-name="adhost"/>
+            <bind name="userName" type="string" export-name="userName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="email" type="string" export-name="email"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

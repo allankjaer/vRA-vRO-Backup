@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="b379d479-9398-4b8e-9bc1-8288df140c71" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" restartMode="1" resumeFromFailedMode="0">
+    <display-name>vRA add thin disks on same datastore</display-name>
+    <position y="50.0" x="400.0"/>
+    <input>
+        <param name="inputProperties" type="Properties"/>
+    </input>
+    <output/>
+    <attrib name="vmName" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="datastore" type="VC:Datastore">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="test" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="extraDisks" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="diskMode" type="VC:VirtualDiskMode">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='persistent'&amp;dunesName='VC:VirtualDiskMode'</value>
+    </attrib>
+    <attrib name="diskObjects" type="Array/CompositeType(vm:VC:VirtualMachine,datastore:VC:Datastore,diskIndex:number,diskSize:number,diskMode:VC:VirtualDiskMode,scsiBusNumber:number,thinProvisioned:boolean):disk">
+        <value encoded="n">[]</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="1040.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Get VM name</display-name>
+        <script encoded="false">vmName = inputProperties.resourceNames[0];</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+        </in-binding>
+        <out-binding>
+            <bind name="vmName" type="string" export-name="vmName"/>
+            <bind name="test" type="string" export-name="test"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.5" x="470.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item7" type="task" script-module="dk.atea.vra.vc.helper/getVMByName" comparator="0">
+        <display-name>Get VM by Name</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vra.vc.helper").getVMByName(name);
+</script>
+        <in-binding>
+            <bind name="name" type="string" export-name="vmName">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="VC:VirtualMachine" export-name="vm"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="580.0"/>
+    </workflow-item>
+    <workflow-item name="item5" out-name="item6" type="task" comparator="0">
+        <display-name>Build Disk Objects</display-name>
+        <script encoded="false">diskObjects = new Array();
+var disks = JSON.parse(inputProperties.get('customProperties').get('Disks'));
+var i = 1;
+for each (disk in disks) {
+     var obj = new Object();
+     obj.vm = vm;
+     obj.datastore = datastore;
+      obj.diskIndex = i;
+     obj.diskSize = disk.size * 1;
+     obj.diskMode = diskMode;
+     obj.thinProvisioned = true;
+     obj.scsiBusNumber = 0;
+     diskObjects.push(obj);
+     i++
+}</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+            <bind name="datastore" type="VC:Datastore" export-name="datastore"/>
+            <bind name="diskMode" type="VC:VirtualDiskMode" export-name="diskMode"/>
+        </in-binding>
+        <out-binding>
+            <bind name="diskObjects" type="Array/CompositeType(vm:VC:VirtualMachine,datastore:VC:Datastore,diskIndex:number,diskSize:number,diskMode:VC:VirtualDiskMode,scsiBusNumber:number,thinProvisioned:boolean):disk" export-name="diskObjects"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="780.0"/>
+    </workflow-item>
+    <workflow-item name="item6" out-name="item0" type="foreach" comparator="0">
+        <display-name>Add disks</display-name>
+        <in-binding>
+            <bind name="vm" type="Array/VC:VirtualMachine" export-name="*diskObjects.vm">
+                <description>Virtual machine to which to add the disk</description>
+            </bind>
+            <bind name="datastore" type="Array/VC:Datastore" export-name="*diskObjects.datastore">
+                <description>Datastore in which to put the virtual disk file</description>
+            </bind>
+            <bind name="diskIndex" type="Array/number" export-name="*diskObjects.diskIndex">
+                <description>Disk index</description>
+            </bind>
+            <bind name="diskSize" type="Array/number" export-name="*diskObjects.diskSize">
+                <description>Disk size (in GB)</description>
+            </bind>
+            <bind name="diskMode" type="Array/VC:VirtualDiskMode" export-name="*diskObjects.diskMode">
+                <description>Disk persistence mode</description>
+            </bind>
+            <bind name="scsiBusNumber" type="Array/number" export-name="*diskObjects.scsiBusNumber">
+                <description>SCSI controller bus number</description>
+            </bind>
+            <bind name="thinProvisioned" type="Array/boolean" export-name="*diskObjects.thinProvisioned">
+                <description>Use thin provisioning?</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <reference id="BD8080808080808080808080808080801BC280800122528313869552e41805bb1" type="Workflow"/>
+        <position y="60.0" x="900.0"/>
+    </workflow-item>
+    <workflow-item name="item7" out-name="item5" type="link" linked-workflow-id="aa2b95b8-5ef8-4a73-a66d-9877d8178414" comparator="0">
+        <display-name>Get Datastore from VM</display-name>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="datastore" type="VC:Datastore" export-name="datastore"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="680.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

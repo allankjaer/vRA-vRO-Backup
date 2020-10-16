@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getComputerNameFromAD" result-type="string" api-version="6.0.0" id="6c86bd57-a44a-4090-a41f-328b93902022" version="0.0.0" category-name="dk.atea.vra.vc.helper">
+  <param n="name" t="string"/>
+  <script encoded="false"><![CDATA[var adhosts = Server.findAllForType("AD:AdHost");
+var adHost = adhosts[0];
+
+computers = ActiveDirectory.getComputerADRecursively(name, adHost);
+ System.log("Computer count: "+computers.length);
+for each (pc in computers){
+    if (name.toLowerCase() == pc.name.toLowerCase()){
+        return pc.name;
+    }
+}
+
+return null;]]></script>
+</dunes-script-module>

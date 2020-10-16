@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="5d923e8d-d847-49d0-beef-3093f2418693" version="0.0.0">
+  <display-name><![CDATA[vAPi_Endpoint]]></display-name>
+  <atts>
+    <att name="vapiEndpoint" type="VAPI:VAPIEndpoint" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='ENDPOINT--https___adc-vc.adc.lan_api'&dunesName='VAPI:VAPIEndpoint']]></value>
+    </att>
+  </atts>
+</config-element>

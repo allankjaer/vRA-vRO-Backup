@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="check_ping_of_ip" result-type="string" api-version="6.0.0" id="6a84df9c-1290-4a14-bad6-d848b225b03a" version="0.0.0" allowed-operations="vfe" category-name="dk.atea.vra.validation">
+  <param n="ip" t="string"/>
+  <script encoded="false"><![CDATA[var check = System.isHostReachable(ip);
+if (check == true)
+{
+    return "IP adressen er i brug";
+}
+return null;]]></script>
+</dunes-script-module>

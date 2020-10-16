@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="c0a7ca5b-de68-4f34-9002-602e9c6ba15f" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>mail- tester</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="mailAddresses" type="string">
+        <value encoded="n">adminank@atealab.dk;ll@atealab.dk</value>
+    </attrib>
+    <attrib name="useStartTls" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="useSsl" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="bccList" type="Array/string">
+        <value encoded="n">[]</value>
+    </attrib>
+    <attrib name="ccList" type="Array/string">
+        <value encoded="n">[]</value>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="subject" type="string">
+        <value encoded="n">dette er en test</value>
+    </attrib>
+    <attrib name="toAddressList" type="Array/string">
+        <value encoded="n">[]</value>
+    </attrib>
+    <attrib name="fromAddress" type="string">
+        <value encoded="n">vra@atealab.dk</value>
+    </attrib>
+    <attrib name="fromName" type="string">
+        <value encoded="n">vra</value>
+    </attrib>
+    <attrib name="password" type="SecureString">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="username" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="smtpPort" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="smtpHost" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="410.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">toAddressList = mailAddresses.split(";");&#13;
+content = "linje\&#13;
+&lt;br&gt;linje 2";</script>
+        <in-binding>
+            <bind name="mailAddresses" type="string" export-name="mailAddresses"/>
+        </in-binding>
+        <out-binding>
+            <bind name="toAddressList" type="Array/string" export-name="toAddressList"/>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="8F808080808080808080808080808080B1808080012318760241416446ce5b52f" comparator="0">
+        <display-name>Workflow element</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="smtpHost" type="string" export-name="smtpHost">
+                <description>SMTP host</description>
+            </bind>
+            <bind name="smtpPort" type="number" export-name="smtpPort">
+                <description>SMTP port</description>
+            </bind>
+            <bind name="username" type="string" export-name="username">
+                <description>Username for authentication</description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="password">
+                <description>Password for authentication</description>
+            </bind>
+            <bind name="fromName" type="string" export-name="fromName">
+                <description>Sender's name</description>
+            </bind>
+            <bind name="fromAddress" type="string" export-name="fromAddress">
+                <description>Sender's address</description>
+            </bind>
+            <bind name="toAddressList" type="Array/string" export-name="toAddressList">
+                <description>List of destination addresses</description>
+            </bind>
+            <bind name="subject" type="string" export-name="subject">
+                <description>Email subject</description>
+            </bind>
+            <bind name="content" type="string" export-name="content">
+                <description>Email content (text or HTML)</description>
+            </bind>
+            <bind name="ccList" type="Array/string" export-name="ccList">
+                <description>List of carbon copy addresses</description>
+            </bind>
+            <bind name="bccList" type="Array/string" export-name="bccList">
+                <description>List of blind carbon copy addresses</description>
+            </bind>
+            <bind name="useSsl" type="boolean" export-name="useSsl">
+                <description>If set to true, use SSL to connect </description>
+            </bind>
+            <bind name="useStartTls" type="boolean" export-name="useStartTls">
+                <description>If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description> </description>
+        <position y="60.0" x="275.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

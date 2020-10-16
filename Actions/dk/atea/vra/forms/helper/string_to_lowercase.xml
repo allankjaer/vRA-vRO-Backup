@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="string_to_lowercase" result-type="string" api-version="6.0.0" id="ca75e9da-bd75-4edd-90c8-c3ea79d5b603" version="0.0.0" allowed-operations="vfe" category-name="dk.atea.vra.forms.helper">
+  <param n="input" t="string"/>
+  <script encoded="false"><![CDATA[var output = input.toLowerCase();
+return output;]]></script>
+</dunes-script-module>

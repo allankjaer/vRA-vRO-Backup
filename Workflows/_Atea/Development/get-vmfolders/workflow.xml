@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="08756494-44bb-401d-aaad-aabe6d4cd8b5" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>get-vmfolders</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="datacenterName" type="string"/>
+    </input>
+    <output/>
+    <attrib name="results" type="Array/string">
+        <value encoded="n">[]</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var vCenters = VcPlugin.allSdkConnections;&#13;
+var vCenter = vCenters[0];&#13;
+var results = new Array;&#13;
+var vmFolders  = vCenter.getAllVmFolders(null,null);&#13;
+for (i = 1; i &lt; vmFolders.length; i++) {&#13;
+    var top = false;&#13;
+    var folder = vmFolders[i];&#13;
+    var folderstr = "";&#13;
+    while (!top){&#13;
+        if (folder.parent.name === "vm" &amp;&amp; folder.parent.parent.name === datacenterName) {&#13;
+            folderstr = folder.name+"\\"+folderstr;&#13;
+            top = true;                 &#13;
+        } else {&#13;
+            folderstr = folder.name+"\\"+folderstr;&#13;
+            System.log("text = "+folder.name );&#13;
+            folder = folder.parent;&#13;
+        }   &#13;
+    }&#13;
+    results.push(folderstr.slice(0, -1));&#13;
+}&#13;
+&#13;
+results.sort();&#13;
+&#13;
+function byName(a,b)&#13;
+&#13;
+{&#13;
+     return (a &lt; b)&#13;
+}</script>
+        <in-binding>
+            <bind name="datacenterName" type="string" export-name="datacenterName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="results" type="Array/string" export-name="results"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

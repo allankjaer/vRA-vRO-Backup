@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="check_for_computer_in_AD" result-type="string" api-version="6.0.0" id="3d2f1184-1615-4e32-86e0-60da53a6239a" version="0.0.1" allowed-operations="vfe" category-name="dk.atea.vra.validation">
+  <param n="name" t="string"/>
+  <script encoded="false"><![CDATA[var adhosts = Server.findAllForType("AD:AdHost");
+var adHost = adhosts[0];
+
+computers = ActiveDirectory.getComputerADRecursively(name, adHost);
+ System.log("Computer count: "+computers.length);
+for each (pc in computers){
+    if (name.toLowerCase() == pc.name.toLowerCase()){
+        return "Computeren: " + name + " er allerede i AD";
+    }
+}
+
+return null;]]></script>
+</dunes-script-module>

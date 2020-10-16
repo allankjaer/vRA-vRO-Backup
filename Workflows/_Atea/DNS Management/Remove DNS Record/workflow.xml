@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="90864ebd-fa0c-41cf-852d-4a64447941f8" editor-version="2.0" version="0.0.3" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Remove DNS Record</display-name>
+    <position y="54.074074074074076" x="325.679012345679"/>
+    <input>
+        <param name="inputProperties" type="Properties"/>
+    </input>
+    <output/>
+    <attrib name="user" type="string" conf-id="49d420d8-6f2e-4837-aba9-3ab2a31b5f49" conf-key="DNSAdmin"/>
+    <attrib name="userPassword" type="SecureString" conf-id="49d420d8-6f2e-4837-aba9-3ab2a31b5f49" conf-key="DNSAdminPassword"/>
+    <attrib name="vm" type="VC:VirtualMachine" conf-id="49d420d8-6f2e-4837-aba9-3ab2a31b5f49" conf-key="DNSServer"/>
+    <attrib name="scriptType" type="string">
+        <value encoded="n">powershell</value>
+    </attrib>
+    <attrib name="script" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="scriptTimeout" type="number">
+        <value encoded="n">10.0</value>
+    </attrib>
+    <attrib name="scriptRefreshTime" type="number">
+        <value encoded="n">10.0</value>
+    </attrib>
+    <attrib name="scriptOutputText" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="scriptExitCode" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="scriptWorkingDirectory" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="interactiveSession" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="dnsDomain" type="string" conf-id="49d420d8-6f2e-4837-aba9-3ab2a31b5f49" conf-key="Domain"/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="740.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="link" linked-workflow-id="f8cd5692-92a0-46b6-a98d-53ffd878d779" comparator="0">
+        <display-name>Run Script In Guest</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm">
+                <description>Virtual Machine (VC)</description>
+            </bind>
+            <bind name="username" type="string" export-name="user">
+                <description>Guest OS username</description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="userPassword">
+                <description>Guest OS password</description>
+            </bind>
+            <bind name="scriptType" type="string" export-name="scriptType">
+                <description>bash / bat / powershell</description>
+            </bind>
+            <bind name="script" type="string" export-name="script">
+                <description>Script Text</description>
+            </bind>
+            <bind name="scriptTimeout" type="number" export-name="scriptTimeout">
+                <description>Timeout for the running script (in second)</description>
+            </bind>
+            <bind name="scriptRefreshTime" type="number" export-name="scriptRefreshTime">
+                <description>(default) Time (in seconds) where a check of script status occurs</description>
+            </bind>
+            <bind name="scriptWorkingDirectory" type="string" export-name="scriptWorkingDirectory">
+                <description>Script working directory in the guest</description>
+            </bind>
+            <bind name="interactiveSession" type="boolean" export-name="interactiveSession">
+                <description>Script context interactivity</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="scriptOutputText" type="string" export-name="scriptOutputText">
+                <description>Output of the script</description>
+            </bind>
+            <bind name="scriptExitCode" type="number" export-name="scriptExitCode">
+                <description>Exit code of the script</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="580.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="task" comparator="0">
+        <display-name>Create script</display-name>
+        <script encoded="false">script = 'Remove-DnsServerResourceRecord -ZoneName "' + dnsDomain + '" -RRType "A" -Name ' + inputProperties.resourceNames[0] + ' -RecordData ' + inputProperties.addresses[0][0] + ' -force';&#13;
+&#13;
+System.log("test " + script)</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+            <bind name="dnsDomain" type="string" export-name="dnsDomain"/>
+        </in-binding>
+        <out-binding>
+            <bind name="script" type="string" export-name="script"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="447.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

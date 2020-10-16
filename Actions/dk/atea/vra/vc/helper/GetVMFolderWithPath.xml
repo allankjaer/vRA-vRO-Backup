@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="GetVMFolderWithPath" result-type="Array/string" api-version="6.0.0" id="07a7bd09-517e-44ef-966d-6e97b5586c04" version="0.0.0" category-name="dk.atea.vra.vc.helper">
+  <param n="datacenterName" t="string"/>
+  <script encoded="false"><![CDATA[var vCenters = VcPlugin.allSdkConnections;
+var vCenter = vCenters[0];
+var results = new Array;
+var vmFolders  = vCenter.getAllVmFolders(null,null);
+for (i = 1; i < vmFolders.length; i++) {
+    var top = false;
+    var folder = vmFolders[i];
+    var folderstr = "";
+    while (!top){
+        if (folder.parent.name === "vm" && folder.parent.parent.name === datacenterName) {
+            folderstr = folder.name+"\\"+folderstr;
+            top = true;                 
+        } else {
+            folderstr = folder.name+"\\"+folderstr;
+            folder = folder.parent;
+        }   
+    }
+    results.push(folderstr.slice(0, -1));
+}
+return results.sort();]]></script>
+</dunes-script-module>

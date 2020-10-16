@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="NetworkSelector" result-type="Array/string" api-version="6.0.0" id="76484084-50b2-473c-9bcb-a25ecad9fd05" version="0.0.2" category-name="dk.atea.vra.forms.helper">
+  <param n="type" t="string"/>
+  <script encoded="false"><![CDATA[var networks = new Array;
+
+switch(type) {
+    case "P":
+        networks.push("vra1");
+        networks.push("vra2");
+        break;
+    case "T":
+        networks.push("vra3");
+        break;
+    case "V":
+        networks.push("vra4");
+        break;
+    case "D":
+        networks.push("vra5");
+        networks.push("vra6");
+        break;
+}
+
+return networks;]]></script>
+</dunes-script-module>

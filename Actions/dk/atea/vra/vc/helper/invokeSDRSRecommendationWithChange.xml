@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="invokeSDRSRecommendationWithChange" result-type="string" api-version="6.0.0" id="07c6bd6b-10ba-4d32-81f0-1191e9f1137b" version="0.0.0" allowed-operations="vfe" category-name="dk.atea.vra.vc.helper">
+  <description><![CDATA[Action found in:
+https://communities.vmware.com/message/2884509#2884509]]></description>
+  <param n="vm" t="VC:VirtualMachine"/>
+  <param n="configSpec" t="VC:ConfigSpecOperation"/>
+  <param n="datastore" t="VC:Datastore"/>
+  <script encoded="false"><![CDATA[// invokeSDRSRecommendationWithChange
+// INPUTS
+// VC:VirtualMachine vm
+// VC:ConfigSpecOperation configSpec
+// VC:Datastore datastore
+
+ 
+
+var storageSpec = new VcStoragePlacementSpec() ;
+storageSpec.configSpec = configSpec;
+storageSpec.type = 'reconfigure';
+storageSpec.disallowPrerequisiteMoves = false; // default behavior
+storageSpec.vm = vm;
+
+myVcStorageDrsPodSelectionSpec = getVcStoragePodSelectionSpec(datastore,configSpec);
+storageSpec.podSelectionSpec = myVcStorageDrsPodSelectionSpec;
+
+var storageMgr = datastore.sdkConnection.storageResourceManager;
+var clusterRecommendation = storageMgr.recommendDatastores(storageSpec);
+var recommendationKey = clusterRecommendation.recommendations[0].key;
+
+if(!recommendationKey)
+{
+  System.log(clusterRecommendation.drsFault.reason);
+  throw("recommendDatastores didn't return a recommendation");
+}
+
+task = storageMgr.applyStorageDrsRecommendation_Task( [ recommendationKey.toString() ] );
+
+return task;
+
+function getVmFolder(vm){
+    var parent = vm.parent;
+    while (parent !== null && ! (parent instanceof VcVmFolder)) 
+    {
+        parent = parent.parent;
+    }
+
+    System.log("VcVmFolder of VM: " + parent.name);
+    return parent;
+}
+
+function getDatstoreDatastoreCluster(datastore)
+{
+    System.log("Finding parent StoragePod for " + datastore);
+    var p = datastore.parent; 
+
+    while (p != null) 
+    {
+        System.log("Checking  " + p.name);
+        if (p instanceof VcStoragePod) 
+        { 
+            System.log("Datastore cluster found: " + p); 
+            break; 
+        } 
+        p = p.parent; 
+    } 
+
+    if (p == null) 
+    { 
+        System.warn("No datastore cluster found!"); 
+    }
+    else 
+    {
+        return p;
+    }
+
+}
+
+function getVcStoragePodSelectionSpec(datastore,configSpec) 
+{
+    var myVcVmPodConfigForPlacement = new VcVmPodConfigForPlacement();
+    var myVcPodDiskLocatorArray = new Array();
+    var myVcPodDiskLocator = new VcPodDiskLocator();
+    var myInitialVmConfig = new Array();
+    var myVcStorageDrsPodSelectionSpec = new VcStorageDrsPodSelectionSpec();
+
+    myVcPodDiskLocator.diskId = configSpec.deviceChange[0].device.key;
+    myVcPodDiskLocator.diskBackingInfo = configSpec.deviceChange[0].device.backing;
+    myVcPodDiskLocatorArray.push(myVcPodDiskLocator);
+    myVcVmPodConfigForPlacement.storagePod = getDatstoreDatastoreCluster(datastore); //myVcStoragePod;
+    myVcVmPodConfigForPlacement.disk = myVcPodDiskLocatorArray;
+
+    //myVcStorageDrsPodSelectionSpec.storagePod = getDatstoreDatastoreCluster(datastore)
+    myInitialVmConfig.push(myVcVmPodConfigForPlacement);
+    myVcStorageDrsPodSelectionSpec.initialVmConfig = myInitialVmConfig;
+    return myVcStorageDrsPodSelectionSpec;
+}
+]]></script>
+</dunes-script-module>

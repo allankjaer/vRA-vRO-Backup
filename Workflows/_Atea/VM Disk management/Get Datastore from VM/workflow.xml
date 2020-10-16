@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="aa2b95b8-5ef8-4a73-a66d-9877d8178414" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Datastore from VM</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output>
+        <param name="datastore" type="VC:Datastore"/>
+    </output>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var devices = vm.config.hardware.device;  
+for each (controller in devices) {  
+  var is_scsi = controller instanceof VcVirtualBusLogicController || controller instanceof VcVirtualLsiLogicController  
+       || controller instanceof VcParaVirtualSCSIController || controller instanceof VcVirtualLsiLogicSASController;  
+  if (!is_scsi) {  
+    continue;  
+  }  
+  for each (device in devices) {  
+    if (device.controllerKey == controller.key) {  
+      var datastore = device.backing.datastore;
+      break;
+    }  
+  }  
+}  </script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="datastore" type="VC:Datastore" export-name="datastore"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

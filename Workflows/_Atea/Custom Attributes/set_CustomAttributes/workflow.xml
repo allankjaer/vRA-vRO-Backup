@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="8eba268f-fbe3-45ad-9f11-d6a556b967ff" editor-version="2.0" version="0.0.2" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>set_CustomAttributes</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="inputProperties" type="Properties"/>
+    </input>
+    <output/>
+    <attrib name="vmName" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="spNumber" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="caSPNumber" type="string">
+        <value encoded="n">SP Number</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="640.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Get VM Name and Custom Attributes</display-name>
+        <script encoded="false">vmName = inputProperties.resourceNames[0];
+spNumber = inputProperties.customProperties.SPNumber;</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+        </in-binding>
+        <out-binding>
+            <bind name="vmName" type="string" export-name="vmName"/>
+            <bind name="spNumber" type="string" export-name="spNumber"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="task" script-module="dk.atea.vra.vc.helper/getVMByName" comparator="0">
+        <display-name>getVMByName</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vra.vc.helper").getVMByName(name);
+</script>
+        <in-binding>
+            <bind name="name" type="string" export-name="vmName">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="VC:VirtualMachine" export-name="vm"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="320.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item0" type="link" linked-workflow-id="A9808080808080808080808080808080BE80808001231146624761b79546544c2" comparator="0">
+        <display-name>Add custom attribute to a virtual machine</display-name>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm">
+                <description>The virtual machine to which to add a custom attribute</description>
+            </bind>
+            <bind name="customAttributeName" type="string" export-name="caSPNumber">
+                <description>A name for the custom attribute</description>
+            </bind>
+            <bind name="newValue" type="string" export-name="spNumber">
+                <description>A value for the custom attribute</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description> </description>
+        <position y="60.0" x="460.0"/>
+    </workflow-item>
+    <presentation>
+        <p-param name="inputProperties">
+            <desc>inputProperties</desc>
+        </p-param>
+    </presentation>
+</ns2:workflow>

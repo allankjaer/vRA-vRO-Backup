@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="check_for_dns_record_dns_domain" result-type="string" api-version="6.0.0" id="c6b992e3-62eb-4665-8a37-65cec919f467" version="0.0.1" allowed-operations="vfe" category-name="dk.atea.vra.validation">
+  <param n="name" t="string"/>
+  <script encoded="false"><![CDATA[var domain = System.getModule("dk.atea.vro.config").getConfigurationAttributeValue("Atea", "default DNS", "domain");
+var hostname = name + "." + domain;
+System.log("test "+hostname);
+var check = System.resolveHostName(hostname);
+if (check !== null)
+{
+    return name + "." + domain + " er allerede i DNS, kontakt evt. DNS Admin";
+}
+
+return null;]]></script>
+</dunes-script-module>

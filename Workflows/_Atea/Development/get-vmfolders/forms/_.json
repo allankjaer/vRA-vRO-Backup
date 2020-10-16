@@ -1,0 +1,1 @@
+{"schema":{"datacenterName":{"id":"datacenterName","type":{"dataType":"string"},"label":"datacenterName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_j3ipm9vj","title":"General","sections":[{"id":"section_s5tyw4xb","fields":[{"id":"datacenterName","display":"textField"}]}]}]},"itemId":""}

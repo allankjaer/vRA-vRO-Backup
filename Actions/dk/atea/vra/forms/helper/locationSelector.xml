@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="locationSelector" result-type="Array/string" api-version="6.0.0" id="d205046a-a75f-4f69-a73c-ec18b7375165" version="0.0.1" category-name="dk.atea.vra.forms.helper">
+  <param n="country" t="string"/>
+  <script encoded="false"><![CDATA[var locations = new Array;
+
+switch(country) {
+    case "DK":
+        locations.push("CPH");
+        locations.push("AAR");
+        locations.push("ODE");
+        break;
+    case "NO":
+        locations.push("OSL");
+        locations.push("BER");
+        break;
+    case "SE":
+        locations.push("STO");
+        locations.push("GOT");
+        break;
+    case "UK":
+        locations.push("LON");
+        locations.push("MAN");
+        break;
+}
+
+return locations;]]></script>
+</dunes-script-module>

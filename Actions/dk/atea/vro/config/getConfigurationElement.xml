@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getConfigurationElement" result-type="ConfigurationElement" api-version="6.0.0" id="4c14432b-1935-47e0-bf6f-b66631625faf" version="0.0.0" category-name="dk.atea.vro.config">
+  <param n="configurationCategoryPath" t="string"/>
+  <param n="configurationName" t="string"/>
+  <script encoded="false"><![CDATA[var category = Server.getConfigurationElementCategoryWithPath(configurationCategoryPath);
+if (!category) {
+	throw "Missing configuration element category " + configurationCategoryPath;
+}
+
+for each (var configuration in category.configurationElements) {
+	if (configuration.name === configurationName) {
+		return configuration;
+	}
+}
+
+System.warn("Cannot find " + configurationCategoryPath + "/" + configurationName + " configuration element");
+
+return null;]]></script>
+</dunes-script-module>

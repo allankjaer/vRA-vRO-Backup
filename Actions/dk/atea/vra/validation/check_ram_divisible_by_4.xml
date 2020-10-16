@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="check_ram_divisible_by_4" result-type="string" api-version="6.0.0" id="da93a356-b058-4012-b97f-9b379302e66a" version="0.0.0" allowed-operations="vfe" category-name="dk.atea.vra.validation">
+  <param n="ram" t="number"/>
+  <script encoded="false"><![CDATA[var test = Number(ram/4);
+//System.log("test " + test + " " + String(test).indexOf("."));
+if (test_string = String(test).indexOf(".") == -1) 
+{
+    return null;
+}
+return "RAM er ikke deviderbart med 4";]]></script>
+</dunes-script-module>

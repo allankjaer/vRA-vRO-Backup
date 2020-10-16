@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="be2cf057-f30a-45dc-8381-394a4f0ad109" editor-version="2.0" version="0.0.2" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Create User in OU, with default password</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="accountName" type="string"/>
+        <param name="domainName" type="string"/>
+        <param name="displayName" type="string"/>
+        <param name="ouContainer" type="AD:OrganizationalUnit"/>
+    </input>
+    <output>
+        <param name="newUser" type="AD:User"/>
+    </output>
+    <attrib name="password" type="SecureString">
+        <value encoded="n">10BP50P61O73J73H77Y6FX72U64N31J21O6A81E95Y4C549C2Y9E22E7ENDCD1DAFQED075EETEB39F76M377CCD7IA5D6CDFQF2D0EEEND97CCD5S15B6657SAF00A91N9C02CD5T126B4DEPF00C7C2U1D65FCDV2F8E6FFHE192B02NDB5D339XC4232EFWE49FBA4M744372CG</value>
+    </attrib>
+    <attrib name="changePasswordAtNextLogon" type="boolean">
+        <value encoded="n">true</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="link" linked-workflow-id="1E8180808080808080808080808080808E80808001270557368849c62c352aa82" comparator="0">
+        <display-name>Workflow element</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="accountName" type="string" export-name="accountName">
+                <description>The account name for the user (without domain information)</description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="password">
+                <description>The password to set for the user</description>
+            </bind>
+            <bind name="confirmPassword" type="SecureString" export-name="password">
+                <description>Confirmation of password</description>
+            </bind>
+            <bind name="domainName" type="string" export-name="domainName">
+                <description>The domain name in Win2000 form (john@sample.com : value must be sample.com)</description>
+            </bind>
+            <bind name="displayName" type="string" export-name="displayName">
+                <description>The display name of the user</description>
+            </bind>
+            <bind name="ouContainer" type="AD:OrganizationalUnit" export-name="ouContainer">
+                <description>Organizational unit in which to put the newly created user</description>
+            </bind>
+            <bind name="changePasswordAtNextLogon" type="boolean" export-name="changePasswordAtNextLogon">
+                <description>True if the user must change password at next logon</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="newUser" type="AD:User" export-name="newUser">
+                <description>Newly created user</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

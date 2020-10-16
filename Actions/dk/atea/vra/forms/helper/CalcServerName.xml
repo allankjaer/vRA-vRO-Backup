@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="CalcServerName" result-type="string" api-version="6.0.0" id="b75dc237-8beb-4651-b33d-1737501c6b33" version="0.0.1" category-name="dk.atea.vra.forms.helper">
+  <param n="country" t="string"/>
+  <param n="location" t="string"/>
+  <param n="application" t="string"/>
+  <param n="type" t="string"/>
+  <script encoded="false"><![CDATA[function FormatInteger(num, length) {
+
+    return (num / Math.pow(10, length)).toFixed(length).substr(2);
+}
+
+if (country !== null && location !== null && application !== null && type !== null) {
+    sn = country+location+application+type;
+    System.log ("sn = " + sn);
+    for (i = 1; i < 999; i++) {
+        var number = FormatInteger(i,3);
+        var serverName = sn + number;
+        System.log("sn2 = " + serverName);
+        if (System.getModule("dk.atea.vra.vc.helper").getVMByName(serverName) == null) {
+            if (System.getModule("dk.atea.vra.vc.helper").getComputerNameFromAD(serverName) == null)
+                return serverName;
+        }
+    } 
+}
+
+return value;]]></script>
+</dunes-script-module>

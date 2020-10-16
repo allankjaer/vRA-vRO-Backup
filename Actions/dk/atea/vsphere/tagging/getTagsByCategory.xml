@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTagsByCategory" result-type="Array/string" api-version="6.0.0" id="1c5046dd-b786-4605-a0ef-0f1cef60dfe7" version="0.0.0" category-name="dk.atea.vsphere.tagging">
+  <param n="cat" t="string"/>
+  <script encoded="false"><![CDATA[var categoryName = cat  
+System.log(cat)  
+  
+// Set the VAPI endpoint
+var endpoint = System.getModule("dk.atea.vro.config").getConfigurationAttributeValue("Atea", "vAPi_Endpoint", "vapiEndpoint");
+  
+if (endpoint == null) {    
+       throw "'endpoint' parameter should not be null";  
+     }  
+  
+// Fetch tags and tag categories  
+var client = endpoint.client();    
+var category = new com_vmware_cis_tagging_category(client);    
+var categories = category.list();    
+var tagging = new com_vmware_cis_tagging_tag(client);    
+var tags = tagging.list();    
+var outputTags = [];  
+  
+// Iterate through tag categories to find the category specified in categoryName  
+  
+for (var i in categories)    
+     {  
+       if (category.get(categories[i]).name == categoryName) {  
+              categoryId = categories[i];  
+              System.log("Name: " + category.get(categories[i]).name + " Id: " + categories[i]);  
+            }  
+     } 
+
+// Iterate through tags to find the tags that belong to the categoryName and add them to the outputTags array
+
+for (var i in tags)  
+{
+  if (tagging.get(tags[i]).category_id.toString() == categoryId.toString()) {
+    outputTags.push(tagging.get(tags[i]).name);
+  }
+}
+
+System.log(outputTags);  
+return outputTags.sort();]]></script>
+</dunes-script-module>

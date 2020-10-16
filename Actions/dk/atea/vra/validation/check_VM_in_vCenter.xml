@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="check_VM_in_vCenter" result-type="string" api-version="6.0.0" id="7747a823-177c-4078-9af5-19fac0772937" version="0.0.1" allowed-operations="vfe" category-name="dk.atea.vra.validation">
+  <param n="name" t="string"/>
+  <script encoded="false"><![CDATA[var allVms = VcPlugin.getAllVirtualMachines();
+for (var I in allVms) 
+{
+    if (allVms[I].name === name) 
+    {
+        return "VM findes allerede i vCenteret med samme navn " + name;
+    }
+}
+return null;]]></script>
+</dunes-script-module>

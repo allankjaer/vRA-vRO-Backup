@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="49d420d8-6f2e-4837-aba9-3ab2a31b5f49" version="0.0.0">
+  <display-name><![CDATA[DNS Server Configuration]]></display-name>
+  <atts>
+    <att name="DNSServer" type="VC:VirtualMachine" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:vm-161'&dunesName='VC:VirtualMachine']]></value>
+    </att>
+    <att name="DNSAdmin" type="string" read-only="false">
+      <value encoded="n"><![CDATA[adc\administrator]]></value>
+    </att>
+    <att name="DNSAdminPassword" type="SecureString" read-only="false">
+      <value encoded="n"><![CDATA[__NULL__]]></value>
+    </att>
+    <att name="Domain" type="string" read-only="false">
+      <value encoded="n"><![CDATA[adc.lan]]></value>
+    </att>
+  </atts>
+</config-element>

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="calculate_default_gateway" result-type="string" api-version="6.0.0" id="90b6d7ae-ca17-4371-9de5-0b0f0e92a327" version="0.0.0" allowed-operations="vfe" category-name="dk.atea.vra.forms.helper">
+  <description><![CDATA[This assumes that the first address in the IP segment is the default gateway]]></description>
+  <param n="ipAddress" t="string"/>
+  <param n="ipMask" t="string"/>
+  <script encoded="false"><![CDATA[var maskParts = ipMask.split(".");
+var numberOfBits = maskParts
+    .map(function(maskPart) {
+        var numberOfBits = parseInt(maskPart, 10).toString(2).replace(/0/g,"").length;      
+        return parseInt(numberOfBits, 10);        
+    })
+    //count the number of ones in the whole array
+    .reduce(function(previous, current) {
+        return previous + current;
+    });
+    
+//Split the 4 parts of the ip into an array
+var ipParts = ipAddress.split(".");
+networkNumber = ipParts
+    //Do a bitwise AND between each ip part and the match subnetmask part to get the network number
+    .map(function(ipPart, index) {
+        return parseInt(ipPart, 10) & parseInt(maskParts[index], 10);
+    })
+    //join array back together in dot notation
+    .reduce(function(previous, current) {
+        return previous + "." + current;
+    });
+ 
+//Create the CIDR notation
+var network = networkNumber;
+
+var networkAddressParts = network.split(".");
+var gateway = networkAddressParts[0] + "." + networkAddressParts[1] + "." + networkAddressParts[2] + "." + (Number(networkAddressParts[3])+1)
+
+return gateway]]></script>
+</dunes-script-module>

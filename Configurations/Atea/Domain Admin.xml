@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="16637ffe-1858-4aeb-a307-39eee5f97948" version="0.0.0">
+  <display-name><![CDATA[Domain Admin]]></display-name>
+  <atts>
+    <att name="domainAdmin" type="string" read-only="false">
+      <value encoded="n"><![CDATA[ADC\Administrator]]></value>
+    </att>
+    <att name="Password" type="SecureString" read-only="false">
+      <value encoded="n"><![CDATA[__NULL__]]></value>
+    </att>
+  </atts>
+</config-element>

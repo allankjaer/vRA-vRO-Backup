@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="c6edaa5a-5bc2-4fab-a0ed-744f958df6cf" version="0.0.0">
+  <display-name><![CDATA[default DNS]]></display-name>
+  <atts>
+    <att name="domain" type="string" read-only="false">
+      <value encoded="n"><![CDATA[adc.lan]]></value>
+    </att>
+  </atts>
+</config-element>
