@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="changeVMvCPU_NUMA" result-type="VC:Task" api-version="6.0.0" id="e8ef2c50-925c-41b3-9ff8-baa11c0626e8" version="0.1.0" category-name="dk.atea.vra.vc.helper">
+<dunes-script-module name="changeVMvCPU_NUMA" result-type="VC:Task" api-version="6.0.0" id="e8ef2c50-925c-41b3-9ff8-baa11c0626e8" version="0.1.1" category-name="dk.atea.vc.helper">
   <description><![CDATA[Change the number of vCPUs in the VM.]]></description>
   <param n="vm" t="VC:VirtualMachine"><![CDATA[The VM to change]]></param>
   <param n="vcpu" t="number"><![CDATA[New vCPU number]]></param>
+  <param n="memory" t="number"><![CDATA[New Memory number]]></param>
   <script encoded="false"><![CDATA[var configSpec = new VcVirtualMachineConfigSpec();
 
 if (vcpu < 8) {
@@ -17,6 +18,7 @@ if (vcpu < 8) {
 
 }
 configSpec.numCPUs = vcpu;
+configSpec.memoryMB = memory;
 var task = vm.reconfigVM_Task( configSpec );
 return task;
 ]]></script>
