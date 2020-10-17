@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="013d742f-4906-4cd4-968f-e4e7c98a3c2c" editor-version="2.0" version="0.0.3" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="013d742f-4906-4cd4-968f-e4e7c98a3c2c" editor-version="2.0" version="0.0.4" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
     <display-name>Right Size VM</display-name>
     <position y="50.0" x="80.0"/>
     <input>
@@ -71,7 +71,7 @@ return (vm !== null);</script>
     <workflow-item name="item5" out-name="item12" type="task" comparator="0">
         <display-name>Find Right Size Values</display-name>
         <script encoded="false">var cpu = vm.cpu.split(" ",1);
-var memory = vm.memory.split(" ",1);
+var memory = vm.memory.split(" ",1) / 1024;
 rightSize = false;
 
 if (catAndTags.get("Atea Right Size vCPU") != null) {
