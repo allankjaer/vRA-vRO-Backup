@@ -1,0 +1,1 @@
+{"schema":{"vmHost":{"id":"vmHost","type":{"dataType":"string"},"label":"vmHost","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_ad8zsmaq","title":"General","sections":[{"id":"section_l852ahdj","fields":[{"id":"vmHost","display":"textField","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

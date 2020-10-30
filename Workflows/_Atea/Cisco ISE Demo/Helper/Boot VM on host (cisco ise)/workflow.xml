@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="b5c7c7ec-9a88-44a0-aaf3-07d6b53d3d09" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Boot VM on host (cisco ise)</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="cluster" type="VC:ClusterComputeResource"/>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output/>
+    <attrib name="esxiHost" type="VC:HostSystem">
+        <value encoded="n"/>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="390.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var namePart = vm.name.substring(0,vm.name.length - 2);&#13;
+var goodHost = true;&#13;
+for each (host in cluster.host) {&#13;
+    goodHost = true;&#13;
+    for each (searchvm in host.vm) {&#13;
+        if (searchvm.name.search(namePart) == 0 &amp;&amp; searchvm.name != vm.name) {&#13;
+            goodHost = false;&#13;
+            break;&#13;
+        }&#13;
+    }&#13;
+    if (goodHost) {&#13;
+        esxiHost = host;&#13;
+        break&#13;
+    }&#13;
+}</script>
+        <in-binding>
+            <bind name="cluster" type="VC:ClusterComputeResource" export-name="cluster"/>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="esxiHost" type="VC:HostSystem" export-name="esxiHost"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="BD808080808080808080808080808080CCC280800122528313869552e41805bb1" comparator="0">
+        <display-name>Workflow element</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm">
+                <description>Virtual machine to start</description>
+            </bind>
+            <bind name="host" type="VC:HostSystem" export-name="esxiHost">
+                <description>[Optional] The host on which to power on the virtual machine. The host must be part of the same compute resource with which the virtual machine is currently associated. Uses the currently associated host if you do not specify a new host or if you specify an incompatible host.</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description> </description>
+        <position y="60.0" x="265.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

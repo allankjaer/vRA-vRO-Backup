@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='013d742f-4906-4cd4-968f-e4e7c98a3c2c'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='1739b300-1c98-457b-8fac-52b8644e3734'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4734e842-4810-465a-8d0c-a2dbbdb68b74'&dunesName='Action'&name='getVMByName'&category='dk.atea.vra.vc.helper']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/ConfigurationElement?id='5d923e8d-d847-49d0-beef-3093f2418693'&dunesName='ConfigurationElement']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='e8ef2c50-925c-41b3-9ff8-baa11c0626e8'&dunesName='Action'&name='changeVMvCPU_NUMA'&category='dk.atea.vc.helper']]></elm>
+<used-plugin name='VC' version='6.5.0' />
+<used-plugin name='VAPI' version='7.5.2' />
+</package>
