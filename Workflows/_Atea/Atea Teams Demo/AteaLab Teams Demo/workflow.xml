@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="3885388d-7427-4ddd-a6ee-37ac3ae33d1c" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>AteaLab Teams Demo</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vmName" type="string"/>
+        <param name="event" type="string"/>
+        <param name="user" type="string"/>
+    </input>
+    <output/>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="statusCode" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="headers" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="440.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="link" linked-workflow-id="2d722523-e380-47f6-babd-a8e583b4562b" comparator="0">
+        <display-name>Invoke 'AteaLab Demo WebHook POST"</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="content" type="string" export-name="content">
+                <description>content</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Response status code</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="statusCode">
+                <description>Response content length</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="task" comparator="0">
+        <display-name>Create Content</display-name>
+        <script encoded="false">content = '{    \&#13;
+    "@type":  "MessageCard", \&#13;
+    "@context":  "http://schema.org/extensions", \&#13;
+    "summary":  "Weekly Infrastructure Stats", \&#13;
+    "themeColor":  "0078D7", \&#13;
+    "sections":  [ \&#13;
+                     { \&#13;
+                         "activitySubtitle":  "AteaLab vCenter Event INFO", \&#13;
+                         "facts":  [ \&#13;
+                                       { \&#13;
+                                           "value":  "' + vmName +'", \&#13;
+                                           "name":  "Virtual Machine: " \&#13;
+                                       }, \&#13;
+                                                                              { \&#13;
+                                           "value":  "' + user +'", \&#13;
+                                           "name":  "User name: " \&#13;
+                                       } \&#13;
+                                   ], \&#13;
+                         "markdown":  true, \&#13;
+                         "activityTitle":  "Virtual Machine ' + event +  '" \&#13;
+                     } \&#13;
+                 ] \&#13;
+}'&#13;
+//System.log("Content: " + content)</script>
+        <in-binding>
+            <bind name="vmName" type="string" export-name="vmName"/>
+            <bind name="event" type="string" export-name="event"/>
+            <bind name="user" type="string" export-name="user"/>
+        </in-binding>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>
