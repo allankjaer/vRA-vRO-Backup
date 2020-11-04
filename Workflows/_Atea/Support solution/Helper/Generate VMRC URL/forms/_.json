@@ -1,0 +1,1 @@
+{"schema":{"vm":{"id":"vm","type":{"dataType":"reference","referenceType":"VC:VirtualMachine"},"label":"vm"}},"layout":{"pages":[{"id":"page_822v0r0q","title":"General","sections":[{"id":"section_q3nohaxn","fields":[{"id":"vm","display":"valuePickerTree","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}
