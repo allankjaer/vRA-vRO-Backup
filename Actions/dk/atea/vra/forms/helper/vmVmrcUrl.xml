@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="vmVmrcUrl" result-type="string" api-version="6.0.0" id="5700a280-dceb-4924-9a53-3384f181070c" version="0.0.0" category-name="dk.atea.vra.forms.helper">
+  <param n="vm" t="VC:VirtualMachine"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var mks = vm.acquireMksTicket();
+var url = "vmrc://"+mks.host+":"+mks.port+"/?mksticket="+mks.ticket+"&thumbprint="+mks.sslThumbprint+"&path="+mks.cfgFile
+return url;]]></script>
+</dunes-script-module>

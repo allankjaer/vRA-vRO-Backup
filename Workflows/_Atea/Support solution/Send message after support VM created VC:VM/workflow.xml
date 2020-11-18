@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item3" object-name="workflow:name=generic" id="02a8e433-d942-40c6-9b24-a181af09b3ad" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Send message after support VM created VC:VM</display-name>
+    <position y="50.0" x="40.0"/>
+    <input>
+        <param name="mailTo" type="string"/>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output/>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="smtpHost" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="smtpPort" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="username" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="password" type="SecureString">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="fromName" type="string">
+        <value encoded="n">vRO</value>
+    </attrib>
+    <attrib name="fromAddress" type="string">
+        <value encoded="n">vro@atealab.dk</value>
+    </attrib>
+    <attrib name="subject" type="string">
+        <value encoded="n">Support VM created</value>
+    </attrib>
+    <attrib name="useSsl" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="useStartTls" type="boolean">
+        <value encoded="n">false</value>
+    </attrib>
+    <attrib name="url" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="580.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>HTML Mail content</display-name>
+        <script encoded="false">content = '&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt; \&#13;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB"&gt; \&#13;
+    VMware Remote Console link: '+url+' \&#13;
+&lt;/html&gt; \&#13;
+'</script>
+        <in-binding>
+            <bind name="url" type="string" export-name="url"/>
+        </in-binding>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="8D80808080808080808080808080808089808080012318760241416446ce5b52f" comparator="0">
+        <display-name>Send notification</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="smtpHost" type="string" export-name="smtpHost">
+                <description>SMTP host</description>
+            </bind>
+            <bind name="smtpPort" type="number" export-name="smtpPort">
+                <description>SMTP port</description>
+            </bind>
+            <bind name="username" type="string" export-name="username">
+                <description>Username for authentication</description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="password">
+                <description>Password for authentication</description>
+            </bind>
+            <bind name="fromName" type="string" export-name="fromName">
+                <description>Sender's name</description>
+            </bind>
+            <bind name="fromAddress" type="string" export-name="fromAddress">
+                <description>Sender's address</description>
+            </bind>
+            <bind name="toAddress" type="string" export-name="mailTo">
+                <description>Destination address</description>
+            </bind>
+            <bind name="subject" type="string" export-name="subject">
+                <description>Email subject</description>
+            </bind>
+            <bind name="content" type="string" export-name="content">
+                <description>Email content (text or HTML)</description>
+            </bind>
+            <bind name="useSsl" type="boolean" export-name="useSsl">
+                <description>If set to true, use SSL to connect </description>
+            </bind>
+            <bind name="useStartTls" type="boolean" export-name="useStartTls">
+                <description>If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands.</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description> </description>
+        <position y="60.0" x="420.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item1" type="link" linked-workflow-id="d2897a1f-8161-44d0-b2a3-a07ca59b5fae" comparator="0">
+        <display-name>Generate VMRC URL</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="url" type="string" export-name="url"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

@@ -22,8 +22,5 @@ if (country !== null && location !== null && application !== null && type !== nu
         }
     } 
 }
-
-
-
-//return value;]]></script>
+]]></script>
 </dunes-script-module>
