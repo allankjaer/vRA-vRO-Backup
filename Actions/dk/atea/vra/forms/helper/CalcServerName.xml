@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="CalcServerName" result-type="string" api-version="6.0.0" id="b75dc237-8beb-4651-b33d-1737501c6b33" version="0.0.1" category-name="dk.atea.vra.forms.helper">
-  <param n="country" t="string"/>
-  <param n="location" t="string"/>
-  <param n="application" t="string"/>
-  <param n="type" t="string"/>
+<dunes-script-module name="CalcServerName" result-type="string" api-version="6.0.0" id="b75dc237-8beb-4651-b33d-1737501c6b33" version="0.0.2" category-name="dk.atea.vra.forms.helper">
+  <param n="country" t="string"><![CDATA[]]></param>
+  <param n="location" t="string"><![CDATA[]]></param>
+  <param n="application" t="string"><![CDATA[]]></param>
+  <param n="type" t="string"><![CDATA[]]></param>
   <script encoded="false"><![CDATA[function FormatInteger(num, length) {
 
     return (num / Math.pow(10, length)).toFixed(length).substr(2);
@@ -23,5 +23,7 @@ if (country !== null && location !== null && application !== null && type !== nu
     } 
 }
 
-return value;]]></script>
+
+
+//return value;]]></script>
 </dunes-script-module>
