@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="fc9127b0-2d5b-4289-ae4b-5e31740045a1" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>test user interaction</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="var_0" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="security_group" type="LdapGroup">
+        <value encoded="n">adc.lan\vRA-admins</value>
+    </attrib>
+    <attrib name="security_assignees" type="Array/LdapUser">
+        <value encoded="n">[23:string#adc.lan\adminank]</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="input" comparator="0">
+        <display-name>User interaction</display-name>
+        <in-binding>
+            <bind name="security.group" type="LdapGroup" export-name="security_group">
+                <description>Any user member of this group will be authorized to fill in this form.</description>
+            </bind>
+            <bind name="security.assignees" type="Array/LdapUser" export-name="security_assignees">
+                <description>Any user from this array of users will be authorized to fill in this form</description>
+            </bind>
+            <bind name="security.assignee.groups" type="Array/LdapGroup">
+                <description>Any user member of any of the groups will be authorized to fill in this form.</description>
+            </bind>
+            <bind name="timeout.date" type="Date">
+                <description>If not null, this input item will wait until date and will continue workflow execution.</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="var_0" type="string" export-name="var_0"/>
+        </out-binding>
+        <description>Use this element to set up a user interaction.</description>
+        <presentation/>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>
