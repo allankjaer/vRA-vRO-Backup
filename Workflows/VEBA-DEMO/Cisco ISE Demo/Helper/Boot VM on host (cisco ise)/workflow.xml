@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="b5c7c7ec-9a88-44a0-aaf3-07d6b53d3d09" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="b5c7c7ec-9a88-44a0-aaf3-07d6b53d3d09" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
     <display-name>Boot VM on host (cisco ise)</display-name>
     <position y="50.0" x="100.0"/>
     <input>
         <param name="cluster" type="VC:ClusterComputeResource"/>
         <param name="vm" type="VC:VirtualMachine"/>
+        <param name="oldVmHost" type="string"/>
     </input>
     <output/>
     <attrib name="esxiHost" type="VC:HostSystem">
@@ -21,6 +22,9 @@
 var goodHost = true;&#13;
 for each (host in cluster.host) {&#13;
     goodHost = true;&#13;
+    if (oldVmHost == host.name) {&#13;
+        goodHost = false;&#13;
+    }&#13;
     for each (searchvm in host.vm) {&#13;
         if (searchvm.name.search(namePart) == 0 &amp;&amp; searchvm.name != vm.name) {&#13;
             goodHost = false;&#13;
@@ -35,6 +39,7 @@ for each (host in cluster.host) {&#13;
         <in-binding>
             <bind name="cluster" type="VC:ClusterComputeResource" export-name="cluster"/>
             <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+            <bind name="oldVmHost" type="string" export-name="oldVmHost"/>
         </in-binding>
         <out-binding>
             <bind name="esxiHost" type="VC:HostSystem" export-name="esxiHost"/>
