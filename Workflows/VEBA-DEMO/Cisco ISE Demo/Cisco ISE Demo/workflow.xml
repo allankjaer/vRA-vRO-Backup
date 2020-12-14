@@ -90,6 +90,7 @@ return (vms !== null);</script>
         <in-binding>
             <bind name="cluster" type="VC:ClusterComputeResource" export-name="cluster"/>
             <bind name="vm" type="Array/VC:VirtualMachine" export-name="*vms"/>
+            <bind name="oldVmHost" type="string" export-name="vmHost"/>
         </in-binding>
         <out-binding/>
         <reference id="b5c7c7ec-9a88-44a0-aaf3-07d6b53d3d09" type="Workflow"/>

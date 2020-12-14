@@ -19,18 +19,24 @@
     <workflow-item name="item1" out-name="item2" type="task" comparator="0">
         <display-name>Scriptable task</display-name>
         <script encoded="false">var namePart = vm.name.substring(0,vm.name.length - 2);&#13;
+//System.log("t1 : " + namePart)&#13;
 var goodHost = true;&#13;
 for each (host in cluster.host) {&#13;
     goodHost = true;&#13;
     if (oldVmHost == host.name) {&#13;
         goodHost = false;&#13;
-    }&#13;
-    for each (searchvm in host.vm) {&#13;
-        if (searchvm.name.search(namePart) == 0 &amp;&amp; searchvm.name != vm.name) {&#13;
-            goodHost = false;&#13;
-            break;&#13;
+        //System.log(host.name +" No good");&#13;
+    } else {&#13;
+        for each (searchvm in host.vm) {&#13;
+            //System.log(host.name +" checked");&#13;
+            if (searchvm.name.search(namePart) == 0 &amp;&amp; searchvm.name != vm.name) {&#13;
+                goodHost = false;&#13;
+                //System.log(host.name +" No good");&#13;
+                break;&#13;
+            }&#13;
         }&#13;
     }&#13;
+    &#13;
     if (goodHost) {&#13;
         esxiHost = host;&#13;
         break&#13;

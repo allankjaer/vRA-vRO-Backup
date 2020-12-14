@@ -79,6 +79,7 @@ rightSize = false;
 configMem = memory;
 configCPU = cpu;
 
+
 if (catAndTags.get("Atea Right Size vCPU") != null) {
     if (catAndTags.get("Atea Right Size vCPU") != cpu) {
         if (cpu == catAndTags.get("Atea Right Size vCPU")) {
@@ -154,16 +155,17 @@ if (catAndTags.get("Atea Right Size Memory") != null) {
 }
 
 configMem = configMem * 1024;
+configCPU = configCPU * 1;
 
-System.log(configCPU + ":" + configMem)</script>
+System.log(configCPU + ":" + configMem);</script>
         <in-binding>
             <bind name="catAndTags" type="Properties" export-name="catAndTags"/>
             <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
         </in-binding>
         <out-binding>
             <bind name="configMem" type="number" export-name="configMem"/>
-            <bind name="configCPU" type="number" export-name="configCPU"/>
             <bind name="rightSize" type="boolean" export-name="rightSize"/>
+            <bind name="configCPU" type="number" export-name="configCPU"/>
         </out-binding>
         <description>Simple task with custom script capability.</description>
         <position y="60.0" x="680.0"/>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='1739b300-1c98-457b-8fac-52b8644e3734'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4734e842-4810-465a-8d0c-a2dbbdb68b74'&dunesName='Action'&name='getVMByName'&category='dk.atea.vra.vc.helper']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/ConfigurationElement?id='5d923e8d-d847-49d0-beef-3093f2418693'&dunesName='ConfigurationElement']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='178d0753-97ba-4012-b4e5-b1f9edefbb72'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='1c5046dd-b786-4605-a0ef-0f1cef60dfe7'&dunesName='Action'&name='getTagsByCategory'&category='dk.atea.vsphere.tagging']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='691c135a-1779-44cd-b324-802230bcc7a1'&dunesName='Action'&name='getConfigurationAttributeValue'&category='dk.atea.vro.config']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c14432b-1935-47e0-bf6f-b66631625faf'&dunesName='Action'&name='getConfigurationElement'&category='dk.atea.vro.config']]></elm>
+<used-plugin name='VAPI' version='7.5.2' />
+<used-plugin name='VC' version='6.5.0' />
+</package>
