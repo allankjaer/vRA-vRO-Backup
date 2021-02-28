@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="3186445b-6750-449b-a3ae-74dbe0bdae34" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>UserGroup test</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="userGroup" type="AD:UserGroup">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='%23_v2_%23%2C%23UserGroup%23%2C%23caadcbcf-ec74-4246-a152-b7ab35b8ee6c%23%2C%23CN%3Ddkaarsqlp001-admins%2COU%3DvRA%2CDC%3Dadc%2CDC%3Dlan%23'&amp;dunesName='AD:UserGroup'</value>
+    </attrib>
+    <attrib name="user" type="AD:User">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='%23_v2_%23%2C%23User%23%2C%23caadcbcf-ec74-4246-a152-b7ab35b8ee6c%23%2C%23CN%3Dtest%20testesen%2COU%3DvRA%2CDC%3Dadc%2CDC%3Dlan%23'&amp;dunesName='AD:User'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">System.log("test : " + userGroup.distinguishedName);&#13;
+System.log("test2 :  " + user);&#13;
+&#13;
+var baseDn = "OU=vRA,DC=adc,DC=lan";&#13;
+&#13;
+var adUsers = new Array;&#13;
+const adHost = Server.findAllForType('AD:AdHost');&#13;
+const ldapClient = adHost[0].getLdapClient(); // ActiveDirectory:AdHost&#13;
+&#13;
+searchResult = ldapClient.search(&#13;
+    baseDn,&#13;
+    LdapSearchScope.ONE,&#13;
+    LdapDereferencePolicy.NEVER, &#13;
+    500, // limit&#13;
+    0, // timeout&#13;
+    "(&amp;(objectCategory=User)(objectClass=User))",&#13;
+    null // attributes&#13;
+);&#13;
+const ldapUsers = searchResult.getSearchEntries();&#13;
+&#13;
+for each (ldapUser in ldapUsers) {&#13;
+&#13;
+    var memberOf = ldapUser.getAttributeValue("memberOf");&#13;
+    if (memberOf){&#13;
+            System.log("test3 :"+ memberOf.indexOf(userGroup.distinguishedName))&#13;
+        if (memberOf.indexOf(userGroup.distinguishedName) == -1) {&#13;
+            System.log("test4 : " + ldapUser.getAttributeValue("displayName"));&#13;
+        }        &#13;
+    }&#13;
+   &#13;
+    adUsers.push(ActiveDirectory.searchExactMatch("User",ldapUser.getAttributeValue("sAMAccountName"),1)[0]); &#13;
+}</script>
+        <in-binding>
+            <bind name="userGroup" type="AD:UserGroup" export-name="userGroup"/>
+            <bind name="user" type="AD:User" export-name="user"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

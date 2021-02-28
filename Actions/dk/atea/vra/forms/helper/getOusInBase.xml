@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getOusInBase" result-type="Array/AD:OrganizationalUnit" api-version="6.0.0" id="4c6d4d38-fd90-467b-b3a6-c5d5695c04dc" version="0.0.0" category-name="dk.atea.vra.forms.helper">
+  <script encoded="false"><![CDATA[var ous = new Array;
+const adHost = Server.findAllForType('AD:AdHost');
+const ldapClient = adHost[0].getLdapClient();
+const baseDn = "OU=vRA,DC=adc,DC=lan";
+
+searchResult = ldapClient.search(
+    baseDn,
+    LdapSearchScope.SUB,
+    LdapDereferencePolicy.NEVER, 
+    500, // limit
+    0, // timeout
+    "(&(objectCategory=OrganizationalUnit)(objectClass=OrganizationalUnit))",
+    null // attributes
+);
+const ldapOus = searchResult.getSearchEntries();
+
+for each (ldapOu in ldapOus) {
+    var ousFromAd = ActiveDirectory.searchExactMatch("OrganizationalUnit",ldapOu.getAttributeValue("name"),100)
+     for each (ouFromAd in ousFromAd)    {
+        System.log("test2 : " + ouFromAd.distinguishedName + " ::: " + ldapOu.getAttributeValue("distinguishedName"));
+        if (ouFromAd.distinguishedName == ldapOu.getAttributeValue("distinguishedName")) {
+            ous.push(ouFromAd);
+        }
+     }
+    
+}
+return ous;]]></script>
+</dunes-script-module>

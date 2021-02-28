@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTest" result-type="string" api-version="6.0.0" id="e3a1c062-62ec-4931-b3ff-c0ee177805d3" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="userGroup" t="AD:UserGroup"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (!userGroup) {
+    return "x";
+} else {
+    return "y";
+    //userGroup.getAttribute("distinguishedName");
+}
+]]></script>
+</dunes-script-module>

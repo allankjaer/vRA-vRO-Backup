@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getAdUserForVraForm" result-type="Array/AD:User" api-version="6.0.0" id="2e96670d-e133-4fdd-ba35-de7a82b3f659" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="baseDn" t="string"><![CDATA[]]></param>
+  <param n="groupName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[//returns AD:User object for a OU in AD
+// output:
+// - Array of AD:User
+// input:
+// - baseDN : string
+// - groupName: string
+
+var adUsers = new Array;
+const adHost = Server.findAllForType('AD:AdHost');
+const ldapClient = adHost[0].getLdapClient(); // ActiveDirectory:AdHost
+
+searchResult = ldapClient.search(
+    baseDn,
+    LdapSearchScope.ONE,
+    LdapDereferencePolicy.NEVER, 
+    500, // limit
+    0, // timeout
+    "(&(objectCategory=User)(objectClass=User))",
+    null // attributes
+);
+const ldapUsers = searchResult.getSearchEntries();
+
+for each (ldapUser in ldapUsers) {
+	var memberOf = ldapUser.getAttributeValue("memberOf");
+	if (memberOf){
+        if (memberOf.indexOf(groupName) == -1) {
+            adUsers.push(ActiveDirectory.searchExactMatch("User",ldapUser.getAttributeValue("sAMAccountName"),1)[0]) 
+        } 
+    } else {
+        adUsers.push(ActiveDirectory.searchExactMatch("User",ldapUser.getAttributeValue("sAMAccountName"),1)[0]) 
+    }    
+}
+
+return adUsers;]]></script>
+</dunes-script-module>

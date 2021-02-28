@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="NoLdapGetAdUserFromOuFrom" result-type="Array/AD:User" api-version="6.0.0" id="ddec1385-8e09-48e9-8227-68bbfb559e7e" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="dn" t="string"><![CDATA[]]></param>
+  <param n="groupName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var users = new Array;
+
+// Get the Common Name of the Organizational Unit we are looking for:
+var cn = dn.split(",")[0].split("=")[1];
+
+// Use the AD Plug-in to search for that common name (using the default Active Directory instance)
+var orgUnits = ActiveDirectory.search("OrganizationalUnit",cn);
+
+// Loop through the results and make sure the DN is the correct one
+for each (ou in orgUnits){
+    System.log("Checking OU: "+ou.distinguishedName);
+
+    if (dn.toLowerCase() == ou.distinguishedName.toLowerCase()){
+        System.log("Found Org: "+ou);
+        //return ou;
+        
+        // Enumerate all users in OUs and add them to user array
+        for each (userObj in ou.users) {
+            //var test = userObj.memberOf();
+            users.push(userObj);
+        }
+    }
+}
+
+return users;
+]]></script>
+</dunes-script-module>

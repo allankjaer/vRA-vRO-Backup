@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="GetOuToDisplay" result-type="string" api-version="6.0.0" id="6a226fcc-398b-4322-abde-af5552d41e01" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="input" t="AD:OrganizationalUnit"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (!input) {
+    return null;
+} else {
+    return input.getAttribute("distinguishedName");
+}]]></script>
+</dunes-script-module>

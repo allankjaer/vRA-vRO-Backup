@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="vmVmrcUrl2" result-type="string" api-version="6.0.0" id="8c8f1bb5-2b6b-4585-a9e8-59fe574c4004" version="0.0.0" category-name="dk.atea.vra.forms.helper">
+  <param n="name" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var allVms = VcPlugin.getAllVirtualMachines();
+for each (var vm in allVms) {
+    if (vm.name === name) {
+        var foundVm = vm;
+    }
+}
+
+var mks = foundVm.acquireMksTicket();
+var url = "vmrc://"+mks.host+":"+mks.port+"/?mksticket="+mks.ticket+"&thumbprint="+mks.sslThumbprint+"&path="+mks.cfgFile
+//var url = '<a href="https://docs.vmware.com/en/VMware-Service-Broker/index.html">VMware Service Broker documentation</a>'
+return url;]]></script>
+</dunes-script-module>
