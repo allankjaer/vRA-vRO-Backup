@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="cc17e751-1752-4917-beac-e8561d4fc597" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get VMRC URL</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="vm" type="string">
+        <value encoded="n">vm-42242</value>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="statusCode" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="contentLength" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="headers" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="520.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">content = '{    \&#13;
+    "spec": {   \&#13;
+        "type": "VMRC"  \&#13;
+    }   \&#13;
+}'&#13;
+//System.log("Content: " + content)</script>
+        <in-binding/>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="9c4ed4b2-7ab9-4bde-9942-94993bd614da" comparator="0">
+        <display-name>Get VMRC URL REST</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vm" type="string" export-name="vm">
+                <description>vm</description>
+            </bind>
+            <bind name="content" type="string" export-name="content">
+                <description>content</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Response status code</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Response content length</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="340.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

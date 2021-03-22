@@ -25,7 +25,9 @@
     </workflow-item>
     <workflow-item name="item1" out-name="item4" type="task" comparator="0">
         <display-name>Get Catagories and Tags from Properties</display-name>
-        <script encoded="false">vmName = payload.resourceNames[0];&#13;
+        <script encoded="false">System.log('log start');&#13;
+&#13;
+vmName = payload.resourceNames[0];&#13;
 &#13;
 var vmProperties = new Properties;&#13;
 vmProperties = payload.get("customProperties");&#13;
@@ -130,7 +132,7 @@ for each (var host in sdkConnections) {&#13;
 	}&#13;
 }&#13;
 &#13;
-</script>
+System.log('log slut');</script>
         <in-binding>
             <bind name="vapiEndpoint" type="VAPI:VAPIEndpoint" export-name="vapiEndpoint"/>
             <bind name="vmName" type="string" export-name="vmName"/>

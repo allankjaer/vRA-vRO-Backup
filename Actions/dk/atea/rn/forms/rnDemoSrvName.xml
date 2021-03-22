@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="rnDemoSrvName" result-type="string" api-version="6.0.0" id="9aa2c858-5cef-4cd1-a79c-5cd7e54b8ca7" version="0.0.0" category-name="dk.atea.rn.forms">
+  <param n="nameConvention" t="string"><![CDATA[]]></param>
+  <param n="forretningssystem" t="string"><![CDATA[]]></param>
+  <param n="role1" t="string"><![CDATA[]]></param>
+  <param n="role2" t="string"><![CDATA[]]></param>
+  <param n="role3" t="string"><![CDATA[]]></param>
+  <param n="location1" t="string"><![CDATA[]]></param>
+  <param n="location2" t="string"><![CDATA[]]></param>
+  <param n="editon" t="string"><![CDATA[]]></param>
+  <param n="avail" t="string"><![CDATA[]]></param>
+  <param n="envir" t="string"><![CDATA[]]></param>
+  <param n="vrf" t="string"><![CDATA[]]></param>
+  <param n="system" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (nameConvention == 'FOR') {
+    var name = forretningssystem+role3+envir+location1+vrf+'##';
+    return name;
+}
+if (nameConvention == 'DB') {
+    if (avail == null) {
+        var name = location2+role2+editon+'##';
+    } else {
+        var name = location2+role2+editon+'##'+avail;
+    }    
+
+    return name;
+}
+if (nameConvention == 'BAS') {
+    var name = location2+system+role1+'##';
+    return name;
+}
+
+return null;]]></script>
+</dunes-script-module>
