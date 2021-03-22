@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="fc9127b0-2d5b-4289-ae4b-5e31740045a1" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="fc9127b0-2d5b-4289-ae4b-5e31740045a1" editor-version="2.0" version="0.0.2" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
     <display-name>test user interaction</display-name>
-    <description>jada jada</description>
+    <description>jada jada jada</description>
     <position y="50.0" x="100.0"/>
     <input/>
     <output/>
@@ -40,7 +40,7 @@
         </out-binding>
         <description>Use this element to set up a user interaction.</description>
         <presentation/>
-        <position y="60.0" x="170.0"/>
+        <position y="50.0" x="180.0"/>
     </workflow-item>
     <presentation/>
 </ns2:workflow>
