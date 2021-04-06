@@ -1,7 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="vmVmrcUrl" result-type="string" api-version="6.0.0" id="5700a280-dceb-4924-9a53-3384f181070c" version="0.0.0" category-name="dk.atea.vra.forms.helper">
+<dunes-script-module name="vmVmrcUrl" result-type="string" api-version="6.0.0" id="5700a280-dceb-4924-9a53-3384f181070c" version="0.0.1" category-name="dk.atea.vra.forms.helper">
   <param n="vm" t="VC:VirtualMachine"><![CDATA[]]></param>
-  <script encoded="false"><![CDATA[var mks = vm.acquireMksTicket();
-var url = "vmrc://"+mks.host+":"+mks.port+"/?mksticket="+mks.ticket+"&thumbprint="+mks.sslThumbprint+"&path="+mks.cfgFile
-return url;]]></script>
+  <script encoded="false"><![CDATA[var restHost = RESTHostManager.getHost('221742c6-f034-4e22-8cb5-0ac8710d4198');
+
+var request = restHost.createRequest("POST", "/com/vmware/cis/session");
+
+// Setting an unset vmware-api-session-id Cookie header enforce using Basic Authorization instead of using a Cookie based authentication based on a previous sesion
+request.setHeader("Cookie", "vmware-api-session-id");
+var response = request.execute();
+
+var content = '{ \
+    "spec": { \
+        "type": "VMRC" \
+    } \
+}';
+
+var request = restHost.createRequest("POST", "vcenter/vm/" + vm.id + "/console/tickets", content);
+request.contentType = "application\/json";
+var response = request.execute();
+var reqProperties = JSON.parse(response.contentAsString).value;
+
+System.log('test1: ' + response + ' ::::: ' + response.contentAsString + ' ::::::: ' + JSON.parse(response.contentAsString).value)
+
+return reqProperties.ticket;]]></script>
 </dunes-script-module>
