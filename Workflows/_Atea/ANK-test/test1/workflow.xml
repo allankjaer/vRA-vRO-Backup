@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="71522f4d-a3c1-4aea-b156-546d59d85db5" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>test1</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="error" type="string"/>
+    </output>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:vm-46402'&amp;dunesName='VC:VirtualMachine'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" catch-name="item2" throw-bind-name="error" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var i = 1;&#13;
+var name = 'CEntos';&#13;
+do {&#13;
+  i = i + 1;&#13;
+  System.sleep(2000);&#13;
+  if (vm.hostName) {&#13;
+    var hostName = vm.hostName.toLowerCase();&#13;
+    if (hostName.search(name.toLowerCase()) ==  0) {break}&#13;
+  }&#13;
+} while (i &lt; 5);&#13;
+&#13;
+if (hostName.search(name.toLowerCase()) !==  0) {throw "Not customized in time"}</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+    <workflow-item name="item2" throw-bind-name="error" type="end" end-mode="1" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="110.0" x="220.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

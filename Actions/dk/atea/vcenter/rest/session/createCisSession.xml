@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createCisSession" result-type="string" api-version="6.0.0" id="80f7a530-8868-45ec-a73d-1fa114af596b" version="0.0.0" category-name="dk.atea.vcenter.rest.session">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var request = restHost.createRequest("POST", "/com/vmware/cis/session");
+// Alternate syntaxes
+//var request = restHost.createRequest("POST", "/com/vmware/cis/session?~action=create");
+//var request = restHost.createRequest("GET", "/com/vmware/cis/session?~method=post");
+// Setting an unset vmware-api-session-id Cookie header enforce using Basic Authorization instead of using a Cookie based authentication based on a previous sesion
+request.setHeader("Cookie", "vmware-api-session-id");
+var response = request.execute();
+if (response.statusCode != 200) throw "Status code " + statusCode + "\n" + response.contentAsString;]]></script>
+</dunes-script-module>

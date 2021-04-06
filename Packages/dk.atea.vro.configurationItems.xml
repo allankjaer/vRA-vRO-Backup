@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c14432b-1935-47e0-bf6f-b66631625faf'&dunesName='Action'&name='getConfigurationElement'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='691c135a-1779-44cd-b324-802230bcc7a1'&dunesName='Action'&name='getConfigurationAttributeValue'&category='dk.atea.vro.configurationsItems']]></elm>
+</package>

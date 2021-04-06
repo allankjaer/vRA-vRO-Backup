@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getCisSession" result-type="Properties" api-version="6.0.0" id="885c0d5c-2ac5-41d9-a38c-7c7dbda0c499" version="0.0.0" category-name="dk.atea.vcenter.rest.session">
+  <param n="restHost" t="REST:RESTHost"/>
+  <script encoded="false"><![CDATA[    var request = restHost.createRequest("POST", "/com/vmware/cis/session?~action=get");
+    var response = request.execute();
+    if (response.statusCode != 200) throw "Status code " + statusCode + "\n" + response.contentAsString;
+    // Returning the object
+    System.log('test: ' + JSON.parse(response.contentAsString).value);
+    return JSON.parse(response.contentAsString).value;]]></script>
+</dunes-script-module>

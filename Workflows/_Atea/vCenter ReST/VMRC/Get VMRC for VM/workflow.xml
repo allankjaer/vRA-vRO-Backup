@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="9337c6d6-27b7-4e45-ac71-d87ccfcd1258" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get VMRC for VM</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output>
+        <param name="vmrcUrl" type="string"/>
+    </output>
+    <attrib name="restHost" type="REST:RESTHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='221742c6-f034-4e22-8cb5-0ac8710d4198'&amp;dunesName='REST:RESTHost'</value>
+    </attrib>
+    <attrib name="actionResult" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="440.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var content = '{ \&#13;
+    "spec": { \&#13;
+        "type": "VMRC" \&#13;
+    } \&#13;
+}';&#13;
+&#13;
+var request = restHost.createRequest("POST", "vcenter/vm/" + vm.id + "/console/tickets", content);&#13;
+System.log("Request URL: " + request.fullUrl);&#13;
+request.contentType = "application\/json";&#13;
+var response = request.execute();&#13;
+var reqProperties = JSON.parse(response.contentAsString).value;&#13;
+&#13;
+System.log('test1: ' + response + ' ::::: ' + response.contentAsString + ' ::::::: ' + JSON.parse(response.contentAsString).value)&#13;
+&#13;
+vmrcLink = reqProperties.ticket;</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost"/>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="vmrcLink" type="string" export-name="vmrcUrl"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="task" script-module="dk.atea.vcenter.rest.session/createCisSession" comparator="0">
+        <display-name>createCisSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vcenter.rest.session").createCisSession(restHost);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="actionResult"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>

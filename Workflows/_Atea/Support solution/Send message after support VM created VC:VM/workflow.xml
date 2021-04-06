@@ -103,14 +103,14 @@
         <description> </description>
         <position y="60.0" x="420.0"/>
     </workflow-item>
-    <workflow-item name="item3" out-name="item1" type="link" linked-workflow-id="d2897a1f-8161-44d0-b2a3-a07ca59b5fae" comparator="0">
-        <display-name>Generate VMRC URL</display-name>
+    <workflow-item name="item3" out-name="item1" type="link" linked-workflow-id="9337c6d6-27b7-4e45-ac71-d87ccfcd1258" comparator="0">
+        <display-name>Get VMRC for VM</display-name>
         <script encoded="false"></script>
         <in-binding>
             <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
         </in-binding>
         <out-binding>
-            <bind name="url" type="string" export-name="url"/>
+            <bind name="vmrcUrl" type="string" export-name="url"/>
         </out-binding>
         <description> </description>
         <position y="60.0" x="160.0"/>

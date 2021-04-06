@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='6d66d552-a9e6-47b7-a5e9-53d72a1fed59'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4734e842-4810-465a-8d0c-a2dbbdb68b74'&dunesName='Action'&name='getVMByName'&category='dk.atea.vra.vc.helper']]></elm>
+<used-plugin name='VC' version='6.5.0' />
+</package>

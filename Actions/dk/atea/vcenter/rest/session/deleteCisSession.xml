@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="deleteCisSession" result-type="string" api-version="6.0.0" id="af347baa-d873-488a-ab62-8487f5e4c791" version="0.0.0" category-name="dk.atea.vcenter.rest.session">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[    var request = restHost.createRequest("DELETE", "/com/vmware/cis/session");
+    var response = request.execute();
+    if (response.statusCode != 200) throw "Status code " + statusCode + "\n" + response.contentAsString;]]></script>
+</dunes-script-module>
