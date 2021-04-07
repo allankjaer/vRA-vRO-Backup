@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="getTagsByCategory" result-type="Array/string" api-version="6.0.0" id="1c5046dd-b786-4605-a0ef-0f1cef60dfe7" version="0.0.0" category-name="dk.atea.vsphere.tagging">
-  <param n="cat" t="string"/>
+<dunes-script-module name="getTagsByCategory" result-type="Array/string" api-version="6.0.0" id="1c5046dd-b786-4605-a0ef-0f1cef60dfe7" version="0.0.1" category-name="dk.atea.vsphere.tagging">
+  <param n="cat" t="string"><![CDATA[]]></param>
   <script encoded="false"><![CDATA[var categoryName = cat  
 System.log(cat)  
   
 // Set the VAPI endpoint
-var endpoint = System.getModule("dk.atea.vro.config").getConfigurationAttributeValue("Atea", "vAPi_Endpoint", "vapiEndpoint");
+var endpoint = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue("Atea", "vAPi_Endpoint", "vapiEndpoint");
   
 if (endpoint == null) {    
        throw "'endpoint' parameter should not be null";  
