@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getVpnClients" result-type="Array/string" api-version="6.0.0" id="f0eafd1c-21e9-4ede-818d-72bc9a4d0dbd" version="0.0.0" category-name="dk.atea.vra.forms.helper.appvolumes">
+  <script encoded="false"><![CDATA[var restHost = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue('Atea', 'App Volumes Config','resthost');
+var userName = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue('Atea', 'App Volumes Config','username');
+var password = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue('Atea', 'App Volumes Config','password');
+
+System.getModule("dk.atea.appvolumes.rest.session").createAppVolumesSession(restHost,userName,password);
+
+var request = restHost.createRequest("GET", "/app_volumes/app_packages?include=app_markers,lifecycle_stage,app_product&light");
+request.contentType = "application\/json";
+var response = request.execute();
+var packages = JSON.parse(response.contentAsString).data;
+System.log('test: ' + packages[0].description)
+
+var vpnClientPackages = new Array();
+for each (package in packages) {
+    if (package.description == 'VPN Client') {
+        vpnClientPackages.push(package.name);
+    }
+}
+return vpnClientPackages;]]></script>
+</dunes-script-module>

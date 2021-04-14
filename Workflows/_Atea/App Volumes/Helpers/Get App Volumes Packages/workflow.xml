@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="1182ee6a-1a43-4eff-af0b-fa3f61cb2c64" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get App Volumes Packages</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="outProperties" type="Array/Properties"/>
+    </output>
+    <attrib name="restHost" type="REST:RESTHost" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="resthost"/>
+    <attrib name="userName" type="string" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="username"/>
+    <attrib name="password" type="SecureString" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="password"/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="480.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>get computers</display-name>
+        <script encoded="false">var request = restHost.createRequest("GET", "/app_volumes/app_packages?include=app_markers,lifecycle_stage,app_product&amp;light");&#13;
+request.contentType = "application\/json";&#13;
+var response = request.execute();&#13;
+var outProperties = JSON.parse(response.contentAsString).data;</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost"/>
+        </in-binding>
+        <out-binding>
+            <bind name="outProperties" type="Array/Properties" export-name="outProperties"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="task" script-module="dk.atea.appvolumes.rest.session/createAppVolumesSession" comparator="0">
+        <display-name>createAppVolumesSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.appvolumes.rest.session").createAppVolumesSession(restHost,userName,password);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+            <bind name="userName" type="string" export-name="userName">
+                <description></description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="password">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name=""/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+</ns2:workflow>

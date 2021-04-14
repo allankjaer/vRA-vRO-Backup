@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="a947e101-de80-4559-9ec3-19c239c9caf0" version="0.0.0">
+  <display-name><![CDATA[App Volumes Config]]></display-name>
+  <atts>
+    <att name="username" type="string" read-only="false">
+      <value encoded="n"><![CDATA[administrator]]></value>
+    </att>
+    <att name="password" type="SecureString" read-only="false">
+      <value encoded="n"><![CDATA[__NULL__]]></value>
+    </att>
+    <att name="resthost" type="REST:RESTHost" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='5715d870-8304-40ce-ae78-b3e83e3f790e'&dunesName='REST:RESTHost']]></value>
+    </att>
+  </atts>
+</config-element>

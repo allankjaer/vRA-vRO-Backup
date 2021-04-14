@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createAppVolumesSession" result-type="string" api-version="6.0.0" id="4fd253b7-8644-47c0-936e-c9f90f62134a" version="0.0.0" category-name="dk.atea.appvolumes.rest.session">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <param n="userName" t="string"><![CDATA[]]></param>
+  <param n="password" t="SecureString"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var request = restHost.createRequest('POST', '/cv_api/sessions', '{"username": "' + userName + '", "password": "' + password +'"}');
+//var request = restHost.createRequest('POST', '/cv_api/sessions');
+request.setHeader("Content-Type","application/json");
+request.setHeader("Accept","application/json");
+request.setHeader("Cookie","_session_id");
+var response = request.execute();
+System.log(request.url);
+System.log(response.contentAsString);
+if (response.statusCode != 200) throw "Status code " + statusCode + "\n" + response.contentAsString;
+]]></script>
+</dunes-script-module>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="e0ee3b36-e5ab-4538-8fe1-aa984ee07043" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get VPN Client Packages</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="vpnClientPackages" type="Array/Properties"/>
+    </output>
+    <attrib name="packages" type="Array/Properties">
+        <value encoded="n">[]</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="480.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var vpnClientPackages = new Array();&#13;
+for each (package in packages) {&#13;
+    System.log('t: ' + package.get('description') );&#13;
+    if (package.get('description') == 'VPN Client') {&#13;
+        vpnClientPackages.push(package);&#13;
+    }&#13;
+}</script>
+        <in-binding>
+            <bind name="packages" type="Array/Properties" export-name="packages"/>
+        </in-binding>
+        <out-binding>
+            <bind name="vpnClientPackages" type="Array/Properties" export-name="vpnClientPackages"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="260.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item1" type="link" linked-workflow-id="1182ee6a-1a43-4eff-af0b-fa3f61cb2c64" comparator="0">
+        <display-name>Get App Volumes Packages</display-name>
+        <script encoded="false"></script>
+        <in-binding/>
+        <out-binding>
+            <bind name="outProperties" type="Array/Properties" export-name="packages"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>
