@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="4194e276-b876-4384-b368-724a025a56a6" editor-version="2.0" version="0.0.1" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="4194e276-b876-4384-b368-724a025a56a6" editor-version="2.0" version="0.0.2" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
     <display-name>Get App Volumes Computer</display-name>
     <position y="50.0" x="100.0"/>
     <input>
@@ -25,7 +25,6 @@
 System.log("Request URL: " + request.fullUrl);&#13;
 request.contentType = "application\/json";&#13;
 var response = request.execute();&#13;
-System.log('test: ' + response.contentAsString);&#13;
 var computers = JSON.parse(response.contentAsString);&#13;
 &#13;
 for each (computer in computers) {&#13;
