@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item6" object-name="workflow:name=generic" id="652216f3-283d-4c8e-b2fc-e1a087697d79" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Add App Volumes App to Machine</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="computerName" type="string"/>
+        <param name="packageName" type="string"/>
+    </input>
+    <output/>
+    <attrib name="computerProperties" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="packageProperties" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="entity_id" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="app_product_id" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="app_marker_id" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="restHost" type="REST:RESTHost" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="resthost"/>
+    <attrib name="userName" type="string" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="username"/>
+    <attrib name="password" type="SecureString" conf-id="a947e101-de80-4559-9ec3-19c239c9caf0" conf-key="password"/>
+    <attrib name="actionResult" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="880.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="4194e276-b876-4384-b368-724a025a56a6" comparator="0">
+        <display-name>Get App Volumes Computer</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="computerName" type="string" export-name="computerName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="outProperties" type="Properties" export-name="computerProperties"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="260.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="link" linked-workflow-id="e0ee3b36-e5ab-4538-8fe1-aa984ee07043" comparator="0">
+        <display-name>Get App Volumes Package</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="packageName" type="string" export-name="packageName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="package" type="Properties" export-name="packageProperties"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="380.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item4" type="task" comparator="0">
+        <display-name>get values from computer and package</display-name>
+        <script encoded="false">app_marker_id = packageProperties.get('app_product_id');&#13;
+app_product_id = packageProperties.get('app_product_id');&#13;
+entity_id = computerProperties.get('id');&#13;
+System.log('ent id: ' + computerProperties.get('id'));</script>
+        <in-binding>
+            <bind name="computerProperties" type="Properties" export-name="computerProperties"/>
+            <bind name="packageProperties" type="Properties" export-name="packageProperties"/>
+        </in-binding>
+        <out-binding>
+            <bind name="app_marker_id" type="number" export-name="app_marker_id"/>
+            <bind name="app_product_id" type="number" export-name="app_product_id"/>
+            <bind name="entity_id" type="number" export-name="entity_id"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="500.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item5" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var content = '{ \&#13;
+"data":  [ \&#13;
+			 { \&#13;
+				 "app_marker_id":  '+app_marker_id+', \&#13;
+				 "entities":  [ \&#13;
+								  { \&#13;
+									  "path":  null, \&#13;
+									  "entity_type":  "Computer", \&#13;
+									  "entity_id":  '+entity_id+' \&#13;
+								  } \&#13;
+							  ], \&#13;
+				 "app_package_id":  null, \&#13;
+				 "app_product_id":  '+app_product_id+' \&#13;
+			 } \&#13;
+		 ] \&#13;
+}';&#13;
+</script>
+        <in-binding>
+            <bind name="app_marker_id" type="number" export-name="app_marker_id"/>
+            <bind name="entity_id" type="number" export-name="entity_id"/>
+            <bind name="app_product_id" type="number" export-name="app_product_id"/>
+        </in-binding>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="600.0"/>
+    </workflow-item>
+    <workflow-item name="item5" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var request = restHost.createRequest("POST", '/app_volumes/app_assignments',content);&#13;
+System.log("Request URL: " + request.fullUrl);&#13;
+request.contentType = "application\/json";&#13;
+//request.body = content;&#13;
+var response = request.execute();&#13;
+</script>
+        <in-binding>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="720.0"/>
+    </workflow-item>
+    <workflow-item name="item6" out-name="item1" type="task" script-module="dk.atea.appvolumes.rest.session/createAppVolumesSession" comparator="0">
+        <display-name>createAppVolumesSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.appvolumes.rest.session").createAppVolumesSession(restHost,userName,password);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+            <bind name="userName" type="string" export-name="userName">
+                <description></description>
+            </bind>
+            <bind name="password" type="SecureString" export-name="password">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="actionResult"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+    <presentation/>
+</ns2:workflow>
