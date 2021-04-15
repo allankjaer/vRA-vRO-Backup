@@ -1,0 +1,1 @@
+{"schema":{"packageName":{"id":"packageName","type":{"dataType":"string"},"label":"packageName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_pr2y4vqa","title":"General","sections":[{"id":"section_atovgj40","fields":[{"id":"packageName","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

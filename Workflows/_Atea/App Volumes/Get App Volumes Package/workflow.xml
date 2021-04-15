@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="e0ee3b36-e5ab-4538-8fe1-aa984ee07043" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
-    <display-name>Get VPN Client Packages</display-name>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item2" object-name="workflow:name=generic" id="e0ee3b36-e5ab-4538-8fe1-aa984ee07043" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get App Volumes Package</display-name>
     <position y="50.0" x="100.0"/>
-    <input/>
+    <input>
+        <param name="packageName" type="string"/>
+    </input>
     <output>
-        <param name="vpnClientPackages" type="Array/Properties"/>
+        <param name="package" type="Properties"/>
     </output>
     <attrib name="packages" type="Array/Properties">
         <value encoded="n">[]</value>
@@ -12,22 +14,23 @@
     <workflow-item name="item0" type="end" end-mode="0" comparator="0">
         <in-binding/>
         <out-binding/>
-        <position y="50.0" x="480.0"/>
+        <position y="50.0" x="420.0"/>
     </workflow-item>
     <workflow-item name="item1" out-name="item0" type="task" comparator="0">
         <display-name>Scriptable task</display-name>
         <script encoded="false">var vpnClientPackages = new Array();&#13;
-for each (package in packages) {&#13;
-    System.log('t: ' + package.get('description') );&#13;
-    if (package.get('description') == 'VPN Client') {&#13;
-        vpnClientPackages.push(package);&#13;
+for each (searchPackage in packages) {&#13;
+    if (searchPackage.name == packageName) {&#13;
+        package = searchPackage;&#13;
+        break;&#13;
     }&#13;
 }</script>
         <in-binding>
             <bind name="packages" type="Array/Properties" export-name="packages"/>
+            <bind name="packageName" type="string" export-name="packageName"/>
         </in-binding>
         <out-binding>
-            <bind name="vpnClientPackages" type="Array/Properties" export-name="vpnClientPackages"/>
+            <bind name="package" type="Properties" export-name="package"/>
         </out-binding>
         <description>Simple task with custom script capability.</description>
         <position y="60.0" x="260.0"/>
