@@ -73,7 +73,7 @@ return (vm !== null);</script>
     </workflow-item>
     <workflow-item name="item5" out-name="item12" type="task" comparator="0">
         <display-name>Find Right Size Values</display-name>
-        <script encoded="false">var cpu = vm.cpu.split(" ",1);
+        <script encoded="false">var cpu = vm.cpu.split(" ",1) * 1;
 var memory = vm.memory.split(" ",1) / 1024;
 rightSize = false;
 configMem = memory;
@@ -242,9 +242,4 @@ actionResult = System.getModule("dk.atea.vc.helper").changeVMvCPU_NUMA(vm,vcpu,m
         <description>Add a note to the workflow schema.</description>
         <position y="60.0" x="960.0"/>
     </workflow-item>
-    <presentation>
-        <p-param name="vmName">
-            <desc>vmName</desc>
-        </p-param>
-    </presentation>
 </ns2:workflow>
