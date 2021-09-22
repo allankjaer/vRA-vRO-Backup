@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="903bda31-a506-407e-9359-c343a3dfe0b7" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>mail test</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:vm-54'&amp;dunesName='VC:VirtualMachine'</value>
+    </attrib>
+    <attrib name="status" type="string">
+        <value encoded="n">Finished</value>
+    </attrib>
+    <attrib name="vmName" type="string">
+        <value encoded="n">ank-dc</value>
+    </attrib>
+    <attrib name="domain" type="string">
+        <value encoded="n">ANK.LAN</value>
+    </attrib>
+    <attrib name="mailAddress" type="string">
+        <value encoded="n">adminank@atealab.dk</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="360.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var message = new EmailMessage();&#13;
+message.toAddress = mailAddress;&#13;
+message.subject = 'vRA har lavet ' + vmName;&#13;
+message.addMimePart(vmName + ' er lavet i domain: ' + domain + ' med status: ' + status + '.&lt;br&gt;&lt;br&gt;Dette er en automatisk mail, Svar ikke tilbage.','text/html; charset=UTF-8');&#13;
+&#13;
+&#13;
+// create RDP file&#13;
+var fileAttachment = new MimeAttachment();&#13;
+if (vm) {&#13;
+    fileAttachment.name = vmName + '.rdp';&#13;
+    fileAttachment.content = 'screen mode id:i:2\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'session bpp:i:16\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'winposstr:s:0,1,189,0,989,599\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'full address:s:' + vm.hostName + '\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'compression:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'keyboardhook:i:2\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'audiomode:i:0\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'redirectdrives:i:0\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'redirectprinters:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'redirectcomports:i:0\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'redirectsmartcards:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'alternate shell:s:\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'shell working directory:s:\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'disable wallpaper:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'disable full window drag:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'disable menu anims:i:1\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'disable themes:i:0\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'disable cursor setting:i:0\r\n';&#13;
+    fileAttachment.content = fileAttachment.content + 'bitmapcachepersistenable:i:1\r\n';&#13;
+    message.addMimePart(fileAttachment,'text/html; charset=UTF-8');&#13;
+    System.log ('RDP file generated.');&#13;
+}&#13;
+message.sendMessage();&#13;
+</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+            <bind name="status" type="string" export-name="status"/>
+            <bind name="vmName" type="string" export-name="vmName"/>
+            <bind name="domain" type="string" export-name="domain"/>
+            <bind name="mailAddress" type="string" export-name="mailAddress"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+</ns2:workflow>
