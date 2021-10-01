@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getUrlsFromSwaggerByServiceNameAndOperationName" result-type="Array/string" api-version="6.0.0" id="b814340d-eb19-42dc-afd3-14c81d30ee8b" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="serviceSwaggerProp" t="Properties"><![CDATA[]]></param>
+  <param n="service" t="string"><![CDATA[]]></param>
+  <param n="operation" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (serviceSwaggerProp == null || vraHost == null || operation == null || service == null) return null;
+
+var url = serviceSwaggerProp.get(service);
+var content = "";
+
+try {
+		var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "GET", url, content, null);
+		var object = JSON.parse(contentAsString);
+	} catch (e) {
+		System.warn("Unable to get object from url : " + url + "\n" + e + "\nWith Content : " + contentAsString);
+}
+
+var urls = Object.keys(object.paths);
+var operationUrls = new Array();
+
+for each (var url in urls) {
+	if (object.paths[url][operation.toLowerCase()] != undefined) operationUrls.push(url);
+}
+
+return operationUrls.sort();
+]]></script>
+</dunes-script-module>

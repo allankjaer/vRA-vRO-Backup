@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getCatalogItemInputProperties" result-type="Properties" api-version="6.0.0" id="cb9b6609-813e-4982-a767-6fa8c1bbb555" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.catalog">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="catalogItemId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (catalogItemId == null || catalogItemId == "") return [];
+
+var url = "/catalog/api/items/" + catalogItemId;
+var parameters = null;
+var catalogItem = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, parameters);
+var keys = Object.keys(catalogItem.schema.properties);
+
+var properties = new Properties();
+for each(var key in keys) {
+	properties.put(key, "");
+}
+
+return properties;]]></script>
+</dunes-script-module>

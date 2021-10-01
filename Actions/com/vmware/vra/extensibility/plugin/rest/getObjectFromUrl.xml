@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getObjectFromUrl" result-type="string" api-version="6.0.0" id="810785a3-75b8-4afd-ab76-aac7ac4ded16" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (url == null) throw "URL is not set";
+if (vraHost == null) throw "VRA Host is not set";
+
+if (parameters != null && parameters != "") {
+    url = url + "?" + parameters; // Parameters must be encoded
+}
+
+try {
+		var json = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "GET", url, null, null);
+        var object = JSON.parse(json);
+        //System.debug("Got JSON object : \n" + JSON.stringify(object,null,2));
+        return object;
+	} catch (e) {
+		System.warn("Unable to get object from url : " + url + "\n" + e + "\nWith Content : " + json);
+}]]></script>
+</dunes-script-module>

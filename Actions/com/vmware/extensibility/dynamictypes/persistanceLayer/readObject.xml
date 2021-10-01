@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="readObject" result-type="Array/Any" api-version="6.0.0" id="70c6f3f8-ca51-4aa5-9250-8632334ada0c" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.persistanceLayer">
+  <param n="objectType" t="string"><![CDATA[]]></param>
+  <param n="objectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log('Find DynamicTypes ' + objectType);
+
+//ensure object type supplied
+if(!objectType){
+  System.error("Required Field Object Type not supplied.");
+  throw new Error("Required Field Object Type not supplied.");
+}
+
+//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+try {
+    resourceName = objectType.replace('.','-')+'_datasource.json';
+
+    var resourceElements = Server.findAllForType( 'ResourceElement' , "c.name='"+resourceName+"'");
+    if (resourceElements[0]){
+        var sourcedata = JSON.parse(resourceElements[0].getContentAsMimeAttachment().content);
+        var resourceElement = resourceElements[0];
+    }else{
+        System.error('Unable to find dynamic types source data for '+ objectType);
+        throw new Error('Unable to find dynamic types source data for '+ objectType);
+    }
+
+    //check if object id supplied
+    if(objectId){
+        if (objectId != null && objectId != ""){
+            System.log('Find DynamicTypes ' + objectType + ' object with ID: ' + objectId + '.');
+            for (var index in sourcedata){
+                element = sourcedata[index];
+                if (element.id == objectId){
+                    // return element when found by id
+					System.log('Dynamics Type object ' + objectType + ' with id: ' + objectId + ' found.');
+                    return [element];
+                }
+        	}
+            // return empty list if element not found
+            System.warn('Dynamics Type object ' + objectType + ' with id: ' + objectId + ' NOT FOUND.');
+        	return [];
+		}
+		else{
+			//return all objects if id set to blank or null
+			System.log('All dynamic types ' + objectType + ' returned.');
+	    	return sourcedata;
+		}
+    }
+	else{
+		//return all objects if id not supplied
+		System.log('All dynamic types ' + objectType + ' returned.');
+	    return sourcedata;
+	}
+}
+catch(err){
+  System.error('Error finding dynamic types ' + objectType + '. Error: ' + err);
+  throw new Error(err);
+}
+]]></script>
+</dunes-script-module>

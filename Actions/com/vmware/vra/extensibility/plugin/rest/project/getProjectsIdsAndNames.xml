@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getProjectsIdsAndNames" result-type="Array/Properties" api-version="6.0.0" id="30ffdb8d-b76c-48f7-8b08-222edfbee94e" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.project">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+//var url = "/iaas/projects"; // Before vRA 8.4
+var url = "/project-service/api/projects"; // Since vRA 8.4
+var parameters = "$orderby=name%20asc";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsIdAndNameAsArrayOfProperties(vraHost, url, parameters);]]></script>
+</dunes-script-module>

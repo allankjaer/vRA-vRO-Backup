@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="f470954a-bf8d-4f5b-8336-336412f3a5e3" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Network Create</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="inputProperties" type="Properties"/>
+    </input>
+    <output>
+        <param name="networkSelectionIds" type="Array/Array"/>
+    </output>
+    <attrib name="vraHost" type="VRA:Host">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='lvboEvqOQXK6yy_cxQRvaA'&amp;dunesName='VRA:Host'</value>
+    </attrib>
+    <attrib name="get" type="string">
+        <value encoded="n">GET</value>
+    </attrib>
+    <attrib name="getDeploymentUrl" type="string">
+        <value encoded="n">/deployment/api/deployments/{deploymentId}</value>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="parameters" type="Array/string">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="networkName" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="dvSwitch" type="VC:VmwareDistributedVirtualSwitch">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:dvs-61788'&amp;dunesName='VC:VmwareDistributedVirtualSwitch'</value>
+    </attrib>
+    <attrib name="numPorts" type="number">
+        <value encoded="n">8.0</value>
+    </attrib>
+    <attrib name="dvPortgroupType" type="string">
+        <value encoded="n">earlyBinding</value>
+    </attrib>
+    <attrib name="dvPortgroup" type="VC:DistributedVirtualPortgroup">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="getFabricNetworkUrl" type="string">
+        <value encoded="n">/iaas/api/fabric-networks-vsphere?$filter=name%20eq%20'{pgName}'</value>
+    </attrib>
+    <attrib name="fabricNetworkId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="getNetworkProfileUrl" type="string">
+        <value encoded="n">/iaas/api/network-profiles/7e33ee84-0315-4975-aec3-6d8764a37b50</value>
+    </attrib>
+    <attrib name="patch" type="string">
+        <value encoded="n">PATCH</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="268.88888888888886" x="268.88888888888886"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Find deployment ID and set ad parameter</display-name>
+        <script encoded="false">var parameters = new Array();&#13;
+parameters.push(inputProperties.deploymentId);</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+        </in-binding>
+        <out-binding>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Get vRA deployment</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="get"/>
+            <bind name="url" type="string" export-name="getDeploymentUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item4" type="task" comparator="0">
+        <display-name>extract network name</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(contentAsString);&#13;
+var inputs = bodyObj.inputs&#13;
+&#13;
+networkName = inputs.network;</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </in-binding>
+        <out-binding>
+            <bind name="networkName" type="string" export-name="networkName"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="420.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item11" type="link" linked-workflow-id="8B808080808080808080808080808080038080800127197184441049b4e6c2cc2" comparator="0">
+        <display-name>Add port group to distributed virtual switch</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="dvSwitch" type="VC:VmwareDistributedVirtualSwitch" export-name="dvSwitch">
+                <description>Distributed virtual switch to attach port group to</description>
+            </bind>
+            <bind name="dvPortGroupName" type="string" export-name="networkName">
+                <description>Name of new port group</description>
+            </bind>
+            <bind name="numPorts" type="number" export-name="numPorts">
+                <description>Number of ports in new port group</description>
+            </bind>
+            <bind name="dvPortgroupType" type="string" export-name="dvPortgroupType">
+                <description>Type of portgroup: earlyBinding, lateBinding, ephemeral</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="dvPortgroup" type="VC:DistributedVirtualPortgroup" export-name="dvPortgroup"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="530.0"/>
+    </workflow-item>
+    <workflow-item name="item6" out-name="item8" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Get vRA Fabric Network</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="get"/>
+            <bind name="url" type="string" export-name="getFabricNetworkUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="130.0" x="780.0"/>
+    </workflow-item>
+    <workflow-item name="item7" out-name="item6" type="task" comparator="0">
+        <display-name>set parameter to get vRA fabric with name</display-name>
+        <script encoded="false">var parameters = new Array();&#13;
+parameters.push(networkName);</script>
+        <in-binding>
+            <bind name="networkName" type="string" export-name="networkName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="760.0"/>
+    </workflow-item>
+    <workflow-item name="item8" out-name="item9" type="task" comparator="0">
+        <display-name>Get vRA Fabric Network ID</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(contentAsString);&#13;
+&#13;
+for each (network in bodyObj.content) {&#13;
+    if (network.name == networkName) {&#13;
+        fabricNetworkId = network.id;&#13;
+    }&#13;
+}</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+            <bind name="networkName" type="string" export-name="networkName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="fabricNetworkId" type="string" export-name="fabricNetworkId"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="134.44444444444443" x="651.1111111111111"/>
+    </workflow-item>
+    <workflow-item name="item9" out-name="item10" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Get vRA Network Profile</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="get"/>
+            <bind name="url" type="string" export-name="getNetworkProfileUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="134.44444444444443" x="517.7777777777777"/>
+    </workflow-item>
+    <workflow-item name="item10" out-name="item13" type="task" comparator="0">
+        <display-name>Create content with updated information for vRA Network Profile</display-name>
+        <script encoded="false">var bodyObj =  JSON.parse(contentAsString);&#13;
+&#13;
+links = bodyObj._links;&#13;
+var linksProperties =  new Properties(links);&#13;
+&#13;
+var fabricNetworkLinks = linksProperties.get('fabric-networks');&#13;
+&#13;
+var fabricNetworkString = '';&#13;
+&#13;
+for each (fabricNetwork in fabricNetworkLinks.hrefs) {&#13;
+    fabricNetworkString = fabricNetworkString + '"'+ fabricNetwork.replace("/iaas/api/fabric-networks/","") + '",'&#13;
+}&#13;
+fabricNetworkString = fabricNetworkString + '"' + fabricNetworkId + '"';&#13;
+&#13;
+//System.log('test FN string: ' + fabricNetworkString);&#13;
+&#13;
+&#13;
+content = '{    \&#13;
+    "name": "' + bodyObj.name + '", \&#13;
+    "regionId": "' + bodyObj._links.region.href.replace('/iaas/api/regions/','') + '", \&#13;
+    "fabricNetworkIds": [' + fabricNetworkString + '] \&#13;
+}';&#13;
+&#13;
+</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+            <bind name="fabricNetworkId" type="string" export-name="fabricNetworkId"/>
+        </in-binding>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="134.44444444444443" x="406.66666666666663"/>
+    </workflow-item>
+    <workflow-item name="item11" out-name="item7" type="input" comparator="0">
+        <display-name>Manuel wait for  Cloud Account to be updated</display-name>
+        <in-binding>
+            <bind name="security.group" type="LdapGroup">
+                <description>Any user member of this group will be authorized to fill in this form.</description>
+            </bind>
+            <bind name="security.assignees" type="Array/LdapUser">
+                <description>Any user from this array of users will be authorized to fill in this form</description>
+            </bind>
+            <bind name="security.assignee.groups" type="Array/LdapGroup">
+                <description>Any user member of any of the groups will be authorized to fill in this form.</description>
+            </bind>
+            <bind name="timeout.date" type="Date">
+                <description>If not null, this input item will wait until date and will continue workflow execution.</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description>Use this element to set up a user interaction.</description>
+        <presentation/>
+        <position y="56.66666666666667" x="628.8888888888889"/>
+    </workflow-item>
+    <workflow-item name="item12" out-name="item0" type="task" comparator="0">
+        <display-name>set return value for network selection to new network</display-name>
+        <script encoded="false">var subnetId = new Array();&#13;
+subnetId.push(fabricNetworkId);&#13;
+var t = new Array()&#13;
+t.push(subnetId);&#13;
+var networkSelectionIds = new Array();&#13;
+networkSelectionIds.push(t);</script>
+        <in-binding>
+            <bind name="fabricNetworkId" type="string" export-name="fabricNetworkId"/>
+        </in-binding>
+        <out-binding>
+            <bind name="networkSelectionIds" type="Array/Array" export-name="networkSelectionIds"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="134.44444444444443" x="184.44444444444443"/>
+    </workflow-item>
+    <workflow-item name="item13" out-name="item12" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Update vRA Network Profile</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="patch"/>
+            <bind name="url" type="string" export-name="getNetworkProfileUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="134.44444444444443" x="295.55555555555554"/>
+    </workflow-item>
+</ns2:workflow>

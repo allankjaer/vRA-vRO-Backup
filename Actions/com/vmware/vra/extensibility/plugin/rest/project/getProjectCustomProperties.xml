@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getProjectCustomProperties" result-type="Properties" api-version="6.0.0" id="d6800c1a-3cc2-41a9-a401-339faedf0393" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.project">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || projectId == null) return [];
+
+var project = System.getModule("com.vmware.vra.extensibility.plugin.rest.project").getProject(vraHost, projectId);
+
+var customProperties = new Properties();
+for (var key in project.properties) {
+    customProperties.put(key, project.properties[key]);
+}
+
+return customProperties;]]></script>
+</dunes-script-module>

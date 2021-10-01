@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTopicIsBlockable" result-type="boolean" api-version="6.0.0" id="d8ed80f1-ba80-4744-82d6-f193c1a8a3d2" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.eventBroker">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="eventTopicId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+var object = System.getModule("com.vmware.vra.extensibility.plugin.rest.eventBroker").getTopic(vraHost, null, eventTopicId);
+return object.blockable;]]></script>
+</dunes-script-module>

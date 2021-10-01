@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="427e47a4-b7ab-4753-89b1-cf2d09bc11bb" version="0.0.0">
+  <display-name><![CDATA[vRA plug-in]]></display-name>
+  <atts>
+    <att name="defaultHost" type="VRA:Host" read-only="false"/>
+  </atts>
+</config-element>

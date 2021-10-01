@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createCatalogItemRequest" result-type="Array/string" api-version="6.0.0" id="c0d22d1a-5e6c-47b8-bc91-0001cc7bacf1" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.catalog">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="catalogItemId" t="string"><![CDATA[]]></param>
+  <param n="deploymentName" t="string"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <param n="bulkRequestCount" t="number"><![CDATA[]]></param>
+  <param n="inputProperties" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/catalog/api/items/" + catalogItemId + "/request";
+var requestBody = {
+	"deploymentName": deploymentName,
+	"projectId": projectId,
+	"bulkRequestCount": bulkRequestCount,
+	"inputs": inputProperties
+};
+
+var content = JSON.stringify(requestBody);
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}
+var deployments = JSON.parse(contentAsString);
+var deploymentsIds = new Array();
+
+if (deployments != null) {
+	for each(var deployment in deployments) {
+		deploymentsIds.push(deployment.deploymentId);
+	}
+	return deploymentsIds;
+} else return null;]]></script>
+</dunes-script-module>

@@ -1,0 +1,1 @@
+{"schema":{"password":{"id":"password","type":{"dataType":"secureString"},"label":"password","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_7qkn9xe1","title":"General","sections":[{"id":"section_8zi1kmdm","fields":[{"id":"password","display":"passwordField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

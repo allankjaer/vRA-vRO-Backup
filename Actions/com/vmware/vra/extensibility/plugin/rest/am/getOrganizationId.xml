@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getOrganizationId" result-type="string" api-version="6.0.0" id="759b62b4-45e2-445f-aeb1-bc45fd671496" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.am">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+var url = "/csp/gateway/am/api/loggedin/user/orgs?expand";
+
+var json = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "GET", url, null, null);
+var object = JSON.parse(json);
+return object.items[0].id;]]></script>
+</dunes-script-module>

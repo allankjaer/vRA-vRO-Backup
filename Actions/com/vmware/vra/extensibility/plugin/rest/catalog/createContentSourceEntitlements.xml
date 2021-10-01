@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createContentSourceEntitlements" result-type="Array/string" api-version="6.0.0" id="2f110a72-f35d-4bc1-8d07-19fb979b33eb" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.catalog">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <param n="contentSourcesIds" t="Array/string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || projectId == null) return null;
+
+var url = "/catalog/api/admin/entitlements";
+var operation = "POST";
+var entitlementIds = new Array();
+
+for each(var contentSourceId in contentSourcesIds) {
+	var entitlement = {
+		"projectId": projectId,
+		"definition": {
+			"type": "CatalogSourceIdentifier",
+			"id": contentSourceId,
+		}
+	};
+	var content = JSON.stringify(entitlement);
+
+	try {
+		var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	} catch (e) {
+		throw "POST " + url + "Failed" +
+			"\n Error : " + e;
+	}
+	var object = JSON.parse(contentAsString);
+	entitlementIds.push(object.id);
+}
+return entitlementIds;]]></script>
+</dunes-script-module>

@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getProject" result-type="Any" api-version="6.0.0" id="26263ee7-f0f8-4a01-b475-08503157b3a2" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.project">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/project-service/api/projects/" + projectId;
+var parameters = null;
+var project = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, parameters);
+return project;]]></script>
+</dunes-script-module>

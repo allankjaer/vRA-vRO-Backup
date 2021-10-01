@@ -1,0 +1,509 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item48" object-name="workflow:name=generic" id="8f168f78-e6b5-4cf6-b645-d45255c0ed8f" version="0.4.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Project Onboarding]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="6.0" x="40.0"/>
+  <input>
+    <param name="networkConstraint" type="string"/>
+    <param name="costCode" type="string"/>
+    <param name="adminAdGroup" type="string"/>
+    <param name="userAdGroup" type="string"/>
+    <param name="projectName" type="string"/>
+    <param name="syncDirectory" type="boolean"/>
+    <param name="contentSourceName" type="string"/>
+    <param name="zoneId" type="string"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <attrib name="vidmUserGroupId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vidmAdminGroupId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="administratorsGroups" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="membersGroups" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="sharedResources" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[true]]></value>
+  </attrib>
+  <attrib name="operationTimeout" type="number" read-only="false">
+    <value encoded="n"><![CDATA[0.0]]></value>
+  </attrib>
+  <attrib name="properties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="zoneUrl" type="string" read-only="false">
+    <value encoded="n"><![CDATA[/iaas/api/zones]]></value>
+  </attrib>
+  <attrib name="parameters" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="zoneIdProperty" type="string" read-only="false">
+    <value encoded="n"><![CDATA[id]]></value>
+  </attrib>
+  <attrib name="zoneIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="zoneAssignmentConfigurationsProperties" type="Array/Properties" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="constraints" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="projectId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="projectTags" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="contentSourcesIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="entitlementIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="organizationId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="projectDescription" type="string" read-only="false">
+    <value encoded="n"><![CDATA[Created by vRO extensibility sample workflow]]></value>
+  </attrib>
+  <attrib name="emptyArray" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="emptyString" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="newContentSourceId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-note x="59.0" y="51.5" w="703.0" h="261.5" color="b5eeb4">
+    <description><![CDATA[IAAS create project & set custom properties and tags ]]></description>
+  </workflow-note>
+  <workflow-note x="58.0" y="313.0" w="703.0" h="61.5" color="c2e8ff">
+    <description><![CDATA[Service Broker content source creation and entitlements]]></description>
+  </workflow-note>
+  <workflow-note x="58.0" y="374.0" w="703.0" h="62.0" color="FFFFC0">
+    <description><![CDATA[Identity Management organization and service roles assignments]]></description>
+  </workflow-note>
+  <workflow-note x="238.0" y="7.5" w="291.0" h="43.5" color="ab82ba">
+    <description><![CDATA[Not implemented]]></description>
+  </workflow-note>
+  <workflow-note x="238.0" y="7.5" w="291.0" h="43.5" color="ab82ba">
+    <description><![CDATA[Not implemented]]></description>
+  </workflow-note>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="382.5" x="700.0"/>
+  </workflow-item>
+  <workflow-item name="item48" out-name="item69" type="custom-condition" alt-out-name="item71">
+    <display-name><![CDATA[Synch directory]]></display-name>
+    <script encoded="false"><![CDATA[return syncDirectory;]]></script>
+    <in-binding>
+      <bind name="syncDirectory" type="boolean" export-name="syncDirectory"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="6.0" x="122.0"/>
+  </workflow-item>
+  <workflow-item name="item52" out-name="item73" type="task">
+    <display-name><![CDATA[Get user & admin group names]]></display-name>
+    <script encoded="false"><![CDATA[var userConfig = System.getModule("com.vmware.vra.extensibility.plugin.rest.onboarding").modifyAdGroupToVidmForm(vraHost, userAdGroup);
+var adminConfig = System.getModule("com.vmware.vra.extensibility.plugin.rest.onboarding").modifyAdGroupToVidmForm(vraHost, adminAdGroup);
+
+vidmUserGroupId = userConfig.vidmGroupId;
+membersGroups = [userConfig.vidmGroupAssociation];
+
+vidmAdminGroupId = adminConfig.vidmGroupId;
+administratorsGroups = [adminConfig.vidmGroupAssociation];]]></script>
+    <in-binding>
+      <bind name="adminAdGroup" type="string" export-name="adminAdGroup"/>
+      <bind name="userAdGroup" type="string" export-name="userAdGroup"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="vidmUserGroupId" type="string" export-name="vidmUserGroupId"/>
+      <bind name="vidmAdminGroupId" type="string" export-name="vidmAdminGroupId"/>
+      <bind name="administratorsGroups" type="Array/string" export-name="administratorsGroups"/>
+      <bind name="membersGroups" type="Array/string" export-name="membersGroups"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="130.0" x="420.0"/>
+  </workflow-item>
+  <workflow-item name="item53" out-name="item55" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/createProject">
+    <display-name><![CDATA[createProject]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").createProject(vraHost,name,description,machineNamingTemplate,sharedResources,operationTimeout,viewersUsers,viewersGroups,membersUsers,membersGroups,administratorsUsers,administratorsGroups,properties,constraints,zoneAssignmentConfigurations);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="projectName"/>
+      <bind name="description" type="string" export-name="projectDescription"/>
+      <bind name="machineNamingTemplate" type="string" export-name="emptyString"/>
+      <bind name="sharedResources" type="boolean" export-name="sharedResources"/>
+      <bind name="operationTimeout" type="number" export-name="operationTimeout"/>
+      <bind name="viewersUsers" type="Array/string" export-name="emptyArray"/>
+      <bind name="viewersGroups" type="Array/string" export-name="emptyArray"/>
+      <bind name="membersUsers" type="Array/string" export-name="emptyArray"/>
+      <bind name="membersGroups" type="Array/string" export-name="membersGroups"/>
+      <bind name="administratorsUsers" type="Array/string" export-name="emptyArray"/>
+      <bind name="administratorsGroups" type="Array/string" export-name="administratorsGroups"/>
+      <bind name="properties" type="Properties" export-name="properties"/>
+      <bind name="constraints" type="Properties" export-name="constraints"/>
+      <bind name="zoneAssignmentConfigurations" type="Array/Properties" export-name="zoneAssignmentConfigurationsProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="projectId"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="130.0" x="660.0"/>
+  </workflow-item>
+  <workflow-item name="item55" out-name="item58" type="task">
+    <display-name><![CDATA[Set project custom properties]]></display-name>
+    <script encoded="false"><![CDATA[var folderName = "Tenants/" + projectName + "/" + networkConstraint.split(":")[1];
+
+properties =
+{
+        "costCode": costCode,
+        "__namingTemplate": "vra${##########}",
+        "folderName": folderName
+}]]></script>
+    <in-binding>
+      <bind name="costCode" type="string" export-name="costCode"/>
+      <bind name="projectName" type="string" export-name="projectName"/>
+      <bind name="networkConstraint" type="string" export-name="networkConstraint"/>
+    </in-binding>
+    <out-binding>
+      <bind name="properties" type="Properties" export-name="properties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="191.5" x="120.0"/>
+  </workflow-item>
+  <workflow-item name="item56" out-name="item57" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/getIaasObjectsProperty">
+    <display-name><![CDATA[getIaasObjectsProperty]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getIaasObjectsProperty(vraHost,url,parameters,property);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="url" type="string" export-name="zoneUrl"/>
+      <bind name="parameters" type="string" export-name="parameters"/>
+      <bind name="property" type="string" export-name="zoneIdProperty"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Array/string" export-name="zoneIds"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="130.0" x="120.0"/>
+  </workflow-item>
+  <workflow-item name="item57" out-name="item52" type="task">
+    <display-name><![CDATA[Set project zone assignments]]></display-name>
+    <script encoded="false"><![CDATA[zoneAssignmentConfigurationsProperties = new Array();
+
+for each(var zoneId in zoneIds) {
+	var zoneAssignmentConfiguration = {
+		"storageLimitGB": 0,
+		"cpuLimit": 0,
+		"memoryLimitMB": 0,
+		"zoneId": zoneId,
+		"maxNumberInstances": 0,
+		"priority": 0
+	}
+	zoneAssignmentConfigurationsProperties.push(zoneAssignmentConfiguration);
+}]]></script>
+    <in-binding>
+      <bind name="zoneIds" type="Array/string" export-name="zoneIds"/>
+    </in-binding>
+    <out-binding>
+      <bind name="zoneAssignmentConfigurationsProperties" type="Array/Properties" export-name="zoneAssignmentConfigurationsProperties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="130.0" x="280.0"/>
+  </workflow-item>
+  <workflow-item name="item58" out-name="item64" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.project/setProjectCustomProperties">
+    <display-name><![CDATA[setProjectCustomProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+System.getModule("com.vmware.vra.extensibility.plugin.rest.project").setProjectCustomProperties(vraHost, projectId, properties);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="projectId" type="string" export-name="projectId"/>
+      <bind name="properties" type="Properties" export-name="properties"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="191.5" x="286.0"/>
+  </workflow-item>
+  <workflow-item name="item59" out-name="item65" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.catalog/createBlueprintContentSource">
+    <display-name><![CDATA[createBlueprintContentSource]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.catalog").createBlueprintContentSource(vraHost,name,projectId);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="contentSourceName"/>
+      <bind name="projectId" type="string" export-name="projectId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="newContentSourceId"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="331.5" x="100.0"/>
+  </workflow-item>
+  <workflow-item name="item63" out-name="item75" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/setProjectTagsFromProperties">
+    <display-name><![CDATA[setProjectTagsFromProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").setProjectTagsFromProperties(vraHost,projectId,tags);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="projectId" type="string" export-name="projectId"/>
+      <bind name="tags" type="Properties" export-name="projectTags"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="261.5" x="286.0"/>
+  </workflow-item>
+  <workflow-item name="item64" out-name="item63" type="task">
+    <display-name><![CDATA[Set tags properties]]></display-name>
+    <script encoded="false"><![CDATA[projectTags = new Properties({
+	"costCode": costCode,
+	"projectName": projectName
+});]]></script>
+    <in-binding>
+      <bind name="costCode" type="string" export-name="costCode"/>
+      <bind name="projectName" type="string" export-name="projectName"/>
+    </in-binding>
+    <out-binding>
+      <bind name="projectTags" type="Properties" export-name="projectTags"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="261.5" x="120.0"/>
+  </workflow-item>
+  <workflow-item name="item65" out-name="item66" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.catalog/getContentSourceIdsByProjectQS">
+    <display-name><![CDATA[getContentSourceIdsByProjectQS]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.catalog").getContentSourceIdsByProjectQS(vraHost,projectId);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="projectId" type="string" export-name="projectId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Array/string" export-name="contentSourcesIds"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="331.5" x="286.0"/>
+  </workflow-item>
+  <workflow-item name="item66" out-name="item67" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.catalog/createContentSourceEntitlements">
+    <display-name><![CDATA[createContentSourceEntitlements]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.catalog").createContentSourceEntitlements(vraHost,projectId,contentSourcesIds);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="projectId" type="string" export-name="projectId"/>
+      <bind name="contentSourcesIds" type="Array/string" export-name="contentSourcesIds"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Array/string" export-name="entitlementIds"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="331.5" x="520.0"/>
+  </workflow-item>
+  <workflow-item name="item67" out-name="item68" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.am/getOrganizationId">
+    <display-name><![CDATA[getOrganizationId]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.am").getOrganizationId(vraHost);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="organizationId"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="391.5" x="100.0"/>
+  </workflow-item>
+  <workflow-item name="item68" out-name="item0" type="task">
+    <display-name><![CDATA[Assign service roles]]></display-name>
+    <script encoded="false"><![CDATA[var url = "/csp/gateway/am/api/loggedin/user/orgs/" + organizationId + "/service-roles";
+var parameters = null;
+
+
+var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+
+var serviceRolesServiceIds = new Properties();
+
+for each (var serviceRole in object.serviceRoles) {
+    for each (var serviceRoleName in serviceRole.serviceRoleNames) {
+        serviceRolesServiceIds.put(serviceRoleName.split(":")[0], serviceRole.serviceDefinitionLink.substring(serviceRole.serviceDefinitionLink.lastIndexOf("/")+1));
+    }
+}
+
+
+System.log("Service roles : ");
+for each (var serviceRole in serviceRolesServiceIds.keys) {
+    System.log("\t" + serviceRole);
+}
+
+// Roles listed by vRA 8.2
+
+// automationservice:cloud_admin
+// automationservice:user
+// catalog:user
+// catalog:admin
+// orchestration:admin
+// orchestration:designer
+// migration:admin
+// CodeStream:developer
+// CodeStream:administrator
+
+var organizationRoleName = "org_member";
+var adminServiceRoleNames = ["automationservice:cloud_admin", "catalog:admin", "orchestration:admin"];
+var userServiceRoleNames = ["automationservice:user", "catalog:user"]
+setGroupOrganizationAndServicesRoles(vidmAdminGroupId, serviceRolesServiceIds, organizationRoleName, adminServiceRoleNames);
+setGroupOrganizationAndServicesRoles(vidmUserGroupId, serviceRolesServiceIds, organizationRoleName, userServiceRoleNames);
+
+
+
+function setGroupOrganizationAndServicesRoles(groupId, serviceRolesServiceIds, organizationRoleName, serviceRoleNames) {
+
+    var projectParams = {
+        "ids":[
+            groupId
+        ],
+        "organizationRoleNames":[
+            organizationRoleName
+        ],
+        "serviceRoles":[
+        ]
+    }
+
+    for each (var serviceRoleName in serviceRoleNames) {
+        var serviceRole = {
+            "serviceDefinitionId":serviceRolesServiceIds.get(serviceRoleName.split(":")[0]),
+            "serviceRoleNames":[
+                serviceRoleName
+            ]
+        }
+        projectParams.serviceRoles.push(serviceRole);
+    }
+    //var url = "/csp/gateway/am/api/orgs/" + organizationId + "/groups"
+    var url = "/csp/gateway/portal/api/orgs/" + organizationId + "/groups"
+    var json = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "POST", url, JSON.stringify(projectParams), null);
+}]]></script>
+    <in-binding>
+      <bind name="organizationId" type="string" export-name="organizationId"/>
+      <bind name="vidmAdminGroupId" type="string" export-name="vidmAdminGroupId"/>
+      <bind name="vidmUserGroupId" type="string" export-name="vidmUserGroupId"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding/>
+    <position y="391.5" x="520.0"/>
+  </workflow-item>
+  <workflow-item name="item69" out-name="item71" type="task">
+    <display-name><![CDATA[Synch Directory]]></display-name>
+    <script encoded="false"><![CDATA[// Unfortunately synching of VIDM coulnd not be included in this version]]></script>
+    <in-binding/>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="16.0" x="286.0"/>
+  </workflow-item>
+  <workflow-item name="item71" out-name="item72" type="custom-condition" alt-out-name="item56">
+    <display-name><![CDATA[Got specific zone ID]]></display-name>
+    <script encoded="false"><![CDATA[if (zoneId != null && zoneId != "") return true;
+return false;]]></script>
+    <in-binding>
+      <bind name="zoneId" type="string" export-name="zoneId"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="62.5" x="120.0"/>
+  </workflow-item>
+  <workflow-item name="item72" out-name="item52" type="task">
+    <display-name><![CDATA[Set project Zone assignment]]></display-name>
+    <script encoded="false"><![CDATA[zoneAssignmentConfigurationsProperties = new Array();
+
+var zoneAssignmentConfiguration = {
+    "storageLimitGB": 0,
+    "cpuLimit": 0,
+    "memoryLimitMB": 0,
+    "zoneId": zoneId,
+    "maxNumberInstances": 0,
+    "priority": 0
+}
+zoneAssignmentConfigurationsProperties.push(zoneAssignmentConfiguration);]]></script>
+    <in-binding>
+      <bind name="zoneId" type="string" export-name="zoneId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="zoneAssignmentConfigurationsProperties" type="Array/Properties" export-name="zoneAssignmentConfigurationsProperties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="72.5" x="286.0"/>
+  </workflow-item>
+  <workflow-item name="item73" out-name="item53" type="task">
+    <display-name><![CDATA[Set constraints]]></display-name>
+    <script encoded="false"><![CDATA[
+constraints = {
+	"network": [{
+		"mandatory": "true",
+		"expression": networkConstraint
+	}],
+	"storage": [],
+	"extensibility": []
+}]]></script>
+    <in-binding>
+      <bind name="networkConstraint" type="string" export-name="networkConstraint"/>
+    </in-binding>
+    <out-binding>
+      <bind name="constraints" type="Properties" export-name="constraints"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="130.0" x="543.0"/>
+  </workflow-item>
+  <workflow-item name="item75" out-name="item59" type="custom-condition" alt-out-name="item65">
+    <display-name><![CDATA[Create content source]]></display-name>
+    <script encoded="false"><![CDATA[if (contentSourceName != ""  && contentSourceName.length >0) return true;
+else return false;]]></script>
+    <in-binding>
+      <bind name="contentSourceName" type="string" export-name="contentSourceName"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="250.0" x="460.0"/>
+  </workflow-item>
+  <presentation>
+    <p-param name="networkConstraint">
+      <desc><![CDATA[networkConstraint]]></desc>
+    </p-param>
+    <p-param name="costCode">
+      <desc><![CDATA[costCode]]></desc>
+    </p-param>
+    <p-param name="adminAdGroup">
+      <desc><![CDATA[adminAdGroup]]></desc>
+    </p-param>
+    <p-param name="userAdGroup">
+      <desc><![CDATA[userAdGroup]]></desc>
+    </p-param>
+    <p-param name="projectName">
+      <desc><![CDATA[projectName]]></desc>
+    </p-param>
+    <p-param name="syncDirectory">
+      <desc><![CDATA[syncDirectory]]></desc>
+    </p-param>
+    <p-param name="contentSourceName">
+      <desc><![CDATA[contentSourceName]]></desc>
+    </p-param>
+    <p-param name="zoneId">
+      <desc><![CDATA[zoneId]]></desc>
+    </p-param>
+    <p-param name="vraHost">
+      <desc><![CDATA[vraHost]]></desc>
+    </p-param>
+  </presentation>
+</workflow>

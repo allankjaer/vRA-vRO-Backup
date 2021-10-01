@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getDeploymentResourcesIdsAndNames" result-type="Array/Properties" api-version="6.0.0" id="75bfab4e-12f5-475e-bdcf-f525254a272f" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null) return null;
+var url = "/deployment/api/deployments/" + deploymentId + "/resources";
+var parameters = "$orderby=name%20asc&$top=20"; // Need to double check as this is different from getDeploymentsIdsAndNames
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsIdAndNameAsArrayOfProperties(vraHost, url, parameters);
+]]></script>
+</dunes-script-module>

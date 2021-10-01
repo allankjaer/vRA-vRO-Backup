@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setDeploymentResourceCpuRam" result-type="string" api-version="6.0.0" id="f6730745-1026-4f98-8093-6dca373a7a83" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentId" t="string"><![CDATA[]]></param>
+  <param n="resourceId" t="string"><![CDATA[]]></param>
+  <param n="cpuCount" t="number"><![CDATA[]]></param>
+  <param n="totalMemoryMB" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || resourceId == null) return null;
+
+var operation = "POST";
+var url = "/deployment/api/deployments/" + deploymentId + "/resources/" + resourceId + "/requests";
+
+var object = {
+	"actionId": "Cloud.vSphere.Machine.Resize",
+	"targetId": resourceId,
+	"inputs": {
+		"cpuCount": cpuCount,
+		"totalMemoryMB": totalMemoryMB
+	}
+};
+
+var content = JSON.stringify(object);
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+	return contentAsString;
+} catch (e) {
+	throw ("Unable to POST object url : " + url + "\n" + e + "\nWith Content : " + content);
+}]]></script>
+</dunes-script-module>

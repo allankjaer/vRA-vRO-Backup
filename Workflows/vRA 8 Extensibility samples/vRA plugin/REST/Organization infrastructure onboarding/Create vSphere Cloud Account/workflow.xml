@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item4" object-name="workflow:name=generic" id="63e2a210-269b-48e1-95b6-505e50aaa094" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Create vSphere Cloud Account]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="80.0"/>
+  <input>
+    <param name="vraHost" type="VRA:Host"/>
+    <param name="name" type="string"/>
+    <param name="description" type="string"/>
+    <param name="hostname" type="string"/>
+    <param name="externalRegionIds" type="Array/string"/>
+    <param name="associatedCloudAccountIds" type="Array/string"/>
+    <param name="dcid" type="string"/>
+    <param name="acceptSelfSignedCertificate" type="boolean"/>
+    <param name="createDefaultZones" type="boolean"/>
+    <param name="tags" type="Properties"/>
+    <param name="cloudUsername" type="string"/>
+    <param name="cloudPassword" type="SecureString"/>
+  </input>
+  <output>
+    <param name="cloudAccountId" type="string"/>
+    <param name="regionIds" type="Array/string"/>
+  </output>
+  <attrib name="vSphereCloudAccountId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="660.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item0" type="task">
+    <display-name><![CDATA[createCloudAccount and set outputs]]></display-name>
+    <script encoded="false"><![CDATA[var cloudAccount = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getCloudAccountVsphere(vraHost,null, vSphereCloudAccountId);
+
+cloudAccountId = cloudAccount.id;
+
+var hrefs = cloudAccount["_links"]["regions"]["hrefs"];
+
+var regionIds = new Array();
+for each (var href in hrefs) {
+    System.log(href);
+    regionIds.push(href.substring(href.lastIndexOf("/")+1));
+}
+
+System.log("fimished");]]></script>
+    <in-binding>
+      <bind name="vSphereCloudAccountId" type="string" export-name="vSphereCloudAccountId"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="cloudAccountId" type="string" export-name="cloudAccountId"/>
+      <bind name="regionIds" type="Array/string" export-name="regionIds"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="380.0"/>
+  </workflow-item>
+  <workflow-item name="item4" out-name="item3" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/createCloudAccountVsphere">
+    <display-name><![CDATA[createCloudAccountVsphere]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").createCloudAccountVsphere(vraHost,name,description,hostname,cloudUsername,cloudPassword,regionIds,associatedCloudAccountIds,dcid,acceptSelfSignedCertificate,createDefaultZones,tags);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="description" type="string" export-name="description"/>
+      <bind name="hostname" type="string" export-name="hostname"/>
+      <bind name="cloudUsername" type="string" export-name="cloudUsername"/>
+      <bind name="cloudPassword" type="SecureString" export-name="cloudPassword"/>
+      <bind name="regionIds" type="Array/string" export-name="externalRegionIds"/>
+      <bind name="associatedCloudAccountIds" type="Array/string" export-name="associatedCloudAccountIds"/>
+      <bind name="dcid" type="string" export-name="dcid"/>
+      <bind name="acceptSelfSignedCertificate" type="boolean" export-name="acceptSelfSignedCertificate"/>
+      <bind name="createDefaultZones" type="boolean" export-name="createDefaultZones"/>
+      <bind name="tags" type="Properties" export-name="tags"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="vSphereCloudAccountId"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="180.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

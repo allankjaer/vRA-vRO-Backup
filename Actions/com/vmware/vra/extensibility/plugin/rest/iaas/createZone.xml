@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createZone" result-type="string" api-version="6.0.0" id="b15a76e3-dc0c-4153-8ba6-a7ff76efb542" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <param n="description" t="string"><![CDATA[]]></param>
+  <param n="regionId" t="string"><![CDATA[]]></param>
+  <param n="folder" t="string"><![CDATA[]]></param>
+  <param n="placementPolicy" t="string"><![CDATA[]]></param>
+  <param n="tagsToMatch" t="Properties"><![CDATA[]]></param>
+  <param n="tags" t="Properties"><![CDATA[]]></param>
+  <param n="customProperties" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || regionId == null || name == null) return null;
+
+var customPropertiesObject = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").propertiesToCustomPropertiesObject(customProperties);
+var tagsObject = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").propertiesToTagsObject(tags);
+var tagsToMatchObject = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").propertiesToTagsObject(tagsToMatch);
+
+
+var url = "/iaas/api/zones";
+var zone = {
+	"customProperties": customPropertiesObject,
+	"folder": folder,
+	"regionId": regionId,
+	"tagsToMatch": tagsToMatchObject,
+	"name": name,
+	"description": description,
+	"placementPolicy": placementPolicy,
+	"tags": tagsObject
+};
+
+var content = JSON.stringify(zone);
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+	return object.id;
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}]]></script>
+</dunes-script-module>

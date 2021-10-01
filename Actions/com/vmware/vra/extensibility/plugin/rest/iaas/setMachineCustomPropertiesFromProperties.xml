@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setMachineCustomPropertiesFromProperties" result-type="string" api-version="6.0.0" id="3b783d82-2b1f-41aa-b5cf-bd21c7750778" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="machineId" t="string"><![CDATA[]]></param>
+  <param n="customProperties" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || machineId == null) return null;
+
+var url = "/iaas/api/machines/" +  machineId;
+var object = new Object();
+
+var customPropertiesObject = {"customProperties" : customProperties};
+var content = JSON.stringify(customPropertiesObject);
+System.debug("Updated Custom properties : " + content);
+
+var operation = "PATCH";
+
+try {
+		var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+		var object = JSON.parse(contentAsString);
+	} catch (e) {
+		throw("Unable to Patch object url : " + url + "\n" + e + "\nWith Content : " + content);
+}
+return contentAsString;]]></script>
+</dunes-script-module>

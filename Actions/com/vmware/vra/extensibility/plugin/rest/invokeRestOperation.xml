@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="invokeRestOperation" result-type="string" api-version="6.0.0" id="62ae8260-e1fe-4d47-8aad-a0091862e04d" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="operation" t="string"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="content" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="Array/string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) throw "vraHost is null";
+if (operation == null) throw "operation is null";
+if (url == null) throw "url is null";
+
+if (parameters == null) parameters = new Array();
+
+
+//Replace URL parameters
+var stringsToReplace = url.match(new RegExp("\{(\s*?.*?)*?\}", "g"));
+
+if (stringsToReplace != null && stringsToReplace.length >0) {
+	if (stringsToReplace.length != parameters.length) {
+		System.warn("URL : " + url + " contains " + stringsToReplace.length + " strings to replace and params has " + parameters.length);
+		//return null;
+	}
+	for (var i=0; i<parameters.length; i++) {
+		System.log("Replacing " + stringsToReplace[i] + " with " + parameters[i]);
+		url = url.replace(stringsToReplace[i],parameters[i]);	
+	}	
+}
+
+if (content != null) {
+    try {
+        var contentObject = JSON.parse(content);
+        System.debug("Content : \n" + JSON.stringify(contentObject,null,2));
+    } catch(e) {System.debug("Content : \n" + content)}  
+}
+
+System.debug("******Rest Request***** ");
+System.debug(operation + " " + vraHost.vraHost + url);
+var restClient = vraHost.createRestClient();
+var request = restClient.createRequest(operation, url, content);
+var response = restClient.execute(request);
+
+System.debug("******Rest Response***** ");
+statusCode = response.statusCode;
+System.debug("Status code: " + statusCode);
+
+statusMessage = response.statusMessage;
+System.debug("Status Message: " + statusMessage);
+
+// Not the fastest but display nicely the JSON : better for learning and troubleshooting purposes.
+if (response.contentAsString != "") System.debug("Content as string: " + JSON.stringify(JSON.parse(response.contentAsString),null,2));
+
+
+if (statusCode != 200 && statusCode != 201 && statusCode != 202 && statusCode != 203 && statusCode != 204) 
+throw "HTTP " + statusCode + " - " + statusMessage + " : " + response.contentAsString;
+
+System.debug("****All Headers****");
+
+for each (var key in response.allHeaders.keys){
+	System.debug(key + " : " + response.allHeaders.get(key));
+}
+
+return response.contentAsString;
+]]></script>
+</dunes-script-module>

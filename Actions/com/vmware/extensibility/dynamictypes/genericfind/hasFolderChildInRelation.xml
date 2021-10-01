@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="hasFolderChildInRelation" result-type="boolean" api-version="6.0.0" id="bb10fb5a-deda-40d1-8ab8-490a0ce3f3e6" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.genericfind">
+  <param n="parentType" t="string"><![CDATA[]]></param>
+  <param n="parentId" t="string"><![CDATA[]]></param>
+  <param n="relationName" t="string"><![CDATA[]]></param>
+</dunes-script-module>

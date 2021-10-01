@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="timezone" result-type="Any" api-version="6.0.0" id="b3641a37-91d5-4687-afb9-75f3d60371f7" version="0.0.0" category-name="dk.atea.test">
+  <script encoded="false"><![CDATA[var d = new Date() ;
+var tzVal = Server.findForType("Enums:MSTimeZone", "110");
+
+System.log("Current date is: " + d.toString() + ' :::: ' + tzVal);
+ return tzVal;]]></script>
+</dunes-script-module>

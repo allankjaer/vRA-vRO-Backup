@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachineByExternalIdQS" result-type="Any" api-version="6.0.0" id="1231d3c7-3eda-43e2-92e3-d496c9fc4ba7" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="externalId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/iaas/api/machines";
+// Query service parameter
+var nameFilter = "externalId eq '" + externalId + "'";
+var parameters = "$filter=" + encodeURIComponent(nameFilter).replace("'", "%27");
+
+var machines = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost,url,parameters);
+if (machines.length == 1) return machines[0];
+if (machines.length == 0) return null;
+
+// More Machines returned than expected !
+System.warn("getMachineByExternalIdQS returned " +  machines.length + " machines");
+return null;]]></script>
+</dunes-script-module>

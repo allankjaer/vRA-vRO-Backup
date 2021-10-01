@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getDeploymentByNameQS" result-type="Any" api-version="6.0.0" id="f424ca56-75d8-448d-9c1c-d3e7654636ba" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentName == null) return null;
+
+var url = "/deployment/api/deployments";
+// Query service parameter
+var parameters = "search=" + encodeURIComponent(deploymentName);
+var deployments = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost, url, parameters);
+if (deployments.length == 1) return deployments[0];
+if (deployments.length == 0) return null;
+
+// More projects returned than expected !
+System.warn("getDeploymentIdByNameQS returned " + deployments.length + " deployments");
+return null;]]></script>
+</dunes-script-module>

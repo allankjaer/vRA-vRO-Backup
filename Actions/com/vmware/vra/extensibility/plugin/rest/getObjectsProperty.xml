@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getObjectsProperty" result-type="Array/Any" api-version="6.0.0" id="7b1b0acd-9d96-4ad9-a07c-c843620332a0" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <description><![CDATA[Return an an array (I.E if property is "name" return all objects names)]]></description>
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <param n="propertyName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var objects = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost, url, parameters);
+return objects.map(getProperty);
+
+function getProperty(property) {
+  return property[propertyName];
+}]]></script>
+</dunes-script-module>

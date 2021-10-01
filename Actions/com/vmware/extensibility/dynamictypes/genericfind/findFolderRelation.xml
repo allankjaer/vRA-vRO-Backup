@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="findFolderRelation" result-type="Array/DynamicTypes:DynamicObject" api-version="6.0.0" id="a516c38e-1836-445b-a9f9-63aa1e3a1313" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.genericfind">
+  <param n="parentType" t="string"><![CDATA[]]></param>
+  <param n="parentId" t="string"><![CDATA[]]></param>
+  <param n="relationName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log("Find Folder Relation for " + relationName);
+resultObjs = new Array();
+
+System.debug('FindFolderRelation inputs: relationName: ' + relationName + ', parentType: ' + parentType + ', parentId: ' + parentId)
+
+if (relationName == 'namespace-children'){
+    System.log('Creating Folder for parentId.');
+    var parent_attributes = parentId.split(".");
+    var objName = parent_attributes[1].replace('Folder','s')
+    var obj = DynamicTypesManager.makeObject(parent_attributes[0], parent_attributes[1], objName, objName, new Array());
+    resultObjs.push(obj);
+    return resultObjs;
+}else {
+    System.log('Creating Child objects.');
+    var parent_attributes = parentType.split(".");
+    var objectType = parent_attributes[0] + '.' + relationName.split("-").pop()
+    System.log('Generating All Objects for type: ' + objectType);
+    resultObjs = System.getModule("com.vmware.extensibility.dynamictypes.genericfind").findAllGeneric(objectType);
+	System.log(resultObjs)
+    return resultObjs;
+}]]></script>
+</dunes-script-module>

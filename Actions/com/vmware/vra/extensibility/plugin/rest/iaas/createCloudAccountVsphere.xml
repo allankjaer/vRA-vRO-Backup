@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createCloudAccountVsphere" result-type="string" api-version="6.0.0" id="d780f8cf-4108-47f1-9916-6b2469c1e58d" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <param n="description" t="string"><![CDATA[]]></param>
+  <param n="hostname" t="string"><![CDATA[]]></param>
+  <param n="cloudUsername" t="string"><![CDATA[]]></param>
+  <param n="cloudPassword" t="SecureString"><![CDATA[]]></param>
+  <param n="regionIds" t="Array/string"><![CDATA[]]></param>
+  <param n="associatedCloudAccountIds" t="Array/string"><![CDATA[]]></param>
+  <param n="dcid" t="string"><![CDATA[]]></param>
+  <param n="acceptSelfSignedCertificate" t="boolean"><![CDATA[]]></param>
+  <param n="createDefaultZones" t="boolean"><![CDATA[]]></param>
+  <param n="tags" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var tagsObject = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").propertiesToTagsObject(tags);
+
+var url = "/iaas/api/cloud-accounts-vsphere";
+var cloudAccount = {
+	"hostName": hostname,
+	"acceptSelfSignedCertificate": acceptSelfSignedCertificate,
+	"associatedCloudAccountIds": associatedCloudAccountIds,
+	"password": cloudPassword,
+	"createDefaultZones": createDefaultZones,
+	"dcid": dcid,
+	"name": name,
+	"description": description,
+	"regionIds": regionIds,
+	"username": cloudUsername,
+	"tags": tagsObject
+};
+
+var content = JSON.stringify(cloudAccount);
+System.debug(content);
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}
+var object = JSON.parse(contentAsString);
+return object.id;]]></script>
+</dunes-script-module>

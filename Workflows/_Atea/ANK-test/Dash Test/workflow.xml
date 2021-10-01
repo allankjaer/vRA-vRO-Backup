@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="9c737dee-d598-4fb3-927c-ee5c427236a3" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Dash Test</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n">{"externalRegionId":"Datacenter:datacenter-21","cloudAccountId":"00490c50-1cce-4c23-91a3-391f92ffa2f6","isolationType":"NONE","isolatedNetworkCIDRPrefix":0,"tags":[{"key":"quick_start_run","value":"1"}],"customProperties":{"edgeClusterRouterStateLink":"/resources/routers/46716aa0-d037-4345-86be-aa874b017b4b","tier0LogicalRouterStateLink":"/resources/routers/ad6549d4-c114-45f0-99bd-31a92ff63800"},"name":"Network Profile-1","description":"adc-vc.adc.lan / AteaDemoLab. Created by Quickstart wizard.","id":"7e33ee84-0315-4975-aec3-6d8764a37b50","updatedAt":"2020-10-09","organizationId":"1b7c22dc-0bac-40fe-a185-daacfc4564c6","orgId":"1b7c22dc-0bac-40fe-a185-daacfc4564c6","_links":{"fabric-networks":{"hrefs":["/iaas/api/fabric-networks/842f5fb3-00a7-410f-98d5-032928386b13","/iaas/api/fabric-networks/05af35dd-80c1-46cb-9adf-c9b57810dda8","/iaas/api/fabric-networks/be397179-04ec-4f24-bc59-a6fc7f264afe"]},"self":{"href":"/iaas/api/network-profiles/7e33ee84-0315-4975-aec3-6d8764a37b50"},"isolated-external-fabric-networks":{"href":"/iaas/api/fabric-networks/05af35dd-80c1-46cb-9adf-c9b57810dda8"},"region":{"href":"/iaas/api/regions/fd0c3c71-426d-4b08-ae6d-c20de5e162a0"}}}</value>
+    </attrib>
+    <attrib name="test" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var bodyObj =  JSON.parse(contentAsString);&#13;
+&#13;
+links = bodyObj._links;&#13;
+var linksProperties =  new Properties(links);&#13;
+&#13;
+var fabricNetworkLinks = linksProperties.get('fabric-networks');&#13;
+&#13;
+var fabricNetworkString = '';&#13;
+&#13;
+for each (fabricNetwork in fabricNetworkLinks.hrefs) {&#13;
+    //var fnString = new String(fabricNetwork);&#13;
+    System.log(fabricNetwork.replace("/iaas/api/fabric-networks/",""))&#13;
+    fabricNetworkString = fabricNetworkString + '"'+ fabricNetwork.replace("/iaas/api/fabric-networks/","") + '"' + ","&#13;
+}&#13;
+&#13;
+System.log('test FN string: ' + fabricNetworkString);&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </in-binding>
+        <out-binding>
+            <bind name="test" type="Properties" export-name="test"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+</ns2:workflow>

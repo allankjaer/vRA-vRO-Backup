@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getDeploymentResourceTagsAsPropertiesFromDeploymentIdAndResourceName" result-type="Properties" api-version="6.0.0" id="88c8b40e-a587-443f-86de-2d605374923b" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentId" t="string"><![CDATA[]]></param>
+  <param n="deploymentResourceName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || deploymentResourceName == null) return null;
+
+if (deploymentId != null) {
+	var deploymentResources = System.getModule("com.vmware.vra.extensibility.plugin.rest.deployment").getDeploymentResources(vraHost, deploymentId);
+	for each(var deploymentResource in deploymentResources) {
+		if (deploymentResource.name == deploymentResourceName) {
+			var tagsProperties = new Properties();
+			var tags = deploymentResource.properties.tags;
+
+			for each(var tag in tags) {
+				tagsProperties.put(tag.key, tag.value);
+			}
+			return tagsProperties;
+		}
+	}
+}
+return null;]]></script>
+</dunes-script-module>

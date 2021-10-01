@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getApprovalRequestsIdsAndNames" result-type="Array/Properties" api-version="6.0.0" id="b59cd72b-a36f-427c-baf1-d7b5057d3450" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.approval">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+var url = "/approval/api/approvals";
+var parameters = "sort=expiryAt,ASC&filterEntitledRequests=false&requestState=PENDING&approverState=PENDING";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsIdAndNameAsArrayOfProperties(vraHost, url, parameters, "id", "deploymentName");]]></script>
+</dunes-script-module>

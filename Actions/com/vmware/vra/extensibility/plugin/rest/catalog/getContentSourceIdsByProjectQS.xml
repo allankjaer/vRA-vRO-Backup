@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getContentSourceIdsByProjectQS" result-type="Array/string" api-version="6.0.0" id="756673d7-85f9-442a-8e86-81129da7f243" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.catalog">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[// Query service parameter
+var parameters = "projectId=" + projectId;
+
+var url = "/catalog/api/admin/sources";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsProperty(vraHost, url, parameters, "id");]]></script>
+</dunes-script-module>

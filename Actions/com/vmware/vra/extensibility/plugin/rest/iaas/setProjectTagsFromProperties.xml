@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setProjectTagsFromProperties" result-type="void" api-version="6.0.0" id="086ed78a-58e3-4f56-8852-a1746d6c7d8e" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <param n="tags" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || projectId == null) return null;
+
+var operation = "PATCH";
+var url = "/iaas/api/projects/" + projectId + "/resource-metadata";
+
+var object = {
+	"tags": []
+};
+for each(var key in tags.keys) {
+	var tag = {
+		"key": key,
+		"value": tags.get(key)
+	};
+	object.tags.push(tag);
+}
+
+var content = JSON.stringify(object);
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+} catch (e) {
+	throw ("Unable to Patch object url : " + url + "\n" + e + "\nWith Content : " + content);
+}]]></script>
+</dunes-script-module>

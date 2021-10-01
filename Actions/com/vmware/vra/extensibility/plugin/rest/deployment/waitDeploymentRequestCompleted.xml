@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="waitDeploymentRequestCompleted" result-type="void" api-version="6.0.0" id="24803fe0-b9fd-4801-b8b0-083e1533a595" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentId" t="string"><![CDATA[]]></param>
+  <param n="requestId" t="string"><![CDATA[]]></param>
+  <param n="sleepInterval" t="string"><![CDATA[Number of seconds between each poll]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || requestId == null) return null;
+
+var lastCompleted = -1;
+var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "GET", "/deployment/api/deployments/" + deploymentId + "/requests/" + requestId, null);
+request = JSON.parse(contentAsString);
+
+while (request.completedTasks < request.totalTasks) {
+	if (request.completedTasks > lastCompleted) System.log('"' + request.name + '"' + " is in status " + request.status + " (" + request.completedTasks + " completed tasks / " + request.totalTasks + ") - " + request.details);
+	lastCompleted = request.completedTasks;
+	System.sleep(sleepInterval * 1000);
+	contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, "GET", "/deployment/api/deployments/" + deploymentId + "/requests/" + requestId, null);
+	request = JSON.parse(contentAsString);
+	if (request.status == "FAILED") throw "Failed : " + request.details;
+	if (request.status == "ABORTED") throw "Cancelled";
+}
+if (request.completedTasks > lastCompleted) System.log('"' + request.name + '"' + " is in status " + request.status + " (" + request.completedTasks + " completed tasks / " + request.totalTasks + ") - " + request.details);]]></script>
+</dunes-script-module>

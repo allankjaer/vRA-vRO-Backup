@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getProjectTagsAsProperties" result-type="Properties" api-version="6.0.0" id="c07b2b2c-def6-4196-8087-f98c8150b357" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || projectId == null) return null;
+
+var url = "/iaas/api/projects/" + projectId + "/resource-metadata";
+var project = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url);
+
+var tagsProperties = new Properties();
+var tags = project.tags;
+
+for each (var tag in tags) {
+    tagsProperties.put(tag.key, tag.value);
+}
+return tagsProperties;]]></script>
+</dunes-script-module>

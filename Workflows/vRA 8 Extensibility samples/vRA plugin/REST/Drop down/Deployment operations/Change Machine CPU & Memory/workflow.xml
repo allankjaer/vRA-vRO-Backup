@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item8" object-name="workflow:name=generic" id="251aea8b-37c7-4308-9e6f-8aff5c3434c3" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Change Machine CPU & Memory]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="cpuCount" type="number"/>
+    <param name="totalMemoryMB" type="number"/>
+    <param name="vraHost" type="VRA:Host"/>
+    <param name="deploymentId" type="string"/>
+    <param name="resourceId" type="string"/>
+  </input>
+  <attrib name="contentAsString" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="requestId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="sleepInterval" type="string" read-only="false">
+    <value encoded="n"><![CDATA[1]]></value>
+    <description><![CDATA[Number of seconds between each poll]]></description>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="820.0"/>
+  </workflow-item>
+  <workflow-item name="item8" out-name="item9" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.deployment/setDeploymentResourceCpuRam">
+    <display-name><![CDATA[setDeploymentResourceCpuRam]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.deployment").setDeploymentResourceCpuRam(vraHost,deploymentId,resourceId,cpuCount,totalMemoryMB);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+      <bind name="resourceId" type="string" export-name="resourceId"/>
+      <bind name="cpuCount" type="number" export-name="cpuCount"/>
+      <bind name="totalMemoryMB" type="number" export-name="totalMemoryMB"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="contentAsString"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="220.0"/>
+  </workflow-item>
+  <workflow-item name="item9" out-name="item10" type="task">
+    <display-name><![CDATA[Get request Id]]></display-name>
+    <script encoded="false"><![CDATA[var request = JSON.parse(contentAsString);
+requestId = request.id;]]></script>
+    <in-binding>
+      <bind name="contentAsString" type="string" export-name="contentAsString"/>
+    </in-binding>
+    <out-binding>
+      <bind name="requestId" type="string" export-name="requestId"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="420.0"/>
+  </workflow-item>
+  <workflow-item name="item10" out-name="item0" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.deployment/waitDeploymentRequestCompleted">
+    <display-name><![CDATA[waitDeploymentRequestCompleted]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+System.getModule("com.vmware.vra.extensibility.plugin.rest.deployment").waitDeploymentRequestCompleted(vraHost,deploymentId,requestId,sleepInterval);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+      <bind name="requestId" type="string" export-name="requestId"/>
+      <bind name="sleepInterval" type="string" export-name="sleepInterval">
+        <description><![CDATA[Number of seconds between each poll]]></description>
+      </bind>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="600.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

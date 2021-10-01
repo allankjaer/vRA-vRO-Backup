@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getVmFolders" result-type="Array/string" api-version="6.0.0" id="fb4865da-9d2f-4da3-afb8-d5da8cfa292b" version="0.0.0" category-name="dk.atea.test">
+  <param n="datacenterName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var datacenters  = VcPlugin.getAllDatacenters();
+var vmFolders = new Array();
+
+function enumerate(folder) {  
+if (folder == null) return;  
+    var top = false;
+    var folderstr = "";
+    var folder2 = folder;
+    while (!top){
+        System.log('t2: ' + folder2.parent )
+        if (folder2.parent instanceof VcDatacenter) {
+            folderstr = folder2.name+"\\"+folderstr;
+            top = true;                 
+        } else {
+            folderstr = folder2.name+"\\"+folderstr;
+            folder2 = folder2.parent;
+        }
+    }
+    vmFolders.push(folderstr.slice(0, -1).slice(3, folderstr.length));  
+    var children = folder.childEntity;  
+    for each (var child in children) {  
+        if (child instanceof VcFolder) {  
+        enumerate(child);  
+        }  
+    }
+}  
+
+for each (dc in datacenters) {
+    if (dc.name == datacenterName) {
+        var topFolder = dc.vmFolder
+        enumerate(topFolder)        
+    }
+}
+return vmFolders;]]></script>
+</dunes-script-module>

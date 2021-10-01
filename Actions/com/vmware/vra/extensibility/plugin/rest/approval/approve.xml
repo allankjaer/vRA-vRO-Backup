@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="approve" result-type="void" api-version="6.0.0" id="2741aa83-3b93-4e49-bd41-f801ffc74e97" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.approval">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="approvalRequestId" t="string"><![CDATA[]]></param>
+  <param n="comment" t="string"><![CDATA[]]></param>
+  <param n="fullApproval" t="boolean"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || approvalRequestId == null) return null;
+
+var url = "/approval/api/approvals/action";
+var contentSource = {
+	"itemId": approvalRequestId,
+	"action": "APPROVE",
+	"comment": comment,
+	"fullApproval": fullApproval
+};
+
+var content = JSON.stringify(contentSource);
+var operation = "POST";
+
+try {
+	System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content, null);
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}]]></script>
+</dunes-script-module>

@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="deleteObject" result-type="boolean" api-version="6.0.0" id="1fe50449-ccdf-4007-ba15-b483bc00b2ea" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.persistanceLayer">
+  <param n="objectType" t="string"><![CDATA[]]></param>
+  <param n="objectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log('Deleting DynamicTypes ' + objectType + ' object with ID: ' + objectId + '.');
+
+//ensure object type supplied
+if(!objectType){
+  System.error("Required Field Object Type not supplied.");
+  throw new Error("Required Field Object Type not supplied.");
+}
+
+//ensure object id supplied
+if(!objectId){
+  System.error("Required Field Object ID not supplied.");
+  throw new Error("Required Field Object ID not supplied.");
+}
+
+//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+//create lock to prevent concurrent edits of source data 
+LockingSystem.lockAndWait("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+System.debug('Lock Aquired');
+
+try {
+    resourceName = objectType.replace('.','-')+'_datasource.json';
+
+    var resourceElements = Server.findAllForType( 'ResourceElement' , "c.name='"+resourceName+"'");
+    if (resourceElements[0]){
+        var sourcedata = JSON.parse(resourceElements[0].getContentAsMimeAttachment().content);
+        var resourceElement = resourceElements[0];
+    }else{
+        System.error('Unable to find dynamic types source data for '+ objectType);
+        throw new Error('Unable to find dynamic types source data for '+ objectType);
+    }
+
+    var itemDeleted = false;
+    for (var index in sourcedata){
+        element = sourcedata[index];
+        if (element.id == objectId){
+            sourcedata.splice(index, 1);
+            itemDeleted = true;
+            break;
+        }
+
+    }
+
+    if (itemDeleted == true){
+        var mime = new MimeAttachment(resourceName);
+        mime.content = JSON.stringify(sourcedata, null, 4);
+        mime.mimeType = "text/json";
+        resourceElement.setContentFromMimeAttachment(mime);
+        System.log('Deleted dynamic types object ' + objectType + ' with ID: ' + objectId)
+        return true;
+    }
+    else{
+        System.warn('Unable to delete dynamic types object ' + objectType + ' with ID: ' + objectId)
+        return false;
+    }
+}
+catch(err){
+  System.error('Error delete dynamic types object ' + objectType + ' with ID: ' + objectId + '. Error: ' + err);
+  throw new Error(err);
+}
+finally{
+    LockingSystem.unlock("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+    System.debug('Lock Released');
+}
+]]></script>
+</dunes-script-module>

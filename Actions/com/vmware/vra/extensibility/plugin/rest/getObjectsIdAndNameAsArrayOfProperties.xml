@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getObjectsIdAndNameAsArrayOfProperties" result-type="Array/Properties" api-version="6.0.0" id="9f255339-5ebd-4e5d-87db-cebd382324da" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <description><![CDATA[Return an array of properties with object id for key and the object name for value sorted by value. Used for Service Broker dropdowns]]></description>
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <param n="idProperty" t="string"><![CDATA[]]></param>
+  <param n="nameProperty" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || url == null) return new Properties();
+
+if (idProperty == null) idProperty = "id";
+if (nameProperty == null) nameProperty = "name";
+
+
+var objects = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost, url, parameters);
+
+var properties = new Properties();
+
+var arrayOfProperties = new Array();
+
+for each (var object in objects) {
+    var properties = new Properties();
+    if (object[idProperty] == undefined || object[nameProperty] == undefined) {
+        System.warn("Object without id or name property : " + JSON.stringify(object));
+        continue;
+    }        
+    properties.put("value", object[idProperty]);
+    properties.put("label", object[nameProperty]);
+    arrayOfProperties.push(properties);
+}
+
+arrayOfProperties.sort( compareProperties );
+return arrayOfProperties;
+
+function compareProperties( a, b ) {
+  if ( a.get("label").toLowerCase() < b.get("label").toLowerCase() ){
+    return -1;
+  }
+  if ( a.get("label").toLowerCase() > b.get("label").toLowerCase() ){
+    return 1;
+  }
+  return 0;
+}]]></script>
+</dunes-script-module>

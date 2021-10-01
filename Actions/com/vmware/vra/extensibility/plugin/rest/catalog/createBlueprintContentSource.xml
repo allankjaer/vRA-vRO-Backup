@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createBlueprintContentSource" result-type="string" api-version="6.0.0" id="1af6ba67-99f3-4634-9721-c744052fe73a" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.catalog">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || name == null || projectId == null) return null;
+
+var url = "/catalog/api/admin/sources";
+var contentSource = {
+	"config": {
+		"sourceProjectId": projectId
+	},
+	"typeId": "com.vmw.blueprint",
+	"name": name
+};
+
+var content = JSON.stringify(contentSource);
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content, null);
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}
+var object = JSON.parse(contentAsString);
+return object.id;]]></script>
+</dunes-script-module>

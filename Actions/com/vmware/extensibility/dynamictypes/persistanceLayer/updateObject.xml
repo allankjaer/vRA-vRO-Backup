@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="updateObject" result-type="boolean" api-version="6.0.0" id="ead3f151-5323-45be-801e-d9c1defe0a80" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.persistanceLayer">
+  <param n="objectType" t="string"><![CDATA[]]></param>
+  <param n="objectIn" t="Any"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log('Updating DynamicTypes ' + objectType + ' object.');
+
+//ensure object type supplied
+if(!objectType){
+  System.error("Required Field Object Type not supplied.");
+  throw new Error("Required Field Object Type not supplied.");
+}
+
+//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+//ensure object id supplied
+if (objectIn.hasOwnProperty('id')){
+    if (objectIn['id'] != null && objectIn['id'] != "" ){
+        System.log('Object id ' + objectIn['id'] + ' supplied for dynamic types object ' + objectType);
+    }else{
+        System.error("property id required values not set");
+        throw new Error("property id required values not set");
+    }
+}
+else{
+    System.error("property id required values not set");
+    throw new Error("property id required values not set");
+}
+
+LockingSystem.lockAndWait("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+System.debug('Lock Aquired');
+
+try {
+    resourceName = objectType.replace('.','-')+'_datasource.json';
+    
+    //load object data file 
+    var resourceElements = Server.findAllForType( 'ResourceElement' , "c.name='"+ resourceName + "'");
+    if (resourceElements[0]){
+        var sourcedata = JSON.parse(resourceElements[0].getContentAsMimeAttachment().content);
+        var resourceElement = resourceElements[0];
+    }else{
+	    System.error('Unable to find dynamic types source data for '+ objectType);
+        throw new Error('Unable to find dynamic types source data for '+ objectType);
+    }
+
+    //get list of properties for object type supplied
+    var dt_properties = DynamicTypesManager.getType(dt_attributes[0], dt_attributes[1]).properties;
+
+    //add name & id property to properties list
+    dt_properties.push('name');
+    dt_properties.push('id');
+    
+    var itemUpdated = false;
+    for (var index in sourcedata){
+        element = sourcedata[index];
+        if (element.id == objectIn.id){
+            for each (var property in dt_properties) {
+                 //check if property is safe to use, other unsafe properties can be added to list if required
+                if (['type'].indexOf(property) >= 0){
+					System.warn(property + ' property is a protected property. Property will be skipped. Use a different property name in your dynamic types configuration.');
+					continue;
+				}
+                if (objectIn.hasOwnProperty(property)){
+                    if (objectIn[property] != null && objectIn[property] != ""){
+                        element[property] = objectIn[property];
+                    }
+                    else{
+                        if (property == 'name'){
+							System.warn('name property cannot be blank. skipping update of name property');
+							continue;
+						}
+						else{
+                            System.warn('Property ' + property + ' has been supplied with a blank value. Updating ' + objectType + ' with ID ' + objectIn.id + ' with an empty string');
+                            element[property] = "";
+						}
+                    }
+                }
+                else{
+                    System.warn('Property ' + property + ' has not been supplied. Current value "' + element[property] + '" will be used.')
+                }
+            }
+                itemUpdated = true;
+                break;
+        }
+    }
+
+    if (itemUpdated == true){
+        var mime = new MimeAttachment(resourceName);
+        mime.content = JSON.stringify(sourcedata, null, 4);
+        mime.mimeType = "text/json";
+        resourceElement.setContentFromMimeAttachment(mime);
+        System.log('Updated dynamic types object ' + objectType + ' with ID: ' + objectIn.id)
+        return true;
+    }
+    else{
+        System.warn('Unable to update dynamic types object ' + objectType + ' with ID: ' + objectIn.id)
+        return false;
+    }
+}
+catch(err){
+  System.error('Error updating dynamic types object '+ objectType + ' : ' + err);
+  throw new Error(err);
+}
+finally{
+    LockingSystem.unlock("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+    System.debug('Lock Released');
+}
+
+]]></script>
+</dunes-script-module>

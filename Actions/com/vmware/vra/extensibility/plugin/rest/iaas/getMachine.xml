@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachine" result-type="Any" api-version="6.0.0" id="16c840fc-4178-4eb6-aa05-a84e2e87ee24" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="machineId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/iaas/api/machines/" + machineId;
+var parameters = null;
+var machine = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, parameters);
+return machine;]]></script>
+</dunes-script-module>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getGroups" result-type="Array/string" api-version="6.0.0" id="7ede235f-11ea-4942-a479-352b18bf6101" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.am">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="searchTerm" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || searchTerm == "") return null;
+var url = "/csp/gateway/am/api/groups/search";
+System.log(vraHost.name);
+var parameters = "searchTerm=" + encodeURIComponent(searchTerm);
+System.log(parameters);
+var groupNames = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsProperty(vraHost, url, parameters, "displayName");
+
+var groups = new Array();
+for each (var groupName in groupNames) {
+    groups.push(groupName.split("@")[0]);
+}
+
+return groups;]]></script>
+</dunes-script-module>

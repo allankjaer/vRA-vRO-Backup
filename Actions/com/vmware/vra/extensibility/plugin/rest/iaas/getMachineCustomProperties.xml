@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachineCustomProperties" result-type="Properties" api-version="6.0.0" id="9e812c3d-e2c8-4f98-a61e-3c585b4a6828" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="machineId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || machineId == null) return [];
+
+var machine = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getMachine(vraHost, machineId);
+
+var customProperties = new Properties();
+for (var key in machine.customProperties) {
+    customProperties.put(key, machine.customProperties[key]);
+}
+
+return customProperties;]]></script>
+</dunes-script-module>

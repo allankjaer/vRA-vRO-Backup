@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getVCenterVMByUUID" result-type="VC:VirtualMachine" api-version="6.0.0" id="2339b1ae-5bbf-4028-94cb-748b7c5bade9" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility">
+  <param n="vcUUID" t="string"><![CDATA[]]></param>
+  <param n="vmUUID" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var allVCenters = VcPlugin.allSdkConnections;
+for each (var vCenter in allVCenters) {
+    if (vCenter.instanceUuid == vcUUID) {
+        return vCenter.searchIndex.findByUuid(null, vmUUID, true, true);
+    }
+}
+return null;]]></script>
+</dunes-script-module>

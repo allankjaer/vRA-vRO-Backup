@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setDeploymentResourceDiskSize" result-type="string" api-version="6.0.0" id="9134d30c-5992-4c7d-b35c-569d6cf289ee" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="deploymentId" t="string"><![CDATA[]]></param>
+  <param n="resourceId" t="string"><![CDATA[]]></param>
+  <param n="capacityGb" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || resourceId == null) return null;
+
+var operation = "POST";
+var url = "/deployment/api/deployments/" + deploymentId + "/resources/" + resourceId + "/requests";
+
+var object = {
+	"actionId": "Cloud.vSphere.Machine.Compute.Disk.Resize",
+	"targetId": resourceId,
+	"inputs": {
+		"capacityGb": capacityGb
+	}
+};
+
+var content = JSON.stringify(object);
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+	return contentAsString;
+} catch (e) {
+	throw ("Unable to POST object url : " + url + "\n" + e + "\nWith Content : " + content);
+}]]></script>
+</dunes-script-module>

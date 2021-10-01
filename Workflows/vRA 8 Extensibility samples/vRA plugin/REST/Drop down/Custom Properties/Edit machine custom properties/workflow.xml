@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item6" object-name="workflow:name=generic" id="f208fb4c-21fd-4c2b-b567-709130e0fab9" version="0.0.2" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Edit machine custom properties]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="machineId" type="string"/>
+    <param name="customProperties" type="Properties"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <attrib name="contentAsString" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="existingCustomProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="newCustomProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="720.0"/>
+  </workflow-item>
+  <workflow-item name="item5" out-name="item0" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/setMachineCustomPropertiesFromProperties">
+    <display-name><![CDATA[setMachineCustomPropertiesFromProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").setMachineCustomPropertiesFromProperties(vraHost,machineId,customProperties);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="machineId" type="string" export-name="machineId"/>
+      <bind name="customProperties" type="Properties" export-name="newCustomProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="contentAsString"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="540.0"/>
+  </workflow-item>
+  <workflow-item name="item6" out-name="item7" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/getMachineCustomProperties">
+    <display-name><![CDATA[getMachineCustomProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getMachineCustomProperties(vraHost,machineId);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="machineId" type="string" export-name="machineId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Properties" export-name="existingCustomProperties"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="200.0"/>
+  </workflow-item>
+  <workflow-item name="item7" out-name="item5" type="task">
+    <display-name><![CDATA[Set new custom properties]]></display-name>
+    <script encoded="false"><![CDATA[// Since vRA 8.4 updating custom properties with existing properties is causing an error so we need to update only updated ones
+
+var newCustomProperties = new Properties();
+for each (var key in customProperties.keys) {
+    if (customProperties.get(key) !=  existingCustomProperties.get(key)) newCustomProperties.put(key, customProperties.get(key));
+}
+]]></script>
+    <in-binding>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+      <bind name="existingCustomProperties" type="Properties" export-name="existingCustomProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="newCustomProperties" type="Properties" export-name="newCustomProperties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="380.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

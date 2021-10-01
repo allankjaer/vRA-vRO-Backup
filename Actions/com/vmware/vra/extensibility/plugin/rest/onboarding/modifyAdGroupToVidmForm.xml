@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="modifyAdGroupToVidmForm" result-type="Any" api-version="6.0.0" id="bef229ec-20f3-4035-9e87-fd9ac1f0b745" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.onboarding">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="group" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var groupName = "";
+if (group.indexOf("@") != -1) {
+	groupName = group.substring(0, group.indexOf("@"));
+} else {
+	groupName = group;
+}
+
+// create request for getting group info in vra.
+var url = "/csp/gateway/am/api/groups/search";
+var parameters = "searchTerm=" + encodeURIComponent(groupName);
+var res = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, parameters);
+
+
+//Calculate the vidm name from the results.
+//Based on samaccountname this should be unique
+
+if (res.totalResults > 0) {
+	System.debug("Groups found:" + res.totalResults);
+
+	System.debug(res.results[0].displayName + "@" + res.results[0].domain);
+
+	vidmGroupAssociation = res.results[0].displayName + "@" + res.results[0].domain;
+	System.debug(vidmGroupAssociation);
+	vidmGroupId = res.results[0].id;
+	return {
+		"vidmGroupId": vidmGroupId,
+		"vidmGroupAssociation": vidmGroupAssociation
+	};
+
+
+} else {
+	throw ("No synced groups matched the specified user");
+}]]></script>
+</dunes-script-module>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="bee27b03-7013-4b22-850f-5deebbd0caab" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Get Tags with Filter]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="tagKey" type="string"/>
+  </input>
+  <output>
+    <param name="tagProperties" type="Properties"/>
+    <param name="tagArray" type="Array/string"/>
+  </output>
+  <attrib name="restHost" type="VRA:Host" read-only="false" conf-id="427e47a4-b7ab-4753-89b1-cf2d09bc11bb" conf-key="defaultHost"/>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="380.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item0" type="task">
+    <display-name><![CDATA[Get tags by Key]]></display-name>
+    <script encoded="false"><![CDATA[var url = "/iaas/api/tags"
+var parameters = encodeURI("$filter=key eq " + tagKey);
+var tags = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(restHost, url, parameters);
+
+// Setting tag array output
+tagArray = new Array();
+for each (var tag in tags) {
+    tagArray.push(tag.key + ":" + tag.value);
+}
+// Setting tag properties output
+tagProperties = new Properties()
+for each (var tag in tags) {
+    tagProperties.put(tag.key, tag.value);
+}]]></script>
+    <in-binding>
+      <bind name="tagKey" type="string" export-name="tagKey"/>
+      <bind name="restHost" type="VRA:Host" export-name="restHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="tagProperties" type="Properties" export-name="tagProperties"/>
+      <bind name="tagArray" type="Array/string" export-name="tagArray"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.5" x="200.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

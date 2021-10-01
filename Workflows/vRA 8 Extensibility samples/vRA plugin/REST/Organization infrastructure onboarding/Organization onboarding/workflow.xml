@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item9" object-name="workflow:name=generic" id="db56dd56-635e-4d1c-829b-bce03f82657c" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Organization onboarding]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="cloudUsername" type="string"/>
+    <param name="datacenter" type="VC:Datacenter"/>
+    <param name="networkConstraint" type="string"/>
+    <param name="costCode" type="string"/>
+    <param name="adminAdGroup" type="string"/>
+    <param name="userAdGroup" type="string"/>
+    <param name="projectName" type="string"/>
+    <param name="createCloudAccountAndZone" type="boolean"/>
+    <param name="cloudPassword" type="SecureString"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <attrib name="name" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="description" type="string" read-only="false">
+    <value encoded="n"><![CDATA[Created by vRO]]></value>
+  </attrib>
+  <attrib name="hostname" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="externalRegionIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="associatedCloudAccountIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="dcid" type="string" read-only="false">
+    <value encoded="n"><![CDATA[onprem]]></value>
+  </attrib>
+  <attrib name="acceptSelfSignedCertificate" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[true]]></value>
+  </attrib>
+  <attrib name="createDefaultZones" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[false]]></value>
+  </attrib>
+  <attrib name="tags" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="cloudAccountId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="regionId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="folder" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="placementPolicy" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="tagsToMatch" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="customProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="regionIds" type="Array/string" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="zoneId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="syncDirectory" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[false]]></value>
+  </attrib>
+  <attrib name="contentSourceName" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="1200.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item5" type="task">
+    <display-name><![CDATA[Set cloud Account vars]]></display-name>
+    <script encoded="false"><![CDATA[externalRegionIds = new Array();
+externalRegionIds.push("Datacenter:" + datacenter.id);
+
+name = datacenter.sdkConnection.id;
+hostname = datacenter.sdkConnection.id;]]></script>
+    <in-binding>
+      <bind name="datacenter" type="VC:Datacenter" export-name="datacenter"/>
+    </in-binding>
+    <out-binding>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="hostname" type="string" export-name="hostname"/>
+      <bind name="externalRegionIds" type="Array/string" export-name="externalRegionIds"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="110.0" x="260.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item7" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/createZone">
+    <display-name><![CDATA[createZone]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").createZone(vraHost,name,description,regionId,folder,placementPolicy,tagsToMatch,tags,customProperties);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="description" type="string" export-name="description"/>
+      <bind name="regionId" type="string" export-name="regionId"/>
+      <bind name="folder" type="string" export-name="folder"/>
+      <bind name="placementPolicy" type="string" export-name="placementPolicy"/>
+      <bind name="tagsToMatch" type="Properties" export-name="tagsToMatch"/>
+      <bind name="tags" type="Properties" export-name="tags"/>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="zoneId"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="110.0" x="680.0"/>
+  </workflow-item>
+  <workflow-item name="item4" out-name="item3" type="task">
+    <display-name><![CDATA[Set zone vars]]></display-name>
+    <script encoded="false"><![CDATA[name = name + "/" + datacenter.id;
+
+//externalRegionId in regions
+regionId = regionIds[0];
+
+
+
+]]></script>
+    <in-binding>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="datacenter" type="VC:Datacenter" export-name="datacenter"/>
+      <bind name="regionIds" type="Array/string" export-name="regionIds"/>
+    </in-binding>
+    <out-binding>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="regionId" type="string" export-name="regionId"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="110.0" x="540.0"/>
+  </workflow-item>
+  <workflow-item name="item5" out-name="item4" type="link" linked-workflow-id="63e2a210-269b-48e1-95b6-505e50aaa094">
+    <display-name><![CDATA[Create vSphere Cloud Account]]></display-name>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="description" type="string" export-name="description"/>
+      <bind name="hostname" type="string" export-name="hostname"/>
+      <bind name="externalRegionIds" type="Array/string" export-name="externalRegionIds"/>
+      <bind name="associatedCloudAccountIds" type="Array/string" export-name="associatedCloudAccountIds"/>
+      <bind name="dcid" type="string" export-name="dcid"/>
+      <bind name="acceptSelfSignedCertificate" type="boolean" export-name="acceptSelfSignedCertificate"/>
+      <bind name="createDefaultZones" type="boolean" export-name="createDefaultZones"/>
+      <bind name="tags" type="Properties" export-name="tags"/>
+      <bind name="cloudUsername" type="string" export-name="cloudUsername"/>
+      <bind name="cloudPassword" type="SecureString" export-name="cloudPassword"/>
+    </in-binding>
+    <out-binding>
+      <bind name="cloudAccountId" type="string" export-name="cloudAccountId"/>
+      <bind name="regionIds" type="Array/string" export-name="regionIds"/>
+    </out-binding>
+    <description><![CDATA[ ]]></description>
+    <position y="110.0" x="400.0"/>
+  </workflow-item>
+  <workflow-item name="item6" out-name="item0" type="link" linked-workflow-id="8f168f78-e6b5-4cf6-b645-d45255c0ed8f">
+    <display-name><![CDATA[Project Onboarding]]></display-name>
+    <in-binding>
+      <bind name="networkConstraint" type="string" export-name="networkConstraint"/>
+      <bind name="costCode" type="string" export-name="costCode"/>
+      <bind name="adminAdGroup" type="string" export-name="adminAdGroup"/>
+      <bind name="userAdGroup" type="string" export-name="userAdGroup"/>
+      <bind name="projectName" type="string" export-name="projectName"/>
+      <bind name="syncDirectory" type="boolean" export-name="syncDirectory"/>
+      <bind name="contentSourceName" type="string" export-name="contentSourceName"/>
+      <bind name="zoneId" type="string" export-name="zoneId"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[ ]]></description>
+    <position y="60.0" x="980.0"/>
+  </workflow-item>
+  <workflow-item name="item7" out-name="item6" type="task">
+    <display-name><![CDATA[Set content source name]]></display-name>
+    <script encoded="false"><![CDATA[contentSourceName = projectName + "Content";]]></script>
+    <in-binding>
+      <bind name="projectName" type="string" export-name="projectName"/>
+    </in-binding>
+    <out-binding>
+      <bind name="contentSourceName" type="string" export-name="contentSourceName"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="820.0"/>
+  </workflow-item>
+  <workflow-item name="item9" out-name="item2" type="custom-condition" alt-out-name="item7">
+    <display-name><![CDATA[Create cloud account & zone]]></display-name>
+    <script encoded="false"><![CDATA[return createCloudAccountAndZone;]]></script>
+    <in-binding>
+      <bind name="createCloudAccountAndZone" type="boolean" export-name="createCloudAccountAndZone"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="50.0" x="160.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

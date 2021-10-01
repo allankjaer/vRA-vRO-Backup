@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createProject" result-type="string" api-version="6.0.0" id="11333c1f-8437-4910-984b-e015b97943d8" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <param n="description" t="string"><![CDATA[]]></param>
+  <param n="machineNamingTemplate" t="string"><![CDATA[]]></param>
+  <param n="sharedResources" t="boolean"><![CDATA[]]></param>
+  <param n="operationTimeout" t="number"><![CDATA[]]></param>
+  <param n="viewersUsers" t="Array/string"><![CDATA[]]></param>
+  <param n="viewersGroups" t="Array/string"><![CDATA[]]></param>
+  <param n="membersUsers" t="Array/string"><![CDATA[]]></param>
+  <param n="membersGroups" t="Array/string"><![CDATA[]]></param>
+  <param n="administratorsUsers" t="Array/string"><![CDATA[]]></param>
+  <param n="administratorsGroups" t="Array/string"><![CDATA[]]></param>
+  <param n="properties" t="Properties"><![CDATA[]]></param>
+  <param n="constraints" t="Properties"><![CDATA[]]></param>
+  <param n="zoneAssignmentConfigurations" t="Array/Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || name == null) return null;
+
+var url = "/iaas/api/projects";
+
+var viewers = createUsersObject(viewersUsers, viewersGroups);
+var members = createUsersObject(membersUsers, membersGroups);
+var administrators = createUsersObject(administratorsUsers, administratorsGroups);
+
+if (description == null) description = "";
+
+var project = {
+	"administrators": administrators,
+	"members": members,
+	"viewers": viewers,
+	"zones": [],
+	"operationTimeout": operationTimeout,
+	"sharedResources": sharedResources,
+	"name": name,
+	"description": description,
+	"properties": properties, // This one is not applied in 8.2
+	"constraints": constraints,
+	"zoneAssignmentConfigurations": zoneAssignmentConfigurations
+};
+
+var content = JSON.stringify(project);
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+	return object.id;
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}
+
+function createUsersObject(users, groups) {
+	var usersObject = new Array();
+
+	for each(var user in users) {
+		usersObject.push({
+			"type": "user",
+			"email": user
+		});
+	}
+
+	for each(var group in groups) {
+		usersObject.push({
+			"type": "group",
+			"email": group
+		});
+	}
+	return usersObject;
+}]]></script>
+</dunes-script-module>

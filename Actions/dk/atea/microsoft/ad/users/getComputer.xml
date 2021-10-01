@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getComputer" result-type="AD:ComputerAD" api-version="6.0.0" id="1fbbbd6d-d26b-4dc4-90d4-8bf5b5df574c" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="computerName" t="string"/>
+  <script encoded="false"><![CDATA[var adHosts = AD_HostManager.findAllHosts();
+
+System.log('test: ' + adHosts[0]);
+return ActiveDirectory.getComputerAD(computerName,adHosts[0]);]]></script>
+</dunes-script-module>

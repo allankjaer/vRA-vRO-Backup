@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="da82c746-e395-4081-a4c7-30b4d9288e87" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Create Website Object]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="name" type="string"/>
+    <param name="host" type="string"/>
+    <param name="domain" type="string"/>
+    <param name="lease" type="string"/>
+    <param name="euro" type="string"/>
+  </input>
+  <output>
+    <param name="webSiteObj" type="DynamicTypes:Websites.Site"/>
+  </output>
+  <attrib name="newObj" type="Any" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="newObjectId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="objectType" type="string" read-only="false">
+    <value encoded="n"><![CDATA[Websites.Site]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="45.40909090909091" x="664.5"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="task">
+    <display-name><![CDATA[Create object]]></display-name>
+    <script encoded="false"><![CDATA[//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+var newObj = {};
+newObj.name = name;
+if (host){
+    newObj['host'] = host;
+}
+if(domain){
+    newObj['domain'] = domain;
+}
+if(lease){
+    newObj['lease'] = lease;
+}
+if(euro){
+    newObj['euro'] = euro;
+}
+]]></script>
+    <in-binding>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="objectType" type="string" export-name="objectType"/>
+      <bind name="host" type="string" export-name="host"/>
+      <bind name="domain" type="string" export-name="domain"/>
+      <bind name="lease" type="string" export-name="lease"/>
+      <bind name="euro" type="string" export-name="euro"/>
+    </in-binding>
+    <out-binding>
+      <bind name="newObj" type="Any" export-name="newObj"/>
+    </out-binding>
+    <position y="55.40909090909091" x="204.5"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item3" type="task" script-module="com.vmware.extensibility.dynamictypes.persistanceLayer/addObject">
+    <display-name><![CDATA[addObject]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.extensibility.dynamictypes.persistanceLayer").addObject(objectType,objectIn);
+]]></script>
+    <in-binding>
+      <bind name="objectType" type="string" export-name="objectType"/>
+      <bind name="objectIn" type="Any" export-name="newObj"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="newObjectId"/>
+    </out-binding>
+    <position y="55.40909090909091" x="344.5"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item0" type="task">
+    <display-name><![CDATA[Get DT object]]></display-name>
+    <script encoded="false"><![CDATA[//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+var webSiteObj =  DynamicTypesManager.getObject(dt_attributes[0], dt_attributes[1], newObjectId) ;
+
+System.log('New Object Name: ' + webSiteObj.name);
+System.log('New Object Id: ' + webSiteObj.id);]]></script>
+    <in-binding>
+      <bind name="newObjectId" type="string" export-name="newObjectId"/>
+      <bind name="objectType" type="string" export-name="objectType"/>
+    </in-binding>
+    <out-binding>
+      <bind name="webSiteObj" type="DynamicTypes:Websites.Site" export-name="webSiteObj"/>
+    </out-binding>
+    <position y="55.40909090909091" x="484.5"/>
+  </workflow-item>
+  <presentation>
+    <p-param name="name">
+      <desc><![CDATA[name]]></desc>
+    </p-param>
+  </presentation>
+</workflow>

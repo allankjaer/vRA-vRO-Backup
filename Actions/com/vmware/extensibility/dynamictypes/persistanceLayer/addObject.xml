@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="addObject" result-type="string" api-version="6.0.0" id="27747145-5d72-4e19-a514-0d32c4c25530" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.persistanceLayer">
+  <param n="objectType" t="string"><![CDATA[]]></param>
+  <param n="objectIn" t="Any"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log('Creating DynamicTypes  ' + objectType + ' object.');
+
+//ensure object type supplied
+if(!objectType){
+  System.error("Required Field Object Type not supplied.");
+  throw new Error("Required Field Object Type not supplied.");
+}
+
+//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+LockingSystem.lockAndWait("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+System.debug('Lock Aquired');
+
+try {
+    var id_out = null;
+    resourceName = objectType.replace('.','-')+'_datasource.json';
+    
+    //load object data file 
+    var resourceElements = Server.findAllForType( 'ResourceElement' , "c.name='"+ resourceName + "'");
+    if (resourceElements[0]){
+        var sourcedata = JSON.parse(resourceElements[0].getContentAsMimeAttachment().content);
+        var resourceElement = resourceElements[0];
+    }else{
+		sourcedata = [];
+		var resourceElement = null;
+    }
+
+    //get list of properties for object type supplied
+    var dt_properties = DynamicTypesManager.getType(dt_attributes[0], dt_attributes[1]).properties;
+
+    //add name & id property to properties list
+    dt_properties.push('name');
+    dt_properties.push('id');
+    
+    //ensure name supplied required for all dynamic types objects
+    if (objectIn.hasOwnProperty('name')){
+        if (objectIn['name'] != null && objectIn['name'] != "" ){
+            System.log('Object name ' + objectIn['name'] + ' supplied for dynamic types object ' + objectType);
+        }else{
+            System.error("property name required values not set");
+            throw new Error("property name required values not set");
+        }
+    }
+    else{
+        System.error("property name required values not set");
+        throw new Error("property name required values not set");
+    }
+
+    //ensure id supplied required for all dynamic types objects
+    //if not supplied generate one
+    if (objectIn.hasOwnProperty('id')){
+        if (objectIn['id'] != null && objectIn['id'] != "" ){
+            System.log('Object id ' + objectIn['id'] + ' supplied for dynamic types object ' + objectType);
+        }else{
+            System.warn("property id required values not set, UUID will be generated");
+            objectIn['id'] = System.nextUUID();
+        }
+    }
+    else{
+        System.warn("property id required values not set, UUID will be generated");
+        objectIn['id'] = System.nextUUID();
+    }
+
+    
+    newObj = {};
+    for each (var property in dt_properties) {
+        //check if property is safe to use, other unsafe properties can be added to list if required
+        if (['type'].indexOf(property) >= 0){
+			System.warn(property + ' property is a protected property. Property will be skipped. Use a different property name in your dynamic types configuration.');
+		    continue;
+		}
+        if (objectIn.hasOwnProperty(property)){
+            if (objectIn[property] != null && objectIn[property] != ""){
+                newObj[property] = objectIn[property];
+            }
+            else{
+                newObj[property] = "";
+            }
+        }
+        else{
+            newObj[property] = "";
+        }
+    }
+
+    sourcedata.push(newObj);
+
+    var mime = new MimeAttachment(resourceName);
+    mime.content = JSON.stringify(sourcedata, null, 4);
+    mime.mimeType = "text/json";
+
+    if (!resourceElement){
+        resourceElement = Server.createResourceElement('VMware/extensibility/dynamictypes/dataPersistance', resourceName, null, 'text/json');
+    }
+
+    //update datasource
+    resourceElement.setContentFromMimeAttachment(mime);
+    id_out = newObj.id;
+	System.log('Dynamic Types Object '+ objectType + ' instance created with id: ' + id_out);
+}
+catch(err){
+  System.error('Error creating dynamic types object '+ objectType + ': '+err);
+  throw Error(err);
+}
+finally{
+    LockingSystem.unlock("dynamictypes.crud.lock."+objectType,"crud-object_"+objectType);
+    System.debug('Lock Released');
+    return id_out;
+}
+
+]]></script>
+</dunes-script-module>

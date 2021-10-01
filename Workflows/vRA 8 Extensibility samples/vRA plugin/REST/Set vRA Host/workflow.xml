@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="a2c4982d-03aa-4ae1-ac1e-59dd2acbc701" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Set vRA Host]]></display-name>
+  <description><![CDATA[Create a host from the plug-in default host with using a shared session]]></description>
+  <position y="50.0" x="60.0"/>
+  <input>
+    <param name="password" type="SecureString">
+      <description><![CDATA[vRA Host Password]]></description>
+    </param>
+    <param name="user" type="string">
+      <description><![CDATA[vRA Host Username]]></description>
+    </param>
+  </input>
+  <attrib name="connectionType" type="string" read-only="false">
+    <value encoded="n"><![CDATA[vra-onprem]]></value>
+    <description><![CDATA[vRA Connection Type(vra-onprem)]]></description>
+  </attrib>
+  <attrib name="vraHost" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+    <description><![CDATA[vRA Host URL]]></description>
+  </attrib>
+  <attrib name="ignoreWarnings" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[true]]></value>
+    <description><![CDATA[Check to ignore SSL certification import warning]]></description>
+  </attrib>
+  <attrib name="sessionMode" type="string" read-only="false">
+    <value encoded="n"><![CDATA[Shared Session]]></value>
+    <description><![CDATA[vRA connection session mode.]]></description>
+  </attrib>
+  <attrib name="host" type="VRA:Host" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+    <description><![CDATA[vRA Host Connection object]]></description>
+  </attrib>
+  <attrib name="pluginConfiguration" type="ConfigurationElement" read-only="false">
+    <value encoded="n"><![CDATA[dunes://service.dunes.ch/ConfigurationElement?id='427e47a4-b7ab-4753-89b1-cf2d09bc11bb'&dunesName='ConfigurationElement']]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="580.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="e602d7e7-e9e6-4e5d-8459-69c9202a2fb1">
+    <display-name><![CDATA[Add vRA Host]]></display-name>
+    <in-binding>
+      <bind name="password" type="SecureString" export-name="password">
+        <description><![CDATA[vRA Host Password]]></description>
+      </bind>
+      <bind name="user" type="string" export-name="user">
+        <description><![CDATA[vRA Host Username]]></description>
+      </bind>
+      <bind name="connectionType" type="string" export-name="connectionType">
+        <description><![CDATA[vRA Connection Type(vra-onprem)]]></description>
+      </bind>
+      <bind name="name" type="string" export-name="vraHost">
+        <description><![CDATA[vRA Host Connection Name]]></description>
+      </bind>
+      <bind name="vraHost" type="string" export-name="vraHost">
+        <description><![CDATA[vRA Host URL]]></description>
+      </bind>
+      <bind name="ignoreWarnings" type="boolean" export-name="ignoreWarnings">
+        <description><![CDATA[Check to ignore SSL certification import warning]]></description>
+      </bind>
+      <bind name="sessionMode" type="string" export-name="sessionMode">
+        <description><![CDATA[vRA connection session mode.]]></description>
+      </bind>
+    </in-binding>
+    <out-binding>
+      <bind name="host" type="VRA:Host" export-name="host">
+        <description><![CDATA[vRA Host Connection object]]></description>
+      </bind>
+    </out-binding>
+    <description><![CDATA[ ]]></description>
+    <position y="60.0" x="260.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item0" type="task">
+    <display-name><![CDATA[Save config]]></display-name>
+    <script encoded="false"><![CDATA[pluginConfiguration.setAttributeWithKey("defaultHost", host);]]></script>
+    <in-binding>
+      <bind name="pluginConfiguration" type="ConfigurationElement" export-name="pluginConfiguration"/>
+      <bind name="host" type="VRA:Host" export-name="host"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="420.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item1" type="task">
+    <display-name><![CDATA[Get default vRA]]></display-name>
+    <script encoded="false"><![CDATA[var host = VraHostManager.createHostForCurrentUser();
+vraHost = host.vraHost;]]></script>
+    <in-binding/>
+    <out-binding>
+      <bind name="vraHost" type="string" export-name="vraHost"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="140.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

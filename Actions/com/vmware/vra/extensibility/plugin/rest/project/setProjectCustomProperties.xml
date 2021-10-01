@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setProjectCustomProperties" result-type="void" api-version="6.0.0" id="2dd9bf5f-6eaf-4d29-817c-3130bed1c167" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.project">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="projectId" t="string"><![CDATA[]]></param>
+  <param n="properties" t="Properties"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || projectId == null) return null;
+
+var operation = "PATCH";
+var url = "/project-service/api/projects/" + projectId; // /iaas/api/project does not support custom properties update in 8.3
+
+
+var projectUpdate = {
+	"properties": properties
+};
+var content = JSON.stringify(projectUpdate);
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	var object = JSON.parse(contentAsString);
+} catch (e) {
+	throw ("Unable to Patch object url : " + url + "\n" + e + "\nWith Content : " + content);
+}]]></script>
+</dunes-script-module>

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTopic" result-type="Any" api-version="6.0.0" id="30a43e1c-bfe7-4f91-8b19-9380b42b668c" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.eventBroker">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <param n="eventTopicId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || eventTopicId == null) return null;
+
+var url = "/event-broker/api/topics/" + eventTopicId;
+var contentObject = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, parameters);
+return contentObject;]]></script>
+</dunes-script-module>

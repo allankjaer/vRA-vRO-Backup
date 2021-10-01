@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="findRelation" result-type="Array/DynamicTypes:DynamicObject" api-version="6.0.0" id="ef1bdd94-9395-4a49-ae64-823aae1f10d3" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.genericfind">
+  <param n="parentType" t="string"><![CDATA[]]></param>
+  <param n="parentId" t="string"><![CDATA[]]></param>
+  <param n="relationName" t="string"><![CDATA[]]></param>
+</dunes-script-module>

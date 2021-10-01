@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="findAllFoldersGeneric" result-type="Array/DynamicTypes:DynamicObject" api-version="6.0.0" id="c231f5c8-7e3d-437f-98f5-53e947279700" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.extensibility.dynamictypes.genericfind">
+  <param n="objectType" t="string"><![CDATA[]]></param>
+</dunes-script-module>

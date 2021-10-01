@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getIaasObjectsProperty" result-type="Array/string" api-version="6.0.0" id="95ffb30b-d5ed-4792-95f7-67683b88fdf1" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <description><![CDATA[Get all IaaS objects using paging ]]></description>
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <param n="property" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || url == null || property == null) return null;
+var iaasObjects = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getIaasObjects(vraHost,url, parameters);
+
+var array = new Array();
+
+for each (var iaasObject in iaasObjects) {
+    array.push(iaasObject[property]);
+}
+return array;]]></script>
+</dunes-script-module>

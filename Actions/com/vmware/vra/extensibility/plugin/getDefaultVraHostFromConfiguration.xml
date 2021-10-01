@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getDefaultVraHostFromConfiguration" result-type="VRA:Host" api-version="6.0.0" id="dc942f76-6839-40bd-aac0-7c57b984e663" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin">
+  <script encoded="false"><![CDATA[var configuration = Server.findForType("ConfigurationElement", "427e47a4-b7ab-4753-89b1-cf2d09bc11bb");
+return configuration.getAttributeWithKey("defaultHost").value;]]></script>
+</dunes-script-module>

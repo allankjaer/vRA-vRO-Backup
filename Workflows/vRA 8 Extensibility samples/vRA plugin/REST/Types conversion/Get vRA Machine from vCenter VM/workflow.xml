@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="f28f1e74-ed62-49ea-ba8b-6039fab8cb01" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Get vRA Machine from vCenter VM]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="vCenterVm" type="VC:VirtualMachine"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <attrib name="externalId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="actionResult" type="Any" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vRAVM" type="Any" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="720.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="task">
+    <display-name><![CDATA[Get VM ID]]></display-name>
+    <script encoded="false"><![CDATA[externalId = vCenterVm.instanceId;]]></script>
+    <in-binding>
+      <bind name="vCenterVm" type="VC:VirtualMachine" export-name="vCenterVm"/>
+    </in-binding>
+    <out-binding>
+      <bind name="externalId" type="string" export-name="externalId"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="170.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item3" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/getMachineByExternalIdQS">
+    <display-name><![CDATA[getMachineByExternalIdQS]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getMachineByExternalIdQS(vraHost,externalId);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="externalId" type="string" export-name="externalId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Any" export-name="vRAVM"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="340.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item0" type="task">
+    <display-name><![CDATA[Display vRA VM info]]></display-name>
+    <script encoded="false"><![CDATA[System.log("Found vRA VM " + vRAVM.name + " with owner " + vRAVM.owner + " created at " + vRAVM.createdAt);
+]]></script>
+    <in-binding>
+      <bind name="vRAVM" type="Any" export-name="vRAVM"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="520.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

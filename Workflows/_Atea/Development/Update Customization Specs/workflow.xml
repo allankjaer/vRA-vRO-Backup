@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="34956f2a-ad3a-4438-9e96-f842f6697fcc" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Update Customization Specs</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="password" type="SecureString"/>
+    </input>
+    <output>
+        <param name="exists" type="boolean"/>
+    </output>
+    <attrib name="vCenter" type="VC:SdkConnection">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan'&amp;dunesName='VC:SdkConnection'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="460.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var cms = vCenter.customizationSpecManager;&#13;
+var customSpecItem = cms.getCustomizationSpec('ANK-TEST-PASSWORD');&#13;
+&#13;
+customSpecItem.spec.identity.guiUnattended.password = new VcCustomizationPassword();&#13;
+customSpecItem.spec.identity.guiUnattended.password.plainText = true;&#13;
+customSpecItem.spec.identity.guiUnattended.password.value = password;&#13;
+&#13;
+cms.overwriteCustomizationSpec(customSpecItem);</script>
+        <in-binding>
+            <bind name="vCenter" type="VC:SdkConnection" export-name="vCenter"/>
+            <bind name="password" type="SecureString" export-name="password"/>
+        </in-binding>
+        <out-binding>
+            <bind name="exists" type="boolean" export-name="exists"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="180.0"/>
+    </workflow-item>
+</ns2:workflow>

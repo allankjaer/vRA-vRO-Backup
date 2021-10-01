@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item4" object-name="workflow:name=generic" id="fc3f8fac-5f4c-4b47-9d71-bee56b9d0336" version="0.0.2" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Invoke VRA 8 REST Operation from swagger and display result]]></display-name>
+  <description><![CDATA[Extensibility sample
+Designed to be started by vRO. Not compatible for running from vRA Service Broker]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="vraHost" type="VRA:Host"/>
+    <param name="operation" type="string"/>
+    <param name="url" type="string"/>
+    <param name="content" type="string"/>
+    <param name="service" type="string"/>
+    <param name="parameters" type="Array/string"/>
+  </input>
+  <attrib name="serviceSwaggerProp" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{9:63:Blueprint=string#/blueprint/api/swagger/swagger-api-docs?group=2019-09-12
+9:65:Approvals=string#/approval/api/swagger/swagger/v2/api-docs?group=2020-11-01
+19:41:Migration Assistant=string#/migration/api/swagger/v2/api-docs
+8:31:Branding=string#/userprofile/v2/api-docs
+7:67:Catalog=string#/deployment/api/swagger/swagger/v2/api-docs?group=2020-08-25
+3:23:CMX=string#/cmx/v2/api-docs
+7:56:Project=string#/project/api/swagger/v2/api-docs?group=2019-01-15
+11:57:Code Stream=string#/pipeline/api/swagger/v2/api-docs?group=2019-10-17
+3:27:ABX=string#/abx/api/v2/api-docs
+12:36:Custom Forms=string#/form-service/doc/v3/api-docs
+15:56:Content Gateway=string#/content/api/swagger/v2/api-docs?group=2019-01-15
+8:32:Identity=string#/identity/doc/v3/api-docs
+10:46:Relocation=string#/relocation/api/swagger/ui/swagger.json
+27:25:Infrastructure as a Service=string#/iaas/api/swagger/
+}]]></value>
+  </attrib>
+  <attrib name="contentAsString" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="500.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item0" type="task" script-module="com.vmware.vra.extensibility.plugin.rest/invokeRestOperation">
+    <display-name><![CDATA[invokeRestOperation]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost,operation,url,content,parameters);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="operation" type="string" export-name="operation"/>
+      <bind name="url" type="string" export-name="url"/>
+      <bind name="content" type="string" export-name="content"/>
+      <bind name="parameters" type="Array/string" export-name="parameters"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="contentAsString"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="340.0"/>
+  </workflow-item>
+  <workflow-item name="item4" out-name="item3" type="task">
+    <display-name><![CDATA[void warnings]]></display-name>
+    <script encoded="false"><![CDATA[// Just to remove the inputs not used warnings as they are indeed used in the input presentatin]]></script>
+    <in-binding>
+      <bind name="service" type="string" export-name="service"/>
+      <bind name="serviceSwaggerProp" type="Properties" export-name="serviceSwaggerProp"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="170.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

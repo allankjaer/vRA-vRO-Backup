@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="119bbc30-3ea7-41d9-8d94-103bf5b78dd6" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Move Computer to OU</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="computerName" type="string"/>
+        <param name="dn" type="string"/>
+    </input>
+    <output/>
+    <attrib name="computer" type="AD:ComputerAD">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="ouObject" type="AD:OrganizationalUnit">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="adHost" type="AD:AdHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='%23_v2_%23%2C%23RootItem%23%2C%23caadcbcf-ec74-4246-a152-b7ab35b8ee6c%23'&amp;dunesName='AD:AdHost'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="600.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Get Computer from AD</display-name>
+        <script encoded="false">var adHosts = AD_HostManager.findAllHosts();&#13;
+&#13;
+//System.log('test: ' + adHosts[0]);&#13;
+computer = ActiveDirectory.getComputerAD(computerName,adHosts[0]);</script>
+        <in-binding>
+            <bind name="computerName" type="string" export-name="computerName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="computer" type="AD:ComputerAD" export-name="computer"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="task" comparator="0">
+        <display-name>Get OU Object</display-name>
+        <script encoded="false">var adHosts = AD_HostManager.findAllHosts();&#13;
+&#13;
+var t1 = ouName.substring(ouName.indexOf('OU=')+3,ouName.length);&#13;
+var searchOu = t1.substring(0,t1.indexOf(','));&#13;
+//System.log('test :' + t1 +' ::::: ' + searchOu + ' :::: ' + adHosts[0]);&#13;
+var ous = ActiveDirectory.search("OrganizationalUnit", searchOu, adHosts[0])&#13;
+for each (ou in ous) {&#13;
+    //System.log('test2: ' +ou.distinguishedName.toLowerCase() + ' :::: '+ ouName.toLowerCase());&#13;
+    var dn = ou.distinguishedName.toLowerCase();&#13;
+    if (dn.indexOf(ouName.toLowerCase()) !== -1) {&#13;
+        ouObject = ou;&#13;
+        break;&#13;
+    }&#13;
+}</script>
+        <in-binding>
+            <bind name="ouName" type="string" export-name="dn"/>
+        </in-binding>
+        <out-binding>
+            <bind name="ouObject" type="AD:OrganizationalUnit" export-name="ouObject"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item0" type="task" comparator="0">
+        <display-name>Move Computer to OU</display-name>
+        <script encoded="false">var result =ActiveDirectory.rename(computer.distinguishedName,"CN="+computerName,dn);</script>
+        <in-binding>
+            <bind name="computer" type="AD:ComputerAD" export-name="computer"/>
+            <bind name="computerName" type="string" export-name="computerName"/>
+            <bind name="dn" type="string" export-name="dn"/>
+        </in-binding>
+        <out-binding>
+            <bind name="ouObject" type="AD:OrganizationalUnit" export-name="ouObject"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="440.0"/>
+    </workflow-item>
+</ns2:workflow>

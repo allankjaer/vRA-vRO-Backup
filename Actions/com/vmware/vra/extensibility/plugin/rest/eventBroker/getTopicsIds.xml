@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTopicsIds" result-type="Array/string" api-version="6.0.0" id="1594d3f8-aedb-4f5c-a5f3-707c0ae2d987" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.eventBroker">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+// Default page size is 20
+var parameters = encodeURI("$orderby=name asc");
+var url = "/event-broker/api/topics";
+var property = "id";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsProperty(vraHost, url, parameters, property);]]></script>
+</dunes-script-module>

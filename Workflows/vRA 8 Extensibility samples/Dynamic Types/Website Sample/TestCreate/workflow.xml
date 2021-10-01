@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="c1030765-bbfc-4e1f-9e06-325d4196e2bf" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="1.6" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[TestCreate]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="name" type="string"/>
+    <param name="objectType" type="string"/>
+    <param name="property1Key" type="string"/>
+    <param name="property1Value" type="string"/>
+    <param name="property2Key" type="string"/>
+    <param name="property2Value" type="string"/>
+  </input>
+  <attrib name="newObj" type="Any" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="newObjectId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="45.40909090909091" x="664.5"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="task">
+    <display-name><![CDATA[Create object]]></display-name>
+    <script encoded="false"><![CDATA[//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+//check supplied type exists
+if (!DynamicTypesManager.getType(dt_attributes[0] , dt_attributes[1])){
+  System.error(objectType + " is not a valid dynamic types oject type");
+  throw new Error(objectType + " is not a valid dynamic types oject type");
+}
+
+var newObj = {};
+newObj.name = name;
+if (property1Key){
+    newObj[property1Key] = property1Value;
+}
+if(property2Key){
+    newObj[property2Key] = property2Value;
+}
+]]></script>
+    <in-binding>
+      <bind name="name" type="string" export-name="name"/>
+      <bind name="objectType" type="string" export-name="objectType"/>
+      <bind name="property1Key" type="string" export-name="property1Key"/>
+      <bind name="property1Value" type="string" export-name="property1Value"/>
+      <bind name="property2Key" type="string" export-name="property2Key"/>
+      <bind name="property2Value" type="string" export-name="property2Value"/>
+    </in-binding>
+    <out-binding>
+      <bind name="newObj" type="Any" export-name="newObj"/>
+    </out-binding>
+    <position y="55.40909090909091" x="204.5"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item3" type="task" script-module="com.vmware.extensibility.dynamictypes.persistanceLayer/addObject">
+    <display-name><![CDATA[addObject]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.extensibility.dynamictypes.persistanceLayer").addObject(objectType,objectIn);
+]]></script>
+    <in-binding>
+      <bind name="objectType" type="string" export-name="objectType"/>
+      <bind name="objectIn" type="Any" export-name="newObj"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="newObjectId"/>
+    </out-binding>
+    <position y="55.40909090909091" x="344.5"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item0" type="task">
+    <display-name><![CDATA[Get DT object]]></display-name>
+    <script encoded="false"><![CDATA[//split supplied type into namespace and type name
+var dt_attributes = objectType.split(".");
+
+var dtObject =  DynamicTypesManager.getObject(dt_attributes[0], dt_attributes[1], newObjectId) ;
+
+System.log('New Object Name: ' + dtObject.name);
+System.log('New Object Id: ' + dtObject.id);]]></script>
+    <in-binding>
+      <bind name="newObjectId" type="string" export-name="newObjectId"/>
+      <bind name="objectType" type="string" export-name="objectType"/>
+    </in-binding>
+    <out-binding/>
+    <position y="55.40909090909091" x="484.5"/>
+  </workflow-item>
+  <presentation>
+    <p-param name="name">
+      <desc><![CDATA[name]]></desc>
+    </p-param>
+    <p-param name="objectType">
+      <desc><![CDATA[objectType]]></desc>
+    </p-param>
+    <p-param name="property1Key">
+      <desc><![CDATA[property1Key]]></desc>
+    </p-param>
+    <p-param name="property1Value">
+      <desc><![CDATA[property1Value]]></desc>
+    </p-param>
+    <p-param name="property2Key">
+      <desc><![CDATA[property2Key]]></desc>
+    </p-param>
+    <p-param name="property2Value">
+      <desc><![CDATA[property2Value]]></desc>
+    </p-param>
+  </presentation>
+</workflow>

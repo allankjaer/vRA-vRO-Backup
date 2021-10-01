@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getNetworksNamesByTagsQS" result-type="Array/string" api-version="6.0.0" id="a20f2088-f125-4643-920b-9a46c43dc190" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="tags" t="Array/string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+var tagsFilters = new Array();
+for each(var tag in tags) {
+	tagsFilters.push(getTagFilter(tag));
+}
+
+// Query service parameter
+var tagsFilter = tagsFilters.join(" and ");
+if (tags.length == 0) var parameters = "expand";
+else var parameters = "expand&$filter=" + encodeURIComponent(tagsFilter).replace("'", "%27");
+
+var url = "/iaas/api/fabric-networks";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsProperty(vraHost, url, parameters, "name");
+
+function getTagFilter(tag) {
+	tag = tag.replace(":", "*");
+	return "(expandedTags.item.tag eq '*" + tag + "*'))";
+}]]></script>
+</dunes-script-module>

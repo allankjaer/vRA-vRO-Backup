@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getOU" result-type="AD:OrganizationalUnit" api-version="6.0.0" id="e2cb1c3b-dd18-493a-a659-48341028ff81" version="0.0.0" category-name="dk.atea.microsoft.ad.users">
+  <param n="ouName" t="string"/>
+  <script encoded="false"><![CDATA[var adHosts = AD_HostManager.findAllHosts();
+
+var t1 = ouName.substring(ouName.indexOf('OU=')+3,ouName.length);
+var searchOu = t1.substring(0,t1.indexOf(','));
+System.log('test :' + t1 +' ::::: ' + searchOu + ' :::: ' + adHosts[0]);
+var ous = ActiveDirectory.search("OrganizationalUnit", searchOu, adHosts[0])
+for each (ou in ous) {
+    System.log('test2: ' +ou.distinguishedName.toLowerCase() + ' :::: '+ ouName.toLowerCase());
+    var dn = ou.distinguishedName.toLowerCase();
+    if (dn.indexOf(ouName.toLowerCase()) !== -1) {
+        return ou;
+    }
+}]]></script>
+</dunes-script-module>

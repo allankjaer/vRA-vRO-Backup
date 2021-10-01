@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="dbeb7212-5c7e-4b6f-95d3-ae16566f4f40" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[vSphere Machine operation template]]></display-name>
+  <description><![CDATA[- Extract payload and get objects from ID
+- Tag deployment resource asynchronously to avoid conflicting with this day 2 workflow (tag will be set on the vRA machine)
+- Set vRA machine custom property
+- Get matching VC:VirtualMachine
+]]></description>
+  <position y="50.0" x="100.0"/>
+  <attrib name="vraHost" type="VRA:Host" read-only="false" conf-id="427e47a4-b7ab-4753-89b1-cf2d09bc11bb" conf-key="defaultHost"/>
+  <attrib name="customProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="resourceId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vCenterUuid" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vmUuid" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vCenterVM" type="VC:VirtualMachine" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="setmachineCustomPropertiesResult" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="newCustomProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="deploymentId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="resourceName" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="tagsProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="newTagsProperties" type="Properties" read-only="false">
+    <value encoded="n"><![CDATA[{}]]></value>
+  </attrib>
+  <attrib name="requestId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="asyncToken" type="WorkflowToken" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-note x="490.0" y="77.0" w="197.0" h="97.0" color="FFFFC0">
+    <description><![CDATA[Applying tag on the deployment requires an async operation as this workflow already runs one]]></description>
+  </workflow-note>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="230.0" x="520.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item6" type="task">
+    <display-name><![CDATA[Get payload]]></display-name>
+    <script encoded="false"><![CDATA[// The execution context is where the vRA extensibility metadatas are passed
+var executionContext = System.getContext();
+
+// Getting specific execution context parameters
+var userName = executionContext.getParameter("__metadata_userName");
+System.log("username : " + userName);
+
+var resourceProperties = executionContext.getParameter("__metadata_resourceProperties");
+var projectId = executionContext.getParameter("__metadata_projectId");
+requestId = executionContext.getParameter("__metadata_requestId");
+deploymentId = executionContext.getParameter("__metadata_deploymentId");
+var orgId = executionContext.getParameter("__metadata_orgId");
+
+
+// Getting resourceId : The id of the VM in case of vSphere Machine
+resourceId = resourceProperties["resourceId"];
+
+// Getting vCenterUuid and vmUuid to convert to vCenter VM
+vCenterUuid = resourceProperties["vcUuid"];
+vmUuid = resourceProperties["instanceUUID"];
+
+// Getting resourceName : Required to set tags
+resourceName = resourceProperties["name"];
+
+
+var tags = resourceProperties["tags"];
+var tagsProperties = new Properties();
+
+for each(var tag in tags) {
+    tagsProperties.put(tag.key, tag.value);
+}
+
+/*
+//Displaying Resource properties
+var resourcePropertiesAsString = "Resource properties : \n";
+
+for each (var key in resourceProperties.keys) {
+    //System.log(key + " : " + resourceProperties.get("key"));
+    var value = resourceProperties[key];
+    if (value != null) {
+        var objectType = System.getObjectType(value);
+    
+        if (objectType == "Properties" || objectType == "Array") resourcePropertiesAsString += "\t" + key + " : " + JSON.stringify(value) + "\n";
+        else resourcePropertiesAsString += "\t" + key + " : " + value + "\n";
+    }
+}
+
+System.log(resourcePropertiesAsString);
+
+// Project
+var projectObject = getObjectFromUrl("/iaas/api/projects/" + projectId);
+if (projectObject != null) {
+    //System.debug("Project\n" + getJson(projectObject));        
+    System.log("Project ID : " + projectObject.id);
+    System.log("Project Name : " + projectObject.name);
+    System.log("Project description : " + projectObject.description);
+    System.log("Project machineNamingTemplate : " + projectObject.machineNamingTemplate);
+    System.log("Project sharedResources : " + projectObject.sharedResources);
+}
+
+// Deployment
+var deploymentObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId);
+if (deploymentObject != null) {
+    //System.debug("Deployment\n" + getJson(deploymentObject));
+    System.log("Deployment ID : " + deploymentObject.id);
+    System.log("Deployment name : " + deploymentObject.name);
+    System.log("Deployment description : " + deploymentObject.description);
+    System.log("Deployment status : " + deploymentObject.status);
+    System.log("Deployment inputs\n" + getJson(deploymentObject.inputs));
+}
+// Deployment events
+var deploymentEventsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/events");
+if (deploymentEventsObject != null) {
+    //System.debug("Deployment Events\n" + getJson(deploymentEventsObject));
+    System.log("Deployment events : ");
+    for each (var deploymentEventObject in deploymentEventsObject.content) {
+        System.log("");
+        System.log("\tDeployment event ID : " + deploymentEventObject.id);
+        System.log("\tDeployment event name : " + deploymentEventObject.name);
+        System.log("\tDeployment event details : " + deploymentEventObject.details);
+        System.log("\tDeployment event status : " + deploymentEventObject.status);
+        System.log("\tDeployment event requestedBy : " + deploymentEventObject.requestedBy);
+        System.log("\tDeployment event requester : " + deploymentEventObject.requester);
+        System.log("\tDeployment event totalTasks : " + deploymentEventObject.totalTasks);
+    }
+}
+
+// Deployment actions
+var deploymentActionsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/actions");
+if (deploymentActionsObject != null) {
+    //System.debug("Deployment actions\n" + getJson(deploymentActionsObject));
+    System.log("Deployment actions :");
+    for each (var deploymentActionObject in deploymentActionsObject) {
+        System.log("\t" + deploymentActionObject.name);
+    }
+}
+
+// Deployment Request
+if (requestId != null) {
+    var requestObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/requests/" + requestId);
+    if (requestObject != null) {
+        //System.debug("Deployment request\n" + getJson(requestObject));
+        System.log("Request ID : " + requestObject.id);
+        System.log("Request name : " + requestObject.name);
+        System.log("Request Completed tasks : " + requestObject.completedTasks);
+        System.log("Request total tasks : " + requestObject.totalTasks);
+        System.log("Request status : " + requestObject.status);
+    }
+
+    // Deployment request events
+    var requestEventsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/requests/" + requestId + "/events");
+    if (requestEventsObject != null) {
+        //System.debug("Deployment request events\n" + getJson(requestEventsObject));
+        System.log("Deployment request events : ");
+        for each (var reqEvent in requestEventsObject.content) {
+            System.log("");
+            System.log("\tDeployment request event name " + reqEvent.name);
+            System.log("\tDeployment request event details " + reqEvent.details);
+            System.log("\tDeployment request event resource type " + reqEvent.resourceType);
+            System.log("\tDeployment request event timestamp " + reqEvent.timestamp);          
+        }
+    }
+}
+
+//Deployment resources 
+var resourcesObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/");
+if (resourcesObject != null) {
+    if (resourcesObject.numberOfElements > 0) {
+        // Deployment Resources
+        for each (var resourceObject in resourcesObject.content) {
+            //var resourceObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/" + resourceId);
+            System.log("Resource id : " + resourceObject.id);
+            System.log("Resource name : " + resourceObject.name);
+            System.log("Resource type : " + resourceObject.type);
+            System.log("Resource state : " + resourceObject.state);
+            System.log("Resource properties\n" + getJson(resourceObject.properties));
+
+            // Deployment resources actions
+            var resourceActionsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/" + resourceObject.id + "/actions");
+            if (resourceActionsObject != null) {
+                System.log("Deployment resource actions :");
+                for each (var resourceActionObject in resourceActionsObject) {
+                    System.log("\t" + resourceActionObject.name);
+                }	
+            }
+        }
+    }
+}
+
+
+// Organization
+var orgObject = getObjectFromUrl("/csp/gateway/am/api/orgs/" + orgId);
+if (orgObject != null) {
+	//System.debug("Organization\n" + getJson(orgObject));
+    System.log("Organization id : " + orgObject.id);
+    System.log("Organization name : " + orgObject.displayName);
+}
+*/
+
+
+function getObjectFromUrl(url) {
+	return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, null);
+}
+
+
+function getJson(object) {
+   return JSON.stringify(object,null,2); 
+}]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="resourceId" type="string" export-name="resourceId"/>
+      <bind name="vmUuid" type="string" export-name="vmUuid"/>
+      <bind name="vCenterUuid" type="string" export-name="vCenterUuid"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+      <bind name="resourceName" type="string" export-name="resourceName"/>
+      <bind name="tagsProperties" type="Properties" export-name="tagsProperties"/>
+      <bind name="requestId" type="string" export-name="requestId"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="340.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item3" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/getMachineCustomProperties">
+    <display-name><![CDATA[getMachineCustomProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getMachineCustomProperties(vraHost,machineId);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="machineId" type="string" export-name="resourceId"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="Properties" export-name="customProperties"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="180.0" x="180.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item4" type="task">
+    <display-name><![CDATA[Manage custom properties]]></display-name>
+    <script encoded="false"><![CDATA[//Display current custom properties
+var customPropertiesAsText = "Custom properties : \n";
+for each (var key in customProperties.keys) {
+    customPropertiesAsText += "\t" + key + " : " + customProperties[key];
+}
+
+System.log(customPropertiesAsText);
+
+// Setting new custom properties
+newCustomProperties = new Properties();
+newCustomProperties.put("Day2Operation", new Date());]]></script>
+    <in-binding>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="newCustomProperties" type="Properties" export-name="newCustomProperties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="180.0" x="340.0"/>
+  </workflow-item>
+  <workflow-item name="item4" out-name="item10" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/setMachineCustomPropertiesFromProperties">
+    <display-name><![CDATA[setMachineCustomPropertiesFromProperties]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").setMachineCustomPropertiesFromProperties(vraHost,machineId,customProperties);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="machineId" type="string" export-name="resourceId"/>
+      <bind name="customProperties" type="Properties" export-name="newCustomProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="setmachineCustomPropertiesResult"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="180.0" x="520.0"/>
+  </workflow-item>
+  <workflow-item name="item6" out-name="item9" type="task">
+    <display-name><![CDATA[Manage tags]]></display-name>
+    <script encoded="false"><![CDATA[//Display current tags
+var tagsAsText = "Tags : \n";
+for each (var key in tagsProperties.keys) {
+    tagsAsText += "\t" + key + " : " + tagsProperties[key];
+}
+System.log(tagsAsText);
+
+
+// Adding tag
+
+tagsProperties.put("Day2Operation",new Date());
+]]></script>
+    <in-binding>
+      <bind name="tagsProperties" type="Properties" export-name="tagsProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="newTagsProperties" type="Properties" export-name="newTagsProperties"/>
+      <bind name="tagsProperties" type="Properties" export-name="tagsProperties"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="120.0" x="340.0"/>
+  </workflow-item>
+  <workflow-item name="item9" out-name="item2" type="task" launched-workflow-id="ffac8cdd-97d1-40e8-a516-6aec3901c3e9">
+    <display-name><![CDATA[Tag deployment resource async]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+var workflowToLaunch = Server.getWorkflowWithId("ffac8cdd-97d1-40e8-a516-6aec3901c3e9");
+if (workflowToLaunch == null) {
+	throw "Workflow not found";
+}
+
+var workflowParameters = new Properties();
+workflowParameters.put("vraHost",vraHost);
+workflowParameters.put("deploymentId",deploymentId);
+workflowParameters.put("requestId",requestId);
+workflowParameters.put("resourceName",resourceName);
+workflowParameters.put("tags",tags);
+wfToken = workflowToLaunch.execute(workflowParameters);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+      <bind name="requestId" type="string" export-name="requestId"/>
+      <bind name="resourceName" type="string" export-name="resourceName"/>
+      <bind name="tags" type="Properties" export-name="tagsProperties"/>
+    </in-binding>
+    <out-binding>
+      <bind name="wfToken" type="WorkflowToken" export-name="asyncToken"/>
+    </out-binding>
+    <description><![CDATA[Start an asynchronous workflow.]]></description>
+    <position y="120.0" x="520.0"/>
+  </workflow-item>
+  <workflow-item name="item10" out-name="item0" type="task" script-module="com.vmware.vra.xaas/findVcVmByVcAndVmUuid">
+    <display-name><![CDATA[findVcVmByVcAndVmUuid]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.xaas").findVcVmByVcAndVmUuid(vCenterUuid,vmUuid);
+]]></script>
+    <in-binding>
+      <bind name="vCenterUuid" type="string" export-name="vCenterUuid">
+        <description><![CDATA[The vCenter instance identifier]]></description>
+      </bind>
+      <bind name="vmUuid" type="string" export-name="vmUuid">
+        <description><![CDATA[The UUID of the desired Virtual Machine]]></description>
+      </bind>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="VC:VirtualMachine" export-name="vCenterVM"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="240.0" x="180.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

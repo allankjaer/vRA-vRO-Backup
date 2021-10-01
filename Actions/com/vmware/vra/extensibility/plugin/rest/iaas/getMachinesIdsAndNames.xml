@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachinesIdsAndNames" result-type="Array/Properties" api-version="6.0.0" id="b9a479a0-fb9b-4af3-948b-46e922c53901" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+var url = "/iaas/machines";
+var parameters = "$orderby=name%20asc&$top=200";
+return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsIdAndNameAsArrayOfProperties(vraHost, url, parameters);]]></script>
+</dunes-script-module>

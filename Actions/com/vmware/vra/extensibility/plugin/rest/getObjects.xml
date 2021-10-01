@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getObjects" result-type="Array/Any" api-version="6.0.0" id="951938bb-c88d-4463-9c7c-fcdb639af67a" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+  <description><![CDATA[Get all deployment objects using paging ]]></description>
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <param n="parameters" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log("********");
+System.log(vraHost.name);
+System.log(url);
+System.log(parameters);
+var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+
+// Depending on the service the objects can be returned in different formats and supports different paging queries
+
+if (object.hasOwnProperty("last")) {
+    var content = object.content;
+    var page = 1;
+    var allContent = content;
+
+    while (object.last == false) {
+        if (parameters == null || parameters == "") var newParameters = "page=" + page;
+        else var newParameters = parameters + "&page=" + page;
+        object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, newParameters);
+        content = object.content;
+        allContent = allContent.concat(content);
+        page++;
+    }
+    return allContent;
+}
+
+// IaaS
+if (object.hasOwnProperty("totalElements")) {
+    var content = object.content;
+    var skip = 0;
+    var elementsLeft = object.totalElements - object.numberOfElements;
+    var allContent = content;
+    var numberOfElements = object.numberOfElements
+
+    while (elementsLeft >0) {
+        var skip = skip + numberOfElements;
+        if (parameters == null) var newParameters = "$skip=" + skip;
+        else var newParameters = parameters + "&$skip=" + skip;
+        object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, newParameters);
+        content = object.content;
+        elementsLeft = elementsLeft - object.numberOfElements;
+        allContent = allContent.concat(content);
+    }
+    System.debug("Returning " + allContent.length + " objects from url " + url);
+    return allContent;
+}
+
+// Identity Management
+if (object.hasOwnProperty("totalResults")) {
+    var page = 1;
+    var allContent = object.results;
+   // var elementsLeft = object.totalResults - object.results.length;
+
+    while (object.nextLink != undefined) {
+        object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,object.nextLink, null);
+        content = object.results;
+        allContent = allContent.concat(content);
+    }    
+    return allContent;
+}    
+
+throw "Unexpected JSON format for objects : " + JSON.stringify(object,null,2);]]></script>
+</dunes-script-module>

@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createEventBrokerSubscription" result-type="void" api-version="6.0.0" id="a67e72c0-e7b0-42d1-a1f4-f2c030fc9e47" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <param n="description" t="string"><![CDATA[]]></param>
+  <param n="disabled" t="boolean"><![CDATA[]]></param>
+  <param n="eventTopicId" t="string"><![CDATA[]]></param>
+  <param n="blocking" t="boolean"><![CDATA[]]></param>
+  <param n="runnableType" t="string"><![CDATA[]]></param>
+  <param n="runnableId" t="string"><![CDATA[]]></param>
+  <param n="timeout" t="string"><![CDATA[]]></param>
+  <param n="priority" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || eventTopicId == null || name == null) return null;
+
+var url = "/event-broker/api/subscriptions";
+var subscription = {
+	"id": System.nextUUID(),
+	"type": "RUNNABLE",
+	"name": name,
+	"description": description,
+	"disabled": disabled,
+	"eventTopicId": eventTopicId,
+	"subscriberId": "temporary-value",
+	"blocking": blocking,
+	"criteria": "",
+	"runnableType": runnableType, //"extensibility.vro",
+	"runnableId": runnableId,
+	"timeout": timeout, // 0
+	"priority": priority, // 10
+	"recoverRunnableType": null,
+	"recoverRunnableId": null,
+	"constraints": {
+		"projectId": null
+	}
+};
+var content = JSON.stringify(subscription);
+
+var operation = "POST";
+
+try {
+	var contentAsString = System.getModule("com.vmware.vra.extensibility.plugin.rest").invokeRestOperation(vraHost, operation, url, content);
+	//ID is returned in location headed
+} catch (e) {
+	throw "POST " + url + "Failed" +
+		"\n Error : " + e;
+}]]></script>
+</dunes-script-module>

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="ffac8cdd-97d1-40e8-a516-6aec3901c3e9" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Tag deployment resource async]]></display-name>
+  <description><![CDATA[This workflow is used to trigger an asynchronous resource tagging from a day 2 operation on the parent deployment to avoid HTTP 409 Conflict.
+]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="vraHost" type="VRA:Host"/>
+    <param name="deploymentId" type="string"/>
+    <param name="requestId" type="string"/>
+    <param name="resourceName" type="string"/>
+    <param name="tags" type="Properties"/>
+  </input>
+  <attrib name="sleepInterval" type="string" read-only="false">
+    <value encoded="n"><![CDATA[5]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="600.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.deployment/waitDeploymentRequestCompleted">
+    <display-name><![CDATA[waitDeploymentRequestCompleted]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+System.getModule("com.vmware.vra.extensibility.plugin.rest.deployment").waitDeploymentRequestCompleted(vraHost,deploymentId,requestId,sleepInterval);
+]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+      <bind name="requestId" type="string" export-name="requestId"/>
+      <bind name="sleepInterval" type="string" export-name="sleepInterval">
+        <description><![CDATA[Number of seconds between each poll]]></description>
+      </bind>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="60.0" x="200.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="2b6bf645-66f3-4632-86d8-a0b4a96aed0f">
+    <display-name><![CDATA[Edit deployment tags]]></display-name>
+    <in-binding>
+      <bind name="tags" type="Properties" export-name="tags"/>
+      <bind name="resourceName" type="string" export-name="resourceName"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="deploymentId" type="string" export-name="deploymentId"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[ ]]></description>
+    <position y="60.0" x="420.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>
