@@ -1,0 +1,1 @@
+{"schema":{"NewIpAddresses":{"id":"NewIpAddresses","type":{"dataType":"string","isMultiple":true},"label":"NewIpAddresses"}},"layout":{"pages":[{"id":"page_pqa5rqse","title":"General","sections":[{"id":"section_1cd3ugui","fields":[{"id":"NewIpAddresses","display":"array","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

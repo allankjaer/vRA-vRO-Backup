@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="18f4617f-a9bb-4853-af31-d33e2d92fd25" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>update user</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="userName" type="string"/>
+    </input>
+    <output/>
+    <attrib name="adHost" type="AD:AdHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='%23_v2_%23%2C%23RootItem%23%2C%23caadcbcf-ec74-4246-a152-b7ab35b8ee6c%23'&amp;dunesName='AD:AdHost'</value>
+    </attrib>
+    <attrib name="adUser" type="AD:User">
+        <value encoded="n"/>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="520.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">userArray = new Array();&#13;
+userArray = ActiveDirectory.search("User", userName, adHost);&#13;
+adUser = userArray[0];</script>
+        <in-binding>
+            <bind name="adHost" type="AD:AdHost" export-name="adHost"/>
+            <bind name="userName" type="string" export-name="userName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="adUser" type="AD:User" export-name="adUser"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="240.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">adUser.setAttribute('department','department');</script>
+        <in-binding>
+            <bind name="adUser" type="AD:User" export-name="adUser"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="360.0"/>
+    </workflow-item>
+</ns2:workflow>

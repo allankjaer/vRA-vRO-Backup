@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='f86173f9-6d71-4f2c-ac27-e709012d877b'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='A18080808080808080808080808080808080808001299080088268176866967b3'&dunesName='Workflow']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='17ddd73a-dd81-43bc-9f47-e14d8f2b7646'&dunesName='Action'&name='getSupportedAcceptHeaderMediaTypes'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='b16e6400-d674-47e2-9d43-29fac7c17625'&dunesName='Action'&name='getRESTOperationHeaderParameterName'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='99a18654-9aee-4144-b1e9-5cb73b20f080'&dunesName='Action'&name='isHeaderParamMandatory'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='e910c13a-8e98-4fd7-9557-413504986c04'&dunesName='Action'&name='isInputParameterMandatory'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='7832ad8d-a21d-401a-86c4-51125b6479c2'&dunesName='Action'&name='getRESTOperationParameterName'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='70b620ae-903f-4fd9-b06d-bd811670c25f'&dunesName='Action'&name='getDefaultContentType'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='44f8cb7f-5061-4269-a046-4e6dbb3a1f55'&dunesName='Action'&name='hasHttpMethodHasBodyPayload'&category='com.vmware.library.http-rest.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/ConfigurationElement?id='6d15434a-c237-406e-8f54-d3a46fe4bc9f'&dunesName='ConfigurationElement']]></elm>
+<used-plugin name='REST' version='2.3.9' />
+</package>

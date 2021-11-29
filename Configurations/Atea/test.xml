@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="7d550833-2686-499c-a81a-9737fe7994ed" version="0.0.0">
+  <display-name><![CDATA[test]]></display-name>
+  <atts>
+    <att name="ip" type="Array/string" read-only="false"/>
+  </atts>
+</config-element>

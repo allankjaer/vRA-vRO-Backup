@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="cb900939-c247-49ab-980a-256b90720310" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Test Object to Prop to JSON</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="jsonString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="vraHost" type="VRA:Host">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='lvboEvqOQXK6yy_cxQRvaA'&amp;dunesName='VRA:Host'</value>
+    </attrib>
+    <attrib name="getDeploymentUrl" type="string">
+        <value encoded="n">/iaas/api/deployments/{id}</value>
+    </attrib>
+    <attrib name="get" type="string">
+        <value encoded="n">GET</value>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="parameters" type="Array/string">
+        <value encoded="n">[43:string#5003300c-2197-43cd-8130-b3b122307531]</value>
+    </attrib>
+    <attrib name="restResourceUrl" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="patch" type="string">
+        <value encoded="n">PATCH</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="820.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Invoke VRA 8 REST Operation from URL</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="get"/>
+            <bind name="url" type="string" export-name="getDeploymentUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(contentAsString);&#13;
+&#13;
+var deploymentHrefs = bodyObj._links.resources.hrefs&#13;
+&#13;
+for each (deploymentHref in deploymentHrefs) {&#13;
+    if (deploymentHref) {&#13;
+        if (deploymentHref.indexOf("machines") !== -1) {&#13;
+            restResourceUrl = deploymentHref;&#13;
+        }&#13;
+    }&#13;
+}&#13;
+&#13;
+</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </in-binding>
+        <out-binding>
+            <bind name="restResourceUrl" type="string" export-name="restResourceUrl"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item4" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Invoke VRA 8 REST Operation from URL</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="get"/>
+            <bind name="url" type="string" export-name="restResourceUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="400.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item5" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var sagsnummer = 'test1234';&#13;
+content = '{ \&#13;
+    "customProperties": { \&#13;
+        "sags nummer": "' + sagsnummer.toLowerCase() + '" \&#13;
+    } \&#13;
+}'&#13;
+</script>
+        <in-binding/>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="510.0"/>
+    </workflow-item>
+    <workflow-item name="item5" out-name="item0" type="link" linked-workflow-id="f5db7670-8ebb-4cf9-81a0-fd3792454b0f" comparator="0">
+        <display-name>Invoke VRA 8 REST Operation from URL</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+            <bind name="operation" type="string" export-name="patch"/>
+            <bind name="url" type="string" export-name="restResourceUrl"/>
+            <bind name="content" type="string" export-name="content"/>
+            <bind name="parameters" type="Array/string" export-name="parameters"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="640.0"/>
+    </workflow-item>
+</ns2:workflow>

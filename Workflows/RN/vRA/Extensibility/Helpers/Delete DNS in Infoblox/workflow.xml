@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="f86173f9-6d71-4f2c-ac27-e709012d877b" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Delete DNS in Infoblox</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="dnsName" type="string"/>
+    </input>
+    <output/>
+    <attrib name="infoBloxHost" type="REST:RESTHost" conf-id="6d15434a-c237-406e-8f54-d3a46fe4bc9f" conf-key="infoBloxHost"/>
+    <attrib name="getDnsARecordsRestOperation" type="REST:RESTOperation" conf-id="6d15434a-c237-406e-8f54-d3a46fe4bc9f" conf-key="getDnsARecordsRestOperation"/>
+    <attrib name="statusCode" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="contentLength" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="headers" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="dnsRefId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="getDnsPtrRecordsRestOperation" type="REST:RESTOperation" conf-id="6d15434a-c237-406e-8f54-d3a46fe4bc9f" conf-key="getDnsPtrRecordsRestOperation"/>
+    <attrib name="ptrRefId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="deleteObjetRestOperation" type="REST:RESTOperation" conf-id="6d15434a-c237-406e-8f54-d3a46fe4bc9f" conf-key="deleteObject"/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="1100.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="A18080808080808080808080808080808080808001299080088268176866967b3" comparator="0">
+        <display-name>Invoke a REST operation (Get DNS A Records)</display-name>
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="getDnsARecordsRestOperation">
+                <description>REST operation to be used for the call</description>
+            </bind>
+            <bind name="param_0" type="string" export-name="dnsName">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_1" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_2" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_3" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_4" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_5" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_6" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_7" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_8" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_9" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_10" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_11" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_12" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_13" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_14" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="content" type="string" export-name="">
+                <description>Input content</description>
+            </bind>
+            <bind name="defaultContentType" type="string" export-name="">
+                <description>Input content type</description>
+            </bind>
+            <bind name="headerParam_0" type="string" export-name=""/>
+            <bind name="headerParam_1" type="string" export-name=""/>
+            <bind name="headerParam_2" type="string" export-name=""/>
+            <bind name="headerParam_3" type="string" export-name=""/>
+            <bind name="headerParam_4" type="string" export-name=""/>
+            <bind name="headerParam_5" type="string" export-name=""/>
+            <bind name="acceptHeaders" type="Array/string" export-name=""/>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Status code of the HTTP request</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Length of the request response</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item6" type="task" comparator="0">
+        <display-name>Get DNS A Record Ref ID</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(contentAsString);
+
+for each (dnsRecord in bodyObj.result) {
+    if (dnsRecord.name == dnsName) {
+        dnsRefId = dnsRecord._ref;
+    }
+}</script>
+        <in-binding>
+            <bind name="dnsName" type="string" export-name="dnsName"/>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+        </in-binding>
+        <out-binding>
+            <bind name="dnsRefId" type="string" export-name="dnsRefId"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="320.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item4" type="link" linked-workflow-id="A18080808080808080808080808080808080808001299080088268176866967b3" comparator="0">
+        <display-name>Invoke a REST operation (Get DNS PTR Records)</display-name>
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="getDnsPtrRecordsRestOperation">
+                <description>REST operation to be used for the call</description>
+            </bind>
+            <bind name="param_0" type="string" export-name="dnsName">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_1" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_2" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_3" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_4" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_5" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_6" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_7" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_8" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_9" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_10" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_11" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_12" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_13" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_14" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="content" type="string" export-name="">
+                <description>Input content</description>
+            </bind>
+            <bind name="defaultContentType" type="string" export-name="">
+                <description>Input content type</description>
+            </bind>
+            <bind name="headerParam_0" type="string" export-name=""/>
+            <bind name="headerParam_1" type="string" export-name=""/>
+            <bind name="headerParam_2" type="string" export-name=""/>
+            <bind name="headerParam_3" type="string" export-name=""/>
+            <bind name="headerParam_4" type="string" export-name=""/>
+            <bind name="headerParam_5" type="string" export-name=""/>
+            <bind name="acceptHeaders" type="Array/string" export-name=""/>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Status code of the HTTP request</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Length of the request response</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="620.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item8" type="task" comparator="0">
+        <display-name>Get DNS PTR Record Ref ID</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(contentAsString);
+
+for each (dnsRecord in bodyObj.result) {
+    if (dnsRecord.ptrdname == dnsName) {
+        ptrRefId = dnsRecord._ref;
+    }
+}</script>
+        <in-binding>
+            <bind name="contentAsString" type="string" export-name="contentAsString"/>
+            <bind name="dnsName" type="string" export-name="dnsName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="ptrRefId" type="string" export-name="ptrRefId"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="740.0"/>
+    </workflow-item>
+    <workflow-item name="item5" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="110.0" x="460.0"/>
+    </workflow-item>
+    <workflow-item name="item6" out-name="item10" alt-out-name="item5" type="condition" comparator="0">
+        <display-name>Decision</display-name>
+        <script encoded="false">// Generated by the system, cannot be edited
+return (dnsRefId !== null);</script>
+        <in-binding>
+            <bind name="dnsRefId" type="string" export-name="dnsRefId"/>
+        </in-binding>
+        <out-binding/>
+        <description>Custom decision based on a custom script.</description>
+        <condition name="dnsRefId" type="string" comparator="3" label="null"></condition>
+        <position y="50.0" x="420.0"/>
+    </workflow-item>
+    <workflow-item name="item7" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="110.0" x="900.0"/>
+    </workflow-item>
+    <workflow-item name="item8" out-name="item11" alt-out-name="item7" type="condition" comparator="0">
+        <display-name>Decision</display-name>
+        <script encoded="false">// Generated by the system, cannot be edited
+return (ptrRefId !== null);</script>
+        <in-binding>
+            <bind name="ptrRefId" type="string" export-name="ptrRefId"/>
+        </in-binding>
+        <out-binding/>
+        <description>Custom decision based on a custom script.</description>
+        <condition name="ptrRefId" type="string" comparator="3" label="null"></condition>
+        <position y="50.0" x="860.0"/>
+    </workflow-item>
+    <workflow-item name="item10" out-name="item3" type="link" linked-workflow-id="A18080808080808080808080808080808080808001299080088268176866967b3" comparator="0">
+        <display-name>Invoke a REST operation</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="deleteObjetRestOperation">
+                <description>REST operation to be used for the call</description>
+            </bind>
+            <bind name="param_0" type="string" export-name="dnsRefId">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_1" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_2" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_3" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_4" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_5" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_6" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_7" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_8" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_9" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_10" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_11" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_12" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_13" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_14" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="content" type="string" export-name="">
+                <description>Input content</description>
+            </bind>
+            <bind name="defaultContentType" type="string" export-name="">
+                <description>Input content type</description>
+            </bind>
+            <bind name="headerParam_0" type="string" export-name=""/>
+            <bind name="headerParam_1" type="string" export-name=""/>
+            <bind name="headerParam_2" type="string" export-name=""/>
+            <bind name="headerParam_3" type="string" export-name=""/>
+            <bind name="headerParam_4" type="string" export-name=""/>
+            <bind name="headerParam_5" type="string" export-name=""/>
+            <bind name="acceptHeaders" type="Array/string" export-name=""/>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Status code of the HTTP request</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Length of the request response</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="500.0"/>
+    </workflow-item>
+    <workflow-item name="item11" out-name="item0" type="link" linked-workflow-id="A18080808080808080808080808080808080808001299080088268176866967b3" comparator="0">
+        <display-name>Invoke a REST operation</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="deleteObjetRestOperation">
+                <description>REST operation to be used for the call</description>
+            </bind>
+            <bind name="param_0" type="string" export-name="ptrRefId">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_1" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_2" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_3" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_4" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_5" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_6" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_7" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_8" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_9" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_10" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_11" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_12" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_13" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_14" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="content" type="string" export-name="">
+                <description>Input content</description>
+            </bind>
+            <bind name="defaultContentType" type="string" export-name="">
+                <description>Input content type</description>
+            </bind>
+            <bind name="headerParam_0" type="string" export-name=""/>
+            <bind name="headerParam_1" type="string" export-name=""/>
+            <bind name="headerParam_2" type="string" export-name=""/>
+            <bind name="headerParam_3" type="string" export-name=""/>
+            <bind name="headerParam_4" type="string" export-name=""/>
+            <bind name="headerParam_5" type="string" export-name=""/>
+            <bind name="acceptHeaders" type="Array/string" export-name=""/>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Status code of the HTTP request</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Length of the request response</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="965.0"/>
+    </workflow-item>
+</ns2:workflow>

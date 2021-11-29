@@ -1,0 +1,1 @@
+{"schema":{"userName":{"id":"userName","type":{"dataType":"string"},"label":"userName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_en9bdxsi","title":"General","sections":[{"id":"section_re7urymg","fields":[{"id":"userName","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

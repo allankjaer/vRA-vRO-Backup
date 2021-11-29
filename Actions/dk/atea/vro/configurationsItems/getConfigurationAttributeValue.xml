@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="getConfigurationAttributeValue" result-type="Any" api-version="6.0.0" id="691c135a-1779-44cd-b324-802230bcc7a1" version="0.0.0" category-name="dk.atea.vro.configurationsItems">
+<dunes-script-module name="getConfigurationAttributeValue" result-type="Any" api-version="6.0.0" id="691c135a-1779-44cd-b324-802230bcc7a1" version="0.1.0" category-name="dk.atea.vro.configurationsItems">
   <param n="configurationCategoryPath" t="string"><![CDATA[]]></param>
   <param n="configurationName" t="string"><![CDATA[]]></param>
   <param n="attributeName" t="string"><![CDATA[]]></param>

@@ -11,11 +11,11 @@
 
 if (country !== null && location !== null && application !== null && type !== null) {
     sn = country+location+application+type;
-    System.log ("sn = " + sn);
+    System.log ("Servername without numbers = " + sn);
     for (i = 1; i < 999; i++) {
         var number = FormatInteger(i,3);
         var serverName = sn + number;
-        System.log("sn2 = " + serverName);
+        System.log("Check servername = " + serverName);
         if (System.getModule("dk.atea.vra.vc.helper").getVMByName(serverName) == null) {
             if (System.getModule("dk.atea.vra.vc.helper").getComputerNameFromAD(serverName) == null)
                 return serverName;

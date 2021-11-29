@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="9d326da5-5f96-4b5b-b4fb-389e738f19a0" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Test Remove Reseved IP</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="ipAddress" type="Array/string"/>
+    </input>
+    <output/>
+    <attrib name="configurationCategoryPath" type="string">
+        <value encoded="n">Atea</value>
+    </attrib>
+    <attrib name="attributeName" type="string">
+        <value encoded="n">ip</value>
+    </attrib>
+    <attrib name="ipAddresses" type="Array/string">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="configurationName" type="string">
+        <value encoded="n">test</value>
+    </attrib>
+    <attrib name="actionResult" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="560.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" script-module="dk.atea.vro.configurationsItems/getConfigurationAttributeValue" comparator="0">
+        <display-name>getConfigurationAttributeValue</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue(configurationCategoryPath,configurationName,attributeName);
+</script>
+        <in-binding>
+            <bind name="configurationCategoryPath" type="string" export-name="configurationCategoryPath">
+                <description></description>
+            </bind>
+            <bind name="configurationName" type="string" export-name="configurationName">
+                <description></description>
+            </bind>
+            <bind name="attributeName" type="string" export-name="attributeName">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="Array/string" export-name="ipAddresses"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">if (!ipAddresses) {&#13;
+    var ipAddresses = new Array();&#13;
+}&#13;
+for each (ipAddr in ipAddress ) {&#13;
+    ipAddresses.splice(ipAddresses.indexOf(ipAddr),1)&#13;
+}&#13;
+</script>
+        <in-binding>
+            <bind name="ipAddresses" type="Array/string" export-name="ipAddresses"/>
+            <bind name="ipAddress" type="Array/string" export-name="ipAddress"/>
+        </in-binding>
+        <out-binding>
+            <bind name="ipAddresses" type="Array/string" export-name="ipAddresses"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item0" type="task" script-module="dk.atea.vro.configurationsItems/setConfigurationAttributeValue" comparator="0">
+        <display-name>setConfigurationAttributeValue</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vro.configurationsItems").setConfigurationAttributeValue(configurationCategoryPath,configurationName,attributeName,value);
+</script>
+        <in-binding>
+            <bind name="configurationCategoryPath" type="string" export-name="configurationCategoryPath">
+                <description></description>
+            </bind>
+            <bind name="configurationName" type="string" export-name="configurationName">
+                <description></description>
+            </bind>
+            <bind name="attributeName" type="string" export-name="attributeName">
+                <description></description>
+            </bind>
+            <bind name="value" type="Array/string" export-name="ipAddresses">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="actionResult"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="420.0"/>
+    </workflow-item>
+</ns2:workflow>

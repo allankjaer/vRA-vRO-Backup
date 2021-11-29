@@ -1,0 +1,1 @@
+{"schema":{"dnsName":{"id":"dnsName","type":{"dataType":"string"},"label":"dnsName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_47i7sx0d","title":"General","sections":[{"id":"section_fg1z2qup","fields":[{"id":"dnsName","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

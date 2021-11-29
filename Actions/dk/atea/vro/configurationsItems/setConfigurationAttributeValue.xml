@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="setConfigurationAttributeValue" result-type="string" api-version="6.0.0" id="52efa57d-c71e-41c8-9e31-1e28a24614da" version="0.1.0" category-name="dk.atea.vro.configurationsItems">
+  <param n="configurationCategoryPath" t="string"><![CDATA[]]></param>
+  <param n="configurationName" t="string"><![CDATA[]]></param>
+  <param n="attributeName" t="string"><![CDATA[]]></param>
+  <param n="value" t="Any"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var configElement = System.getModule("dk.atea.vro.configurationsItems").getConfigurationElement(configurationCategoryPath, configurationName);
+
+if (!configElement) {
+	throw "Missing configuration element " + configurationCategoryPath + "/" + configurationName;
+}
+
+var result = configElement.setAttributeWithKey(attributeName,value,null)]]></script>
+</dunes-script-module>

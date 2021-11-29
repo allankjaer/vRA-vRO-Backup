@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="6d15434a-c237-406e-8f54-d3a46fe4bc9f" version="0.0.0">
+  <display-name><![CDATA[InfoBlox]]></display-name>
+  <atts>
+    <att name="infoBloxHost" type="REST:RESTHost" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='f1c76b50-eb24-4566-885b-6fa2bde8b3f3'&dunesName='REST:RESTHost']]></value>
+    </att>
+    <att name="getDnsARecordsRestOperation" type="REST:RESTOperation" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='f1c76b50-eb24-4566-885b-6fa2bde8b3f3:bf4085f7-800f-408e-8208-8f16f9d440c3'&dunesName='REST:RESTOperation']]></value>
+    </att>
+    <att name="getDnsPtrRecordsRestOperation" type="REST:RESTOperation" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='f1c76b50-eb24-4566-885b-6fa2bde8b3f3:c11c3520-877c-49fe-90b1-6db30d82d28a'&dunesName='REST:RESTOperation']]></value>
+    </att>
+    <att name="deleteObject" type="REST:RESTOperation" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='f1c76b50-eb24-4566-885b-6fa2bde8b3f3:d52ca6ce-6b77-4e19-bca0-e2ba98e5f84f'&dunesName='REST:RESTOperation']]></value>
+    </att>
+  </atts>
+</config-element>

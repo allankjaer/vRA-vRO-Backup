@@ -1,0 +1,1 @@
+{"schema":{"ipAddress":{"id":"ipAddress","type":{"dataType":"string","isMultiple":true},"label":"ipAddress"}},"layout":{"pages":[{"id":"page_pqa5rqse","title":"General","sections":[{"id":"section_1cd3ugui","fields":[{"id":"ipAddress","display":"array","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

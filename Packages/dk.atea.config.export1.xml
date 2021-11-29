@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <package>
-<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c14432b-1935-47e0-bf6f-b66631625faf'&dunesName='Action'&name='getConfigurationElement'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='9d326da5-5f96-4b5b-b4fb-389e738f19a0'&dunesName='Workflow']]></elm>
 <elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='691c135a-1779-44cd-b324-802230bcc7a1'&dunesName='Action'&name='getConfigurationAttributeValue'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c14432b-1935-47e0-bf6f-b66631625faf'&dunesName='Action'&name='getConfigurationElement'&category='dk.atea.vro.configurationsItems']]></elm>
 <elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='52efa57d-c71e-41c8-9e31-1e28a24614da'&dunesName='Action'&name='setConfigurationAttributeValue'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Workflow?id='e54f55d7-23be-403e-bb47-0699cfe52343'&dunesName='Workflow']]></elm>
 </package>
