@@ -75,23 +75,25 @@ content = '{    \&#13;
     "summary":  "VM deployment/removel Notification", \&#13;
     "themeColor":  "0078D7", \&#13;
     "sections":  [ \&#13;
-                     { \&#13;
-                         "activitySubtitle":  "AteaLab vCenter Event INFO", \&#13;
-                         "facts":  [ \&#13;
-                                       { \&#13;
-                                           "value":  "' + vmName +'", \&#13;
-                                           "name":  "Virtual Machine: " \&#13;
-                                       }, \&#13;
-                                                                              { \&#13;
-                                           "value":  "' + userName +'", \&#13;
-                                           "name":  "User name: " \&#13;
-                                       } \&#13;
-                                   ], \&#13;
-                         "markdown":  true, \&#13;
-                         "activityTitle":  "Virtual Machine ' + eventString +  '" \&#13;
-                     } \&#13;
-                 ] \&#13;
+        { \&#13;
+            "activitySubtitle":  "AteaLab vCenter Event INFO", \&#13;
+            "facts":  [ \&#13;
+                { \&#13;
+                    "value":  "' + vmName +'", \&#13;
+                    "name":  "Virtual Machine: " \&#13;
+                }, \&#13;
+                { \&#13;
+                    "value":  "' + userName +'", \&#13;
+                    "name":  "User name: " \&#13;
+                } \&#13;
+            ], \&#13;
+            "markdown":  true, \&#13;
+            "activityTitle":  "Virtual Machine ' + eventString +  '" \&#13;
+        } \&#13;
+    ] \&#13;
 }'&#13;
+&#13;
+content = JSON.stringify(JSON.parse(content));&#13;
 //System.log("Content: " + content)</script>
         <in-binding>
             <bind name="vmName" type="string" export-name="vmName"/>
@@ -104,5 +106,4 @@ content = '{    \&#13;
         <description>Simple task with custom script capability.</description>
         <position y="60.0" x="160.0"/>
     </workflow-item>
-    <presentation/>
 </ns2:workflow>

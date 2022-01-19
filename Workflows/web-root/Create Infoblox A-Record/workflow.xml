@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="9bbcedcf-fcdd-422e-889d-b533926d950f" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Create Infoblox A-Record</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="ip" type="string"/>
+        <param name="hostname" type="string"/>
+    </input>
+    <output/>
+    <attrib name="restOperation" type="REST:RESTOperation">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='f1c76b50-eb24-4566-885b-6fa2bde8b3f3:71c9091c-b42d-4284-9e07-bbdb39eca834'&amp;dunesName='REST:RESTOperation'</value>
+    </attrib>
+    <attrib name="content" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="statusCode" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="contentLength" type="number">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="headers" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="contentAsString" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="defaultContentType" type="string">
+        <value encoded="n"> application/json</value>
+    </attrib>
+    <attrib name="acceptHeaders" type="Array/string">
+        <value encoded="n">[24:string# application/json]</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="900.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Create REST content</display-name>
+        <script encoded="false">content ='{ \&#13;
+    "name":"' + Hostname + '", \&#13;
+    "ipv4addr":"' + IP + '" \&#13;
+}';&#13;
+</script>
+        <in-binding>
+            <bind name="Hostname" type="string" export-name="hostname"/>
+            <bind name="IP" type="string" export-name="ip"/>
+        </in-binding>
+        <out-binding>
+            <bind name="content" type="string" export-name="content"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="A18080808080808080808080808080808080808001299080088268176866967b3" comparator="0">
+        <display-name>Invoke a REST operation</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="restOperation" type="REST:RESTOperation" export-name="restOperation">
+                <description>REST operation to be used for the call</description>
+            </bind>
+            <bind name="param_0" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_1" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_2" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_3" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_4" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_5" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_6" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_7" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_8" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_9" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_10" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_11" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_12" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_13" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="param_14" type="string" export-name="">
+                <description>Input parameter</description>
+            </bind>
+            <bind name="content" type="string" export-name="content">
+                <description>Input content</description>
+            </bind>
+            <bind name="defaultContentType" type="string" export-name="defaultContentType">
+                <description>Input content type</description>
+            </bind>
+            <bind name="headerParam_0" type="string" export-name=""/>
+            <bind name="headerParam_1" type="string" export-name=""/>
+            <bind name="headerParam_2" type="string" export-name=""/>
+            <bind name="headerParam_3" type="string" export-name=""/>
+            <bind name="headerParam_4" type="string" export-name=""/>
+            <bind name="headerParam_5" type="string" export-name=""/>
+            <bind name="acceptHeaders" type="Array/string" export-name="acceptHeaders"/>
+        </in-binding>
+        <out-binding>
+            <bind name="statusCode" type="number" export-name="statusCode">
+                <description>Status code of the HTTP request</description>
+            </bind>
+            <bind name="contentLength" type="number" export-name="contentLength">
+                <description>Length of the request response</description>
+            </bind>
+            <bind name="headers" type="Properties" export-name="headers">
+                <description>Response headers</description>
+            </bind>
+            <bind name="contentAsString" type="string" export-name="contentAsString">
+                <description>Response content as string</description>
+            </bind>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="360.0"/>
+    </workflow-item>
+</ns2:workflow>

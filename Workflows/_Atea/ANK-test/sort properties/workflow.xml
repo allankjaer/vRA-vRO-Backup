@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="fb11852f-d590-48ba-86de-86485fc5a476" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>sort properties</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="prop" type="Properties">
+        <value encoded="n">{3:13:aaa=string#aalfa1
+3:12:ggR=string#Gests
+3:15:ttt=string#tttttttt
+3:12:zgt=string#Zebra
+4:16:beta=string#bgfhaetty
+4:11:ffff=string#fart
+}</value>
+    </attrib>
+    <attrib name="prop2" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="420.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var keys = new Array();&#13;
+for each(var p in prop.keys) {&#13;
+    keys.push(p);&#13;
+}&#13;
+&#13;
+keys.sort();&#13;
+var prop2 = new Properties();&#13;
+&#13;
+&#13;
+for each (key in keys) {&#13;
+    System.log(key);&#13;
+    prop2.put(key,prop.get(key));&#13;
+}&#13;
+&#13;
+for each (t in prop2.keys) {&#13;
+    System.log("t: " + prop2.get(t))&#13;
+}&#13;
+</script>
+        <in-binding>
+            <bind name="prop" type="Properties" export-name="prop"/>
+        </in-binding>
+        <out-binding>
+            <bind name="prop2" type="Properties" export-name="prop2"/>
+            <bind name="prop" type="Properties" export-name="prop"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="180.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">for each (t in prop2.keys) {&#13;
+    System.log("t2: " + prop2.get(t))&#13;
+}&#13;
+</script>
+        <in-binding>
+            <bind name="prop2" type="Properties" export-name="prop2"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+</ns2:workflow>

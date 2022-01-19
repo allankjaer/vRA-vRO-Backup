@@ -1,0 +1,1 @@
+{"schema":{"test":{"id":"test","type":{"dataType":"string"},"label":"test","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_sapiwk8e","title":"General","sections":[{"id":"section_ypxv8088","fields":[{"id":"test","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":"item2"}

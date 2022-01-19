@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="4ef06b4f-81d8-4c78-8920-fffa3189a958" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>disk size</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="size" type="number"/>
+    </output>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:vm-9643'&amp;dunesName='VC:VirtualMachine'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var devices = vm.config.hardware.device;&#13;
+for each (controller in devices) {&#13;
+  var is_scsi = controller instanceof VcVirtualBusLogicController || controller instanceof VcVirtualLsiLogicController&#13;
+       || controller instanceof VcParaVirtualSCSIController || controller instanceof VcVirtualLsiLogicSASController;&#13;
+  if (!is_scsi) {&#13;
+    continue;&#13;
+  }&#13;
+  var controller_label = controller.deviceInfo.label;&#13;
+  System.log("SCSI controller found: " + controller_label);&#13;
+  for each (device in devices) {&#13;
+    if (device.controllerKey == controller.key) {&#13;
+        &#13;
+            System.log("    device found: " + device.deviceInfo);&#13;
+        if (device.deviceInfo.label == 'Hard disk 1') {&#13;
+            size = Math.round(device.deviceInfo.summary.split(' ')[0].replace(/[^0-9 ]/g, '') /  1024 / 1024);&#13;
+            System.log("    device found: " + device.deviceInfo);&#13;
+        }&#13;
+    }&#13;
+  }&#13;
+}</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="size" type="number" export-name="size"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="170.0"/>
+    </workflow-item>
+</ns2:workflow>

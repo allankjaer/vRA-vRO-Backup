@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item3" object-name="workflow:name=generic" id="59ee25d8-f971-4faa-be77-5569b4983b87" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Wait for VMware Tools and return Hostname og IP</display-name>
+    <position y="50.0" x="320.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output>
+        <param name="error" type="string"/>
+        <param name="hostname" type="string"/>
+        <param name="ipAddress" type="string"/>
+    </output>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="560.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item0" catch-name="item4" throw-bind-name="error" type="task" comparator="0">
+        <display-name>Check for hostname from VMware Tools</display-name>
+        <script encoded="false">var i = 1;&#13;
+do {&#13;
+  i = i + 1;&#13;
+  System.sleep(5000);&#13;
+  if (vm.hostName &amp;&amp; vm.guest.ipAddress) {&#13;
+    hostname = vm.hostName;&#13;
+    ipAddress = vm.guest.ipAddress;&#13;
+    break&#13;
+  }&#13;
+} while (i &lt; 120);&#13;
+</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding>
+            <bind name="hostname" type="string" export-name="hostname"/>
+            <bind name="ipAddress" type="string" export-name="ipAddress"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="400.0"/>
+    </workflow-item>
+    <workflow-item name="item4" throw-bind-name="error" type="end" end-mode="1" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="110.0" x="440.0"/>
+    </workflow-item>
+</ns2:workflow>

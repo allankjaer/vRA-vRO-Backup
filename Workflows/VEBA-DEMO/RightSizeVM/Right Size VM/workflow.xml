@@ -189,10 +189,14 @@ return (rightSize === true);</script>
     </workflow-item>
     <workflow-item name="item9" out-name="item8" type="task" comparator="0">
         <display-name>Is Right Size Allowed</display-name>
-        <script encoded="false">if (catAndTags.get("Atea Right Size") == "true") {
-    rightSize = true;
+        <script encoded="false">if (catAndTags)  {
+    if (catAndTags.get("Atea Right Size") == "true") {
+        rightSize = true;
+    } else {
+        rightSize = false
+    }
 } else {
-    rightSize = false
+    rightSize = false;
 }</script>
         <in-binding>
             <bind name="catAndTags" type="Properties" export-name="catAndTags"/>
