@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item2" object-name="workflow:name=generic" id="e6a4110c-4aa6-4a86-846c-ac922d1cc704" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item5" object-name="workflow:name=generic" id="e6a4110c-4aa6-4a86-846c-ac922d1cc704" version="0.0.2" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
   <display-name><![CDATA[Request Catalog Item (Service Broker Only)]]></display-name>
   <description><![CDATA[This workflow must be started from Service Broker to get the projectId metadata]]></description>
-  <position y="50.0" x="100.0"/>
+  <position y="20.0" x="100.0"/>
   <input>
     <param name="catItemId" type="string"/>
     <param name="inputProperties" type="Properties"/>
@@ -13,43 +13,44 @@
   <output>
     <param name="deploymentIds" type="Array/string"/>
   </output>
-  <attrib name="projectId" type="string" read-only="false">
+  <attrib name="project" type="VRA:Project" read-only="false">
     <value encoded="n"><![CDATA[]]></value>
   </attrib>
-  <workflow-item name="item0" type="end" end-mode="0">
-    <in-binding/>
-    <position y="50.0" x="640.0"/>
-  </workflow-item>
-  <workflow-item name="item1" out-name="item0" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.catalog/createCatalogItemRequest">
-    <display-name><![CDATA[createCatalogItemRequest]]></display-name>
-    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
-actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.catalog").createCatalogItemRequest(vraHost,catalogItemId,deploymentName,projectId,bulkRequestCount,inputProperties);
-]]></script>
+  <workflow-item name="item3" out-name="item4" type="link" linked-workflow-id="b4ec46bc-f3b1-44d7-8b91-ba81adecddbd">
+    <display-name><![CDATA[Request Catalog Item]]></display-name>
     <in-binding>
-      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
-      <bind name="catalogItemId" type="string" export-name="catItemId"/>
-      <bind name="deploymentName" type="string" export-name="depName"/>
-      <bind name="projectId" type="string" export-name="projectId"/>
-      <bind name="bulkRequestCount" type="number" export-name="requestCount"/>
+      <bind name="catItemId" type="string" export-name="catItemId"/>
       <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+      <bind name="depName" type="string" export-name="depName"/>
+      <bind name="requestCount" type="number" export-name="requestCount"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+      <bind name="project" type="VRA:Project" export-name="project"/>
     </in-binding>
     <out-binding>
-      <bind name="actionResult" type="Array/string" export-name="deploymentIds"/>
+      <bind name="deploymentIds" type="Array/string" export-name="deploymentIds"/>
     </out-binding>
-    <description><![CDATA[Add a note to the workflow schema.]]></description>
-    <position y="60.0" x="380.0"/>
+    <description><![CDATA[ ]]></description>
+    <position y="31.66666666666667" x="350.6666666666667"/>
   </workflow-item>
-  <workflow-item name="item2" out-name="item1" type="task">
-    <display-name><![CDATA[Get projectId]]></display-name>
-    <script encoded="false"><![CDATA[// Getting projectId from this request
-projectId = System.getContext().getParameter("__metadata_projectId");
-if (projectId == null) throw "This workflow must be started from Service Broker to get the projectId metadata";]]></script>
+  <workflow-item name="item4" type="end" end-mode="0">
     <in-binding/>
+    <position y="21.66666666666667" x="530.0"/>
+  </workflow-item>
+  <workflow-item name="item5" out-name="item3" type="task">
+    <display-name><![CDATA[Get project]]></display-name>
+    <script encoded="false"><![CDATA[// Getting projectId from this request
+var projectId = System.getContext().getParameter("__metadata_projectId");
+if (projectId == null) throw "This workflow must be started from Service Broker to get the projectId metadata";
+
+project = VraEntitiesFinder.getProject(vraHost, projectId);]]></script>
+    <in-binding>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
     <out-binding>
-      <bind name="projectId" type="string" export-name="projectId"/>
+      <bind name="project" type="VRA:Project" export-name="project"/>
     </out-binding>
     <description><![CDATA[Simple task with custom script capability.]]></description>
-    <position y="60.0" x="200.0"/>
+    <position y="31.66666666666667" x="206.66666666666669"/>
   </workflow-item>
   <presentation/>
 </workflow>

@@ -25,13 +25,13 @@ for each (host in cluster.host) {&#13;
     goodHost = true;&#13;
     if (oldVmHost == host.name) {&#13;
         goodHost = false;&#13;
-        //System.log(host.name +" No good");&#13;
+        System.log(host.name +" No good");&#13;
     } else {&#13;
         for each (searchvm in host.vm) {&#13;
-            //System.log(host.name +" checked");&#13;
+            System.log(host.name +" checked");&#13;
             if (searchvm.name.search(namePart) == 0 &amp;&amp; searchvm.name != vm.name) {&#13;
                 goodHost = false;&#13;
-                //System.log(host.name +" No good");&#13;
+                System.log(host.name +" No good");&#13;
                 break;&#13;
             }&#13;
         }&#13;
@@ -68,5 +68,4 @@ for each (host in cluster.host) {&#13;
         <description> </description>
         <position y="60.0" x="265.0"/>
     </workflow-item>
-    <presentation/>
 </ns2:workflow>

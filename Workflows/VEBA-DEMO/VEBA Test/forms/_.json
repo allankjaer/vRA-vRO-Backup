@@ -1,0 +1,1 @@
+{"schema":{"cloudEvent":{"id":"cloudEvent","type":{"dataType":"string"},"label":"cloudEvent","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_dsf6yfn9","title":"General","sections":[{"id":"section_nngqerv4","fields":[{"id":"cloudEvent","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

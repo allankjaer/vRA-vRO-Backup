@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="1ba5230a-1653-42bd-9d31-cd2013e6fa4e" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Create sample  "Event Broker Template" subscriptions]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="topicIds" type="Array/string"/>
+    <param name="disabled" type="boolean"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <attrib name="description" type="string" read-only="false">
+    <value encoded="n"><![CDATA[Created by VMware Extensibility samples]]></value>
+  </attrib>
+  <attrib name="blocking" type="boolean" read-only="false">
+    <value encoded="n"><![CDATA[true]]></value>
+  </attrib>
+  <attrib name="runnableType" type="string" read-only="false">
+    <value encoded="n"><![CDATA[extensibility.vro]]></value>
+  </attrib>
+  <attrib name="runnableId" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="timeout" type="string" read-only="false">
+    <value encoded="n"><![CDATA[10]]></value>
+  </attrib>
+  <attrib name="priority" type="string" read-only="false">
+    <value encoded="n"><![CDATA[0]]></value>
+  </attrib>
+  <attrib name="runnableWorkflow" type="Workflow" read-only="false">
+    <value encoded="n"><![CDATA[dunes://service.dunes.ch/Workflow?id='9239fa70-1430-4781-a29c-205156a49a6a'&dunesName='Workflow']]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="681.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item0" type="foreach">
+    <display-name><![CDATA[Create an Event Broker subscription]]></display-name>
+    <in-binding>
+      <bind name="name" type="Array/string" export-name="*topicIds"/>
+      <bind name="description" type="string" export-name="description"/>
+      <bind name="disabled" type="boolean" export-name="disabled"/>
+      <bind name="eventTopicId" type="Array/string" export-name="*topicIds"/>
+      <bind name="blocking" type="boolean" export-name="blocking"/>
+      <bind name="runnableType" type="string" export-name="runnableType"/>
+      <bind name="runnableId" type="string" export-name="runnableId"/>
+      <bind name="timeout" type="string" export-name="timeout"/>
+      <bind name="priority" type="string" export-name="priority"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding/>
+    <reference type="Workflow" id="556cca14-1eca-4896-8621-e0789e2d849d"/>
+    <iteration-catch-block>
+      <script encoded="false"><![CDATA[System.warn("Could not create subscription");]]></script>
+    </iteration-catch-block>
+    <position y="60.0" x="360.0"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item2" type="task">
+    <display-name><![CDATA[Set runnable ID]]></display-name>
+    <script encoded="false"><![CDATA[runnableId = runnableWorkflow.id;]]></script>
+    <in-binding>
+      <bind name="runnableWorkflow" type="Workflow" export-name="runnableWorkflow"/>
+    </in-binding>
+    <out-binding>
+      <bind name="runnableId" type="string" export-name="runnableId"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="200.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

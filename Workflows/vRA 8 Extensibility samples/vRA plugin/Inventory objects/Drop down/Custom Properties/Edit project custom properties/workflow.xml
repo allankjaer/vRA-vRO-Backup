@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item6" object-name="workflow:name=generic" id="2b5b6894-dbc8-49ea-a8cc-5e6268527cbf" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Edit project custom properties]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="project" type="VRA:Project"/>
+    <param name="customProperties" type="Properties"/>
+  </input>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="420.0"/>
+  </workflow-item>
+  <workflow-item name="item6" out-name="item0" type="task">
+    <display-name><![CDATA[Update project]]></display-name>
+    <script encoded="false"><![CDATA[var projectSpecification = new VraProjectSpecification();
+
+// Setting keys that are in the project and not in the customProperties input to null to delete them
+var custProps = JSON.parse(project.customPropertiesExtension);
+for each (var key in Object.keys(custProps)) {
+    if (customProperties.get(key) == null) customProperties.put(key,null);
+}
+
+for each (var key in customProperties.keys) {
+    projectSpecification.putCustomPropertiesItem(key,customProperties.get(key));
+}
+
+System.debug(projectSpecification);
+var projectService = project.host.createInfrastructureClient().createProjectService();
+projectService.updateProject(project.id, projectSpecification);
+
+
+]]></script>
+    <in-binding>
+      <bind name="project" type="VRA:Project" export-name="project"/>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="220.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

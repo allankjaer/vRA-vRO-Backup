@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="2bf6440c-4dbc-40cb-9fa2-212b308f9412" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Get networks ids by tags]]></display-name>
+  <description><![CDATA[Extensibility sample]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="tags" type="Array/VRA:Tag"/>
+    <param name="networkNames" type="Array/string"/>
+    <param name="vraHost" type="VRA:Host"/>
+  </input>
+  <output>
+    <param name="networkIds" type="Array/string"/>
+  </output>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="460.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item0" type="task">
+    <display-name><![CDATA[Display networks and get ids]]></display-name>
+    <script encoded="false"><![CDATA[var vraHost = tags[0].host;
+
+var tagsFilters = new Array();
+for each (var tag in tags) {
+    tagsFilters.push(getTagFilter(tag.displayName));
+}
+
+// Query service parameter
+var tagsFilter = tagsFilters.join(" and ");
+if (tags.length == 0) var parameters = "expand";
+else var parameters = "expand&$filter=" + encodeURIComponent(tagsFilter).replace("'", "%27");
+
+var url = "/iaas/api/fabric-networks";
+networkIds = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectsProperty(vraHost, url, parameters, "id");
+
+function getTagFilter(tag) {
+    tag = tag.replace(":","*");
+    return "(expandedTags.item.tag eq '*" + tag + "*'))"
+}]]></script>
+    <in-binding>
+      <bind name="tags" type="Array/VRA:Tag" export-name="tags"/>
+      <bind name="vraHost" type="VRA:Host"/>
+      <bind name="networkNames" type="Array/string" export-name="networkNames"/>
+    </in-binding>
+    <out-binding>
+      <bind name="networkIds" type="Array/string" export-name="networkIds"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="260.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

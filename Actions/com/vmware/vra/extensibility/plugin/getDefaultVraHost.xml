@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getDefaultVraHost" result-type="VRA:Host" api-version="6.0.0" id="531b66da-558c-4c85-802b-375f2ae2bb0e" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin">
+  <script encoded="false"><![CDATA[var allHosts = Server.findAllForType("VRA:Host");
+
+for each (var host in allHosts) {
+    if (host.name == "Default") return host;
+}]]></script>
+</dunes-script-module>

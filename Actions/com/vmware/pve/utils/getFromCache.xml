@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getFromCache" result-type="Any" api-version="6.0.0" id="611c850d-d833-4fb0-85bd-71abd4a0b681" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.pve.utils">
+  <param n="objectId" t="string"><![CDATA[]]></param>
+  <param n="timeOut" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var cacheProp = DynamicTypesManager.getFromCache(objectId);
+if (cacheProp == null) {
+    System.log("Object with id " + objectId + " not found in cache");
+    return null;
+}
+
+// Enforcing timeOut specified in the getFromCache
+if (timeOut != null) {
+    try {
+        var timeExistingMs = cacheProp.get("Date").getTime() - new Date().getTime();
+        if ((timeExistingMs /100) > timeOut) {
+            System.debug("Object with id " + objectId + " existed for more seconds than timeOut : "  + timeExistingMs/100 + " seconds");
+            return null;        
+        }
+        else {
+            System.debug("Object with id " + objectId + " has not expired from cache and will still be valid for : "  + (timeExistingMs/100)-timeOut + " seconds");
+            return cacheProp.get("object"); 
+        }
+    }    
+    catch(e) {return null};    
+}
+
+// Enforcing timeOut specified in the putInCache
+var timeLeftMs = cacheProp.get("timeOut").getTime() - new Date().getTime();
+
+if (timeLeftMs >0 ) {
+    System.debug("Object with id " + objectId + " will stay in cache for " + timeLeftMs/100 + " seconds")
+    return cacheProp.get("object");
+}    
+else {
+    System.debug("Object with id " + objectId + " expired "  + -timeLeftMs/100 + " seconds");
+    return null;
+}]]></script>
+</dunes-script-module>

@@ -1,0 +1,1 @@
+{"schema":{"url":{"id":"url","type":{"dataType":"string"},"label":"url","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_dxznmcxa","title":"General","sections":[{"id":"section_ecao18n1","fields":[{"id":"url","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

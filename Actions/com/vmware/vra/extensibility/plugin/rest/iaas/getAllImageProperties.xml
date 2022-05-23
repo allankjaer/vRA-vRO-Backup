@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getAllImageProperties" result-type="Array/Properties" api-version="6.0.0" id="10922e19-12be-499c-99c9-cf6ca0ac23fa" version="0.0.4" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="imageProfileName" t="string"><![CDATA[]]></param>
+  <param n="cacheTimeout" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || imageProfileName == null) return null;
+
+var objects = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getImageProfileMappingsCached(vraHost, cacheTimeout);
+
+var imagesProp = new Array();
+for each (var object in objects) {
+    if (object.imageMappings.mapping[imageProfileName] != undefined) {
+        var imageProp = new Properties();
+        imageProp.put("id", object.id);
+        imageProp.put("cloudAccount",System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getCloudAccountNameCached(vraHost, object.cloudAccountId, 24 * 3600));
+        var cloudAccountType = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getCloudAccountTypeCached(vraHost, object.cloudAccountId, 24 * 3600);
+        imageProp.put("cloudAccountType", cloudAccountType);
+        if (cloudAccountType == "aws") imageProp.put("region",  object.externalRegionId);
+        else imageProp.put("region", System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getRegionNameByExternalRegionIdCached(vraHost, object.externalRegionId, 24 * 3600));
+        imageProp.put("osFamily",object.imageMappings.mapping[imageProfileName].osFamily);
+        imageProp.put("description",object.imageMappings.mapping[imageProfileName].description);
+        var imageName = object.imageMappings.mapping[imageProfileName].name;
+        if (imageName != "") imageProp.put("name",imageName);
+        else imageProp.put("name",object.imageMappings.mapping[imageProfileName].externalId);
+        imageProp.put("updatedAt", object.updatedAt);
+
+        imagesProp.push(imageProp);
+    }
+}
+return imagesProp;]]></script>
+</dunes-script-module>

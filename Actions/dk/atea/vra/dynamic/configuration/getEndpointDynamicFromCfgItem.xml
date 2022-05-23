@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getEndpointDynamicFromCfgItem" result-type="Any" api-version="6.0.0" id="69063ea1-6830-45bc-ac84-8e95778b384a" version="0.0.2" allowed-operations="vef" category-name="dk.atea.vra.dynamic.configuration">
+  <param n="endpointType" t="string"><![CDATA[]]></param>
+  <param n="configurationCategoryPath" t="string"><![CDATA[]]></param>
+  <param n="configurationName" t="string"><![CDATA[]]></param>
+  <param n="endpointAttributeName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var endpointNames = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue(configurationCategoryPath,configurationName,endpointAttributeName);
+
+return System.getModule("dk.atea.vra.dynamic.configuration").getEndpointDynamic(endpointNames,endpointType);]]></script>
+</dunes-script-module>

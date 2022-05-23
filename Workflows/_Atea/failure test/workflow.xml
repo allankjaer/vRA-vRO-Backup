@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item7" object-name="workflow:name=generic" id="db465ea0-974f-4e55-af56-ead2bafb15ed" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item7" object-name="workflow:name=generic" id="db465ea0-974f-4e55-af56-ead2bafb15ed" editor-version="2.0" version="0.0.2" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
     <display-name>failure test</display-name>
     <position y="50.0" x="100.0"/>
     <input>
@@ -31,5 +31,4 @@ throw "Der er tastet forkert navn";</script>
         <out-binding/>
         <position y="110.0" x="240.0"/>
     </workflow-item>
-    <presentation/>
 </ns2:workflow>

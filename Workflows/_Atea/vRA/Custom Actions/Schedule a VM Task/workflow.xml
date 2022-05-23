@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="9f33f290-f90d-49fe-87b2-376f9727320c" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Schedule a VM Task</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="time" type="Date"/>
+        <param name="task" type="string"/>
+        <param name="vCpu" type="number"/>
+        <param name="Memory" type="number"/>
+    </input>
+    <output/>
+    <attrib name="wfToken" type="WorkflowToken">
+        <value encoded="n"/>
+    </attrib>
+    <attrib name="workflow" type="Workflow">
+        <value encoded="n">dunes://service.dunes.ch/Workflow?id='2406ddda-0150-44fb-98a2-ddbe4c50cdb8'&amp;dunesName='Workflow'</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="560.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" launched-workflow-id="2406ddda-0150-44fb-98a2-ddbe4c50cdb8" comparator="0">
+        <display-name>Run Schedule a VM Task</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+var workflowToLaunch = Server.getWorkflowWithId("2406ddda-0150-44fb-98a2-ddbe4c50cdb8");
+if (workflowToLaunch == null) {
+	throw "Workflow not found";
+}
+
+var workflowParameters = new Properties();
+workflowParameters.put("time",time);
+workflowParameters.put("task",task);
+wfToken = workflowToLaunch.execute(workflowParameters);
+</script>
+        <in-binding>
+            <bind name="time" type="Date" export-name="time"/>
+            <bind name="task" type="string" export-name="task"/>
+        </in-binding>
+        <out-binding>
+            <bind name="wfToken" type="WorkflowToken" export-name="wfToken"/>
+        </out-binding>
+        <description>Start an asynchronous workflow.</description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">System.log(wfToken.id);&#13;
+System.log(Server.getWorkflowTokenState(wfToken.id));&#13;
+var test = workflow.executions;&#13;
+for each (t in test) {&#13;
+    //System.log("test: " + t.id);&#13;
+}&#13;
+var inputParams = wfToken.getInputParameters();&#13;
+if (inputParams != null){&#13;
+    for each (key in inputParams.keys){&#13;
+        var value = inputParams.get(key);&#13;
+        System.log(key + ": " + value + " ("+System.getObjectType(value)+")");&#13;
+    }&#13;
+}</script>
+        <in-binding>
+            <bind name="wfToken" type="WorkflowToken" export-name="wfToken"/>
+            <bind name="workflow" type="Workflow" export-name="workflow"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="360.0"/>
+    </workflow-item>
+</ns2:workflow>

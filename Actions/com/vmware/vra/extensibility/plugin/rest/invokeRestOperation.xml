@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="invokeRestOperation" result-type="string" api-version="6.0.0" id="62ae8260-e1fe-4d47-8aad-a0091862e04d" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+<dunes-script-module name="invokeRestOperation" result-type="string" api-version="6.0.0" id="62ae8260-e1fe-4d47-8aad-a0091862e04d" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
   <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
   <param n="operation" t="string"><![CDATA[]]></param>
   <param n="url" t="string"><![CDATA[]]></param>
@@ -22,9 +22,12 @@ if (stringsToReplace != null && stringsToReplace.length >0) {
 	}
 	for (var i=0; i<parameters.length; i++) {
 		System.log("Replacing " + stringsToReplace[i] + " with " + parameters[i]);
-		url = url.replace(stringsToReplace[i],parameters[i]);	
+		//url = url.replace(stringsToReplace[i],parameters[i]);
+        url = url.replace(stringsToReplace[i],encodeURIComponent(parameters[i]).replace("'", "%27"));	
 	}	
 }
+
+;
 
 if (content != null) {
     try {

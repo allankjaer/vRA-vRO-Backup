@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachineCustomProperties" result-type="Properties" api-version="6.0.0" id="4f3acd25-891f-4028-a999-dfe1adc6bd2b" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.iaas">
+  <param n="machine" t="VRA:Machine"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (machine == null) return null;
+
+var customPropertiesExtensionObject = JSON.parse(machine.customPropertiesExtension);
+
+var machineCustomProperties = new Properties();
+for (var key in customPropertiesExtensionObject) {
+    machineCustomProperties.put(key, customPropertiesExtensionObject[key]);
+}
+
+return machineCustomProperties;
+]]></script>
+</dunes-script-module>

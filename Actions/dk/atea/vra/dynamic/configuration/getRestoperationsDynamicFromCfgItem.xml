@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getRestoperationsDynamicFromCfgItem" result-type="Any" api-version="6.0.0" id="4c3a2fe5-58a7-491f-bfaf-2541d09e74d6" version="0.0.2" allowed-operations="vef" category-name="dk.atea.vra.dynamic.configuration">
+  <param n="configurationCategoryPath" t="string"><![CDATA[]]></param>
+  <param n="configurationName" t="string"><![CDATA[]]></param>
+  <param n="endpointAttributeName" t="string"><![CDATA[]]></param>
+  <param n="restOperationName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[
+var restHost = System.getModule("dk.atea.vra.dynamic.configuration").getEndpointDynamicFromCfgItem("REST:RESTHost", configurationCategoryPath, configurationName, endpointAttributeName);
+
+var restOperationIds = restHost.getOperations();
+for each (restOperationId in restOperationIds) {
+    var restOperation = restHost.getOperation(restOperationId);
+    if (restOperation.name == restOperationName) {
+        return restOperation;
+    }
+}
+
+
+]]></script>
+</dunes-script-module>

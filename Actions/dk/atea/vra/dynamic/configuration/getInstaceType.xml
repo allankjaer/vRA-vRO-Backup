@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getInstaceType" result-type="string" api-version="6.0.0" id="b30b069b-78cc-4890-bdb3-aa026911b115" version="0.0.3" allowed-operations="vef" category-name="dk.atea.vra.dynamic.configuration">
+  <script encoded="false"><![CDATA[var endpoints = Server.findAllForType("REST:RESTHost");
+for each (endpoint in endpoints) {
+    if (endpoint.name == "Local vRO") {
+        var localVro = endpoint;
+        break;
+    }
+}
+
+var op = new RESTOperation("health");
+op.method = "GET";
+op.urlTemplate = ""
+op.host = localVro;
+
+var arr = new Array();
+var content = "{}";
+var request = op.createRequest(arr, content);
+var response = request.execute();
+var bodyObj = JSON.parse(response.contentAsString.replace("instance-id","instance_id"))
+
+var vraOrgTypes = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue("Atea/vRA","vRA Configurations","vraOrgTypes");
+var instanceId = bodyObj.instance_id;
+instanceId = instanceId.substring(0,instanceId.indexOf("-vco-app-"));
+var vraOrgType = vraOrgTypes.get(instanceId);
+
+return vraOrgType;]]></script>
+</dunes-script-module>

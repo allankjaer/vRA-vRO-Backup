@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="checkvRAVersionPowerShell" result-type="string" api-version="6.0.0" id="b82b79aa-7740-470a-9b81-10ad7e455b2f" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility">
+  <runtime><![CDATA[powercli:12-powershell-7.1]]></runtime>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[function Handler($context, $inputs) {
+    $inputsString = $inputs | ConvertTo-Json -Compress
+    $url = $inputs.url
+    $response = Invoke-RestMethod -Uri "$url/config.json" -SkipCertificateCheck
+    $applicationVersionEncoded = $response.applicationVersion
+    $applicationVersion = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($applicationVersionEncoded))
+    return $applicationVersion
+}]]></script>
+</dunes-script-module>

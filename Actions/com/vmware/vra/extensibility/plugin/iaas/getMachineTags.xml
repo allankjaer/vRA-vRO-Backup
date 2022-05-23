@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getMachineTags" result-type="Array/VRA:Tag" api-version="6.0.0" id="5b083869-b998-46e2-b5d0-6c6972b0537c" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.iaas">
+  <param n="machine" t="VRA:Machine"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (machine == null) return null;
+return machine.tags;]]></script>
+</dunes-script-module>

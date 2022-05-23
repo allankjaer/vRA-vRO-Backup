@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getTagByKey" result-type="Array/string" api-version="6.0.0" id="d5453735-6aff-4d53-ab98-c29fa973fd50" version="1.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="tagKey" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null || tagKey == null) return null;
+
+// Leveraging plug-in VraEntitiesFinder provides a supp
+var filter = "key eq " + tagKey;
+tags = VraEntitiesFinder.getTags(vraHost,filter);
+
+// Alternate : leverage REST API via custom action getObjects
+// Needed when VraEntitiesFinder does not handle an object type
+/*
+var url = "/iaas/api/tags"
+var parameters = encodeURI("$filter=key eq " + tagKey);
+var tags = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost, url, parameters);
+*/
+
+
+var tagArray = new Array();
+for each (var tag in tags) {
+    tagArray.push(tag.key + ":" + tag.value);
+}
+
+return tagArray;]]></script>
+</dunes-script-module>

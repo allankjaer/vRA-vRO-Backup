@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getRegionNameByExternalRegionIdQS" result-type="Any" api-version="6.0.0" id="5635341b-0230-4c92-8a59-aed974d33bac" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="externalRegionId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/iaas/api/regions";
+// Query service parameter
+var nameFilter = "externalRegionId eq '" + externalRegionId + "'";
+var parameters = "$filter=" + encodeURIComponent(nameFilter).replace("'", "%27");
+
+var regions = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost,url,parameters);
+if (regions.length == 1) return regions[0].name;
+if (regions.length == 0) return null;
+
+// More Machines returned than expected !
+System.warn("getRegionNameByExternalRegionIdQS returned " +  regions.length + " regions");
+return null;]]></script>
+</dunes-script-module>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="setDeploymentResourceTagsFromProperties" result-type="string" api-version="6.0.0" id="77ad9ea7-ac18-4f9f-9fe2-4eada746f56b" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+<dunes-script-module name="setDeploymentResourceTagsFromProperties" result-type="string" api-version="6.0.0" id="77ad9ea7-ac18-4f9f-9fe2-4eada746f56b" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
   <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
   <param n="deploymentId" t="string"><![CDATA[]]></param>
   <param n="resourceName" t="string"><![CDATA[]]></param>
@@ -7,17 +7,17 @@
   <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || resourceName == null) return null;
 
 var operation = "POST";
-var url = "/deployment/api/deployments/" +  deploymentId + "/requests";
+var url = "/deployment/api/deployments/" +  deploymentId + "/requests?apiVersion=2020-08-25";
 
 var object = {
   "actionId": "Deployment.EditTags",
-  "targetId": deploymentId,
   "inputs": {}
 };
 
 object.inputs[resourceName] = new Array();
 for each (var key in tags.keys) {
-    var tag = {"key": key,"value": tags.get(key)};
+    if (tags.get(key) != null) var tag = {"key": key,"value": tags.get(key)};
+    else var tag = {"key": key};
     object.inputs[resourceName].push(tag);
 }
 

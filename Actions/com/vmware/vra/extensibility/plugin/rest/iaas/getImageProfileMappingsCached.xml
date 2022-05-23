@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getImageProfileMappingsCached" result-type="Any" api-version="6.0.0" id="dcd645f7-0950-4488-88e8-a3913a1a6da5" version="0.0.3" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="cacheTimeout" t="number"><![CDATA[Cache timeout in seconds]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+if (cacheTimeout == null) var ttl = 2*60; // 2 minutes cache timeout
+else var ttl = cacheTimeout;
+ 
+var objectId = "getImageProfileMappings_" + vraHost.name;
+var object = System.getModule("com.vmware.pve.utils").getFromCache(objectId, ttl); 
+if (object != null) {
+    System.debug("Got object " + objectId + " from cache");    
+    return object; 
+}
+var url = "/iaas/api/image-profiles";
+var parameters = "$top=250";
+var objects = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjects(vraHost,url,parameters);
+
+System.getModule("com.vmware.pve.utils").putInCache(objectId, objects, ttl); 
+//System.debug(JSON.stringify(objects));
+return objects;]]></script>
+</dunes-script-module>

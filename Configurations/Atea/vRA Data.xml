@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="15979d23-0c55-41d8-bd65-8c86bcc16f70" version="0.0.0">
+  <display-name><![CDATA[vRA Data]]></display-name>
+  <atts>
+    <att name="getServiceOwnerSql" type="string" read-only="false">
+      <value encoded="n"><![CDATA[SELECT services.name, serviceUser.[User ID], users.Name   FROM [vra_data].[dbo].[services]    inner join [vra_data].dbo.ServiceUser    on services.id = ServiceUser.[Service ID]   inner join vra_data.dbo.Users   on serviceuser.[User ID] = users.id   where services.id = {ID}]]></value>
+    </att>
+    <att name="getServicesSql" type="string" read-only="false">
+      <value encoded="n"><![CDATA[SELECT services.name, services.ID FROM [vra_data].[dbo].[services] ORDER BY name ASC]]></value>
+    </att>
+    <att name="vraDataDatabase" type="SQL:Database" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='25166082-bfb6-4be9-875e-0e98651d4f13'&dunesName='SQL:Database']]></value>
+    </att>
+  </atts>
+</config-element>

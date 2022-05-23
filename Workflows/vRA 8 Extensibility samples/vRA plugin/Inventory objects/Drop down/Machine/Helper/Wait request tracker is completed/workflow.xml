@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item8" object-name="workflow:name=generic" id="f91a977f-44b6-4180-ade8-23e835377714" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Wait request tracker is completed]]></display-name>
+  <position y="53.170731707317074" x="93.82113821138212"/>
+  <input>
+    <param name="requestTracker" type="VRA:RequestTracker"/>
+    <param name="sleepInterval" type="number"/>
+    <param name="timeOut" type="number"/>
+  </input>
+  <attrib name="timeOutDate" type="Date" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="error" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="requestTrackerStatus" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="53.170731707317074" x="939.349593495935"/>
+  </workflow-item>
+  <workflow-item name="item3" out-name="item22" type="custom-condition" alt-out-name="item18">
+    <display-name><![CDATA[Completed ?]]></display-name>
+    <script encoded="false"><![CDATA[return (requestTrackerStatus == "FINISHED" || requestTrackerStatus == "FAILED");]]></script>
+    <in-binding>
+      <bind name="requestTrackerStatus" type="string" export-name="requestTrackerStatus"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="53.170731707317074" x="476.5853658536586"/>
+  </workflow-item>
+  <workflow-item name="item4" prototype-id="sleep" out-name="item5" content-mode="x" type="task">
+    <display-name><![CDATA[Sleep]]></display-name>
+    <script encoded="false"><![CDATA[//Auto-generated script
+if ( sleepTime !== null )  {
+	System.sleep(sleepTime * 1000);
+}else  {
+	throw "'sleepTime' is NULL"; 
+}]]></script>
+    <in-binding>
+      <bind name="sleepTime" type="number" export-name="sleepInterval">
+        <description><![CDATA[Time to sleep in seconds]]></description>
+      </bind>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Sleep a given number of seconds.]]></description>
+    <position y="242.03252032520325" x="476.5853658536586"/>
+  </workflow-item>
+  <workflow-item name="item5" out-name="item20" type="task">
+    <display-name><![CDATA[Log progress]]></display-name>
+    <script encoded="false"><![CDATA[System.log(requestTracker.name + " operation is completed at " + requestTracker.progress + "%");]]></script>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="242.03252032520325" x="330.2439024390244"/>
+  </workflow-item>
+  <workflow-item name="item8" out-name="item20" type="task">
+    <display-name><![CDATA[Set timeout date]]></display-name>
+    <script encoded="false"><![CDATA[timeOutDate = new Date (new Date().getTime() + (timeOut * 1000));]]></script>
+    <in-binding>
+      <bind name="timeOut" type="number" export-name="timeOut"/>
+    </in-binding>
+    <out-binding>
+      <bind name="timeOutDate" type="Date" export-name="timeOutDate"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="63.170731707317074" x="183.90243902439025"/>
+  </workflow-item>
+  <workflow-item name="item15" out-name="item26" type="task">
+    <display-name><![CDATA[Set error]]></display-name>
+    <script encoded="false"><![CDATA[error = requestTracker.name + " operation completed at " + requestTracker.progress + "% timed out after " + timeOut + " seconds";]]></script>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+      <bind name="timeOut" type="number" export-name="timeOut"/>
+    </in-binding>
+    <out-binding>
+      <bind name="error" type="string" export-name="error"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="176.9918699186992" x="622.9268292682927"/>
+  </workflow-item>
+  <workflow-item name="item18" out-name="item4" type="custom-condition" alt-out-name="item15">
+    <display-name><![CDATA[Timed out ?]]></display-name>
+    <script encoded="false"><![CDATA[return (new Date() < timeOutDate);]]></script>
+    <in-binding>
+      <bind name="timeOutDate" type="Date" export-name="timeOutDate"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="166.9918699186992" x="476.5853658536586"/>
+  </workflow-item>
+  <workflow-item name="item20" out-name="item3" type="task" script-module="com.vmware.vra.extensibility.plugin.rest.iaas/getRequestTrackerStatus">
+    <display-name><![CDATA[getRequestTrackerStatus]]></display-name>
+    <script encoded="false"><![CDATA[//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getRequestTrackerStatus(requestTracker);
+]]></script>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+    </in-binding>
+    <out-binding>
+      <bind name="actionResult" type="string" export-name="requestTrackerStatus"/>
+    </out-binding>
+    <description><![CDATA[Add a note to the workflow schema.]]></description>
+    <position y="63.170731707317074" x="330.2439024390244"/>
+  </workflow-item>
+  <workflow-item name="item22" out-name="item24" type="condition" alt-out-name="item23" comparator="0">
+    <display-name><![CDATA[Successful ?]]></display-name>
+    <script encoded="false"><![CDATA[// Generated by the system, cannot be edited
+return (requestTrackerStatus === "FINISHED");]]></script>
+    <in-binding>
+      <bind name="requestTrackerStatus" type="string" export-name="requestTrackerStatus"/>
+    </in-binding>
+    <out-binding/>
+    <condition name="requestTrackerStatus" type="string" comparator="0" label="null">FINISHED</condition>
+    <description><![CDATA[Custom decision based on a custom script.]]></description>
+    <position y="53.170731707317074" x="622.9268292682927"/>
+  </workflow-item>
+  <workflow-item name="item23" out-name="item25" type="task">
+    <display-name><![CDATA[Set error]]></display-name>
+    <script encoded="false"><![CDATA[error = requestTracker.name + " operation failed at " + requestTracker.progress + "% with message : " + requestTracker.message;]]></script>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+    </in-binding>
+    <out-binding>
+      <bind name="error" type="string" export-name="error"/>
+    </out-binding>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="120.08130081300814" x="622.9268292682927"/>
+  </workflow-item>
+  <workflow-item name="item24" out-name="item0" type="task">
+    <display-name><![CDATA[Log message]]></display-name>
+    <script encoded="false"><![CDATA[System.log(requestTracker.name + " operation finished successfully with status " + requestTracker.message);]]></script>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="63.170731707317074" x="769.2682926829268"/>
+  </workflow-item>
+  <workflow-item name="item25" throw-bind-name="error" type="end" end-mode="1">
+    <in-binding/>
+    <position y="110.08130081300814" x="939.349593495935"/>
+  </workflow-item>
+  <workflow-item name="item26" throw-bind-name="error" type="end" end-mode="1">
+    <in-binding/>
+    <position y="166.9918699186992" x="939.349593495935"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

@@ -1,14 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="getObjects" result-type="Array/Any" api-version="6.0.0" id="951938bb-c88d-4463-9c7c-fcdb639af67a" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
+<dunes-script-module name="getObjects" result-type="Array/Any" api-version="6.0.0" id="951938bb-c88d-4463-9c7c-fcdb639af67a" version="0.0.2" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest">
   <description><![CDATA[Get all deployment objects using paging ]]></description>
   <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
   <param n="url" t="string"><![CDATA[]]></param>
   <param n="parameters" t="string"><![CDATA[]]></param>
-  <script encoded="false"><![CDATA[System.log("********");
-System.log(vraHost.name);
-System.log(url);
-System.log(parameters);
-var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+  <script encoded="false"><![CDATA[var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
 
 // Depending on the service the objects can be returned in different formats and supports different paging queries
 

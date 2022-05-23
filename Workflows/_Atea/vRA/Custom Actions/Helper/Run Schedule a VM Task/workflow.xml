@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="2406ddda-0150-44fb-98a2-ddbe4c50cdb8" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Run Schedule a VM Task</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="time" type="Date"/>
+        <param name="task" type="string"/>
+    </input>
+    <output/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="500.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" prototype-id="wait-until-date" content-mode="x" comparator="0">
+        <display-name>Wait until date</display-name>
+        <script encoded="false">//Auto-generated script 
+if (waitDate !== null) { 
+	System.waitUntil(waitDate,1000);
+}
+else  { 
+	throw "'waitDate' is NULL"; 
+}
+</script>
+        <in-binding>
+            <bind name="waitDate" type="Date" export-name="time">
+                <description>Wait date</description>
+            </bind>
+        </in-binding>
+        <out-binding/>
+        <description>Wait until date.</description>
+        <position y="60.0" x="180.0"/>
+    </workflow-item>
+</ns2:workflow>

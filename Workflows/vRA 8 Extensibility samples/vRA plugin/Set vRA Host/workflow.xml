@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="a2c4982d-03aa-4ae1-ac1e-59dd2acbc701" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item3" object-name="workflow:name=generic" id="a2c4982d-03aa-4ae1-ac1e-59dd2acbc701" version="0.0.1" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
   <display-name><![CDATA[Set vRA Host]]></display-name>
   <description><![CDATA[Create a host from the plug-in default host with using a shared session]]></description>
   <position y="50.0" x="60.0"/>
@@ -34,6 +34,9 @@
   <attrib name="pluginConfiguration" type="ConfigurationElement" read-only="false">
     <value encoded="n"><![CDATA[dunes://service.dunes.ch/ConfigurationElement?id='427e47a4-b7ab-4753-89b1-cf2d09bc11bb'&dunesName='ConfigurationElement']]></value>
   </attrib>
+  <attrib name="name" type="string" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
   <workflow-item name="item0" type="end" end-mode="0">
     <in-binding/>
     <position y="50.0" x="580.0"/>
@@ -50,7 +53,7 @@
       <bind name="connectionType" type="string" export-name="connectionType">
         <description><![CDATA[vRA Connection Type(vra-onprem)]]></description>
       </bind>
-      <bind name="name" type="string" export-name="vraHost">
+      <bind name="name" type="string" export-name="name">
         <description><![CDATA[vRA Host Connection Name]]></description>
       </bind>
       <bind name="vraHost" type="string" export-name="vraHost">
@@ -85,10 +88,12 @@
   <workflow-item name="item3" out-name="item1" type="task">
     <display-name><![CDATA[Get default vRA]]></display-name>
     <script encoded="false"><![CDATA[var host = VraHostManager.createHostForCurrentUser();
-vraHost = host.vraHost;]]></script>
+vraHost = host.vraHost;
+name = "vRA Extensibility Sample Host";]]></script>
     <in-binding/>
     <out-binding>
       <bind name="vraHost" type="string" export-name="vraHost"/>
+      <bind name="name" type="string" export-name="name"/>
     </out-binding>
     <description><![CDATA[Simple task with custom script capability.]]></description>
     <position y="60.0" x="140.0"/>

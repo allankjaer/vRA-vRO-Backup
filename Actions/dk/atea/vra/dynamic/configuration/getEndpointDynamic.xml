@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getEndpointDynamic" result-type="Any" api-version="6.0.0" id="c0975dea-fc0a-44d4-82de-751f8c965ae7" version="0.0.2" allowed-operations="vef" category-name="dk.atea.vra.dynamic.configuration">
+  <param n="endpointNames" t="Properties"><![CDATA[]]></param>
+  <param n="endpointType" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[
+var vraOrgType = System.getModule("dk.atea.vra.dynamic.configuration").getInstaceType();
+
+var endpointName = endpointNames.get(vraOrgType);
+
+var endpoints = Server.findAllForType(endpointType, "xpath:name[contains(.,'" + endpointName + "')]");
+if (endpoints == "") {
+    var endpoints = Server.findAllForType(endpointType);
+}
+
+for each (endpoint in endpoints) {
+    if (endpoint.name == endpointName) {
+        return endpoint
+    }
+}
+
+]]></script>
+</dunes-script-module>

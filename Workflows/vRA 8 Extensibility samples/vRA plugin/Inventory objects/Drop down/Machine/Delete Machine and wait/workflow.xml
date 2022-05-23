@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="c11191b2-3d06-41a2-8c3e-82ae5eb602f7" version="0.0.0" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Delete Machine and wait]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="machine" type="VRA:Machine">
+      <description><![CDATA[Vra machine to deleted. ]]></description>
+    </param>
+  </input>
+  <attrib name="requestTracker" type="VRA:RequestTracker" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+    <description><![CDATA[Tracker object for delete operation request.]]></description>
+  </attrib>
+  <attrib name="sleepInterval" type="number" read-only="false">
+    <value encoded="n"><![CDATA[10.0]]></value>
+  </attrib>
+  <attrib name="timeOut" type="number" read-only="false">
+    <value encoded="n"><![CDATA[60.0]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="500.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="36182499-2dd4-4ef6-979c-57061905333a">
+    <display-name><![CDATA[Delete Machine]]></display-name>
+    <in-binding>
+      <bind name="machine" type="VRA:Machine" export-name="machine">
+        <description><![CDATA[Vra machine to deleted. ]]></description>
+      </bind>
+    </in-binding>
+    <out-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker">
+        <description><![CDATA[Tracker object for delete operation request.]]></description>
+      </bind>
+    </out-binding>
+    <description><![CDATA[ ]]></description>
+    <position y="60.0" x="170.0"/>
+  </workflow-item>
+  <workflow-item name="item2" out-name="item0" type="link" linked-workflow-id="f91a977f-44b6-4180-ade8-23e835377714">
+    <display-name><![CDATA[Wait request tracker is completed]]></display-name>
+    <in-binding>
+      <bind name="requestTracker" type="VRA:RequestTracker" export-name="requestTracker"/>
+      <bind name="sleepInterval" type="number" export-name="sleepInterval"/>
+      <bind name="timeOut" type="number" export-name="timeOut"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[ ]]></description>
+    <position y="60.0" x="320.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getRequestTrackerStatus" result-type="string" api-version="6.0.0" id="da4edebd-592f-4ad1-8945-64c0df138487" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="requestTracker" t="VRA:RequestTracker"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[//var status = requestTracker.status;
+var status = requestTracker.requestTrackerStatus;
+if (status != undefined) return status;
+
+// Work around as requestTracker is missing the status property in plug-in version 8.7
+System.debug("Get requestTracker status work around for 8.7");
+var url = "/iaas/api/request-tracker/" + requestTracker.id;
+var requestTrackerObject = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(requestTracker.host, url, null);
+return requestTrackerObject.status;]]></script>
+</dunes-script-module>

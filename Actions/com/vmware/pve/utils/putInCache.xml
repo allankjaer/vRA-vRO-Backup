@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="putInCache" result-type="string" api-version="6.0.0" id="e8d87046-a464-4457-9c30-80d213a499b5" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.pve.utils">
+  <param n="objectId" t="string"><![CDATA[]]></param>
+  <param n="object" t="Any"><![CDATA[]]></param>
+  <param n="ttl" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var timeOut = new Date();
+timeOut.setSeconds(timeOut.getSeconds() + ttl);
+System.debug("Object " + objectId + " set to time out at " + timeOut);
+
+var cacheProp = new Properties();
+cacheProp.put("object", object);
+cacheProp.put("timeOut", timeOut);
+cacheProp.put("date", new Date());
+
+DynamicTypesManager.putInCache(objectId, cacheProp);]]></script>
+</dunes-script-module>

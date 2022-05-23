@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="checkvRAVersionPython" result-type="string" api-version="6.0.0" id="0f95ded1-cd0c-4028-aa5c-a7fa5781044c" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility">
+  <runtime><![CDATA[python:3.7]]></runtime>
+  <param n="url" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[import json
+import urllib.request
+import ssl
+import base64
+
+
+def handler(context, inputs):
+    ssl._create_default_https_context = ssl._create_unverified_context
+    jsonOut = json.dumps(inputs, separators=(',', ':'))
+    webUrl = urllib.request.urlopen(format(inputs['url'])
+                                    + '/config.json')
+    jsonData = webUrl.read()
+    data = json.loads(jsonData)
+    applicationVersionEncoded = data['applicationVersion']
+    applicationVersionBytes = \
+        base64.b64decode(applicationVersionEncoded)
+    return applicationVersionBytes.decode('ascii')]]></script>
+</dunes-script-module>

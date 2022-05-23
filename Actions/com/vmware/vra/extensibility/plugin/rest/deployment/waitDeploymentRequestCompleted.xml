@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="waitDeploymentRequestCompleted" result-type="void" api-version="6.0.0" id="24803fe0-b9fd-4801-b8b0-083e1533a595" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
+<dunes-script-module name="waitDeploymentRequestCompleted" result-type="void" api-version="6.0.0" id="24803fe0-b9fd-4801-b8b0-083e1533a595" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.deployment">
   <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
   <param n="deploymentId" t="string"><![CDATA[]]></param>
   <param n="requestId" t="string"><![CDATA[]]></param>
-  <param n="sleepInterval" t="string"><![CDATA[Number of seconds between each poll]]></param>
+  <param n="sleepInterval" t="number"><![CDATA[Number of seconds between each poll]]></param>
   <script encoded="false"><![CDATA[if (vraHost == null || deploymentId == null || requestId == null) return null;
 
 var lastCompleted = -1;

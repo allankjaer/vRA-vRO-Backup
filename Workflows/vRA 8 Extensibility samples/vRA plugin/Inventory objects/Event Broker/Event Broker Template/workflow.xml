@@ -1,0 +1,669 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item1" object-name="workflow:name=generic" id="9239fa70-1430-4781-a29c-205156a49a6a" version="0.0.2" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Event Broker Template]]></display-name>
+  <description><![CDATA[Extensibility sample
+Designed to be started from a vRA event subscription.
+Display the event payload, the execution context metadatas
+Get VC:virtualMachine from payload vCenter & VM UUID
+Run REST requests against vRA to get objects from payload IDs
+Display the parameters that supports being changed via workflow outputs.
+Update custom properties with eventHistory property
+Update tags
+Update VM names
+Get Host Selection
+
+]]></description>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="inputProperties" type="Properties">
+      <description><![CDATA[This inputis used to pass the event payload properties as defined in the subscription schema ]]></description>
+    </param>
+  </input>
+  <output>
+    <param name="customProperties" type="Properties"/>
+    <param name="tags" type="Properties"/>
+    <param name="resourceNames" type="Array/string"/>
+    <param name="addresses" type="Array/string"/>
+    <param name="gateways" type="Array/string"/>
+    <param name="networkSelectionIds" type="Array/Array"/>
+    <param name="skipIPAllocations" type="Array/boolean"/>
+    <param name="domains" type="Array/string"/>
+    <param name="dnsServers" type="Array/string"/>
+    <param name="cidrs" type="Array/string"/>
+    <param name="dnsSearchDomains" type="Array/string"/>
+    <param name="networkProfileIds" type="Array/string"/>
+    <param name="placementIds" type="Array/string"/>
+    <param name="hostSelectionIds" type="Array/string"/>
+  </output>
+  <attrib name="vCenterVM" type="VC:VirtualMachine" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="vraHost" type="VRA:Host" read-only="false" conf-id="427e47a4-b7ab-4753-89b1-cf2d09bc11bb" conf-key="defaultHost"/>
+  <attrib name="vSphereCloudAccount" type="VRA:CloudAccountVsphere" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="cloudAccountEnabledRegions" type="Array/VRA:Region" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="zone" type="VRA:Zone" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="project" type="VRA:Project" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="placementZone" type="VRA:Zone" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="tagList" type="Array/VRA:Tag" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <attrib name="cloudAccount" type="VRA:CloudAccount" read-only="false">
+    <value encoded="n"><![CDATA[]]></value>
+  </attrib>
+  <attrib name="projectTags" type="Array/VRA:Tag" read-only="false">
+    <value encoded="n"><![CDATA[[]]]></value>
+  </attrib>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="440.0"/>
+  </workflow-item>
+  <workflow-item name="item1" out-name="item0" type="task">
+    <display-name><![CDATA[Get payload and execution context]]></display-name>
+    <script encoded="false"><![CDATA[// The execution context is where the vRA extensibility metadatas are passed
+var executionContext = System.getContext();
+
+// Getting specific execution context parameters
+var eventTopicId = executionContext.getParameter("__metadata_eventTopicId");
+var eventId = executionContext.getParameter("__metadata_id");
+var isEventBlocking = executionContext.getParameter("__metadata_hdr_blocking");
+var orgId = executionContext.getParameter("__metadata_orgId");
+
+
+System.log("Got event " + eventId + " of type " + eventTopicId + " (Blocking = " + isEventBlocking + ")");
+
+// Putting execution context in Properties object to display with getJson() function
+var executionContextProperties = new Properties();
+for each(var parameter in executionContext.parameterNames()) {
+	executionContextProperties.put(parameter, executionContext.getParameter(parameter));
+}
+
+// Displaying metadatas and payload
+System.log("Execution context :\n" + getJson(executionContextProperties));
+System.log("Event payload :\n" + getJson(inputProperties));
+
+// From here to get further information we need to query vRA
+var operation = "GET";
+var content = "";
+
+// In vRA 8.3 / 8.4 / 8.5 these return a host with the vRO Gateway service user.
+// This user has limited rights so we use the vraHost attribute that maps to a config element that we set with admin user  
+//var vraHost = VraHostManager.createHostForCurrentUser();
+//var vraHost = VraHostManager.defaultHostData;
+
+// We now invoke REST GET commands on the URLs of the objects
+// REST API is documented on https://[vRAHost]/automation-ui/api-docs/
+
+
+// Organization
+var orgObject = getObjectFromUrl("/csp/gateway/am/api/orgs/" + orgId);
+if (orgObject != null) {
+	//System.debug("Organization\n" + getJson(orgObject));
+    System.log("Organization id : " + orgObject.id);
+    System.log("Organization name : " + orgObject.displayName);
+}
+
+// Event
+var eventObject = getObjectFromUrl("/event-broker/api/events/" + eventId);
+if (eventObject != null) {
+	//System.debug("Event\n" + getJson(eventObject));
+	// Same info as on the extensibility events page
+	System.log("Event ID : " + eventObject.id);
+	System.log("Event Timestamp : " + eventObject.timeStamp);
+	System.log("Event Topic ID : " + eventObject.eventTopicId);
+	System.log("Event User Name : " + eventObject.userName);
+	if (eventObject.targetId != null) System.log("Event Target ID : " + eventObject.targetId);
+}
+
+// Event Trace
+var eventTraceObject = getObjectFromUrl("/event-broker/api/event-trace/event/" + eventId);
+if (eventTraceObject != null) {
+    //System.debug("Event Trace\n" + getJson(eventTraceObject));
+	for each(var eventTrace in eventTraceObject.content) {
+		System.log("Event trace subscription ID : " + eventTrace.subscriptionId);
+		if (eventTrace.subscriptionId.indexOf("sub_") == 0) {
+			var subscriptionObject = getObjectFromUrl("/event-broker/api/subscriptions/" + eventTrace.subscriptionId);
+			if (eventTraceObject != null) {
+                //System.debug("Event Subscription\n" + getJson(subscriptionObject));
+				System.log("Subscription name : " + subscriptionObject.name);
+				System.log("Subscription owner id : " + subscriptionObject.ownerId);
+				System.log("Subscription priority : " + subscriptionObject.priority);
+				System.log("Subscription timeOut : " + subscriptionObject.timeout);
+				System.log("Subscription blocking : " + subscriptionObject.blocking);
+			}
+			break;
+		}
+	}
+}
+
+// Topic
+var eventTopicObject = getObjectFromUrl("/event-broker/api/topics/" + eventTopicId);
+if (eventTopicObject != null) {
+    //System.debug("Event topic\n" + getJson(eventTopicObject));
+	var parametersReadOnly = new Properties();
+	System.log("Parameters for the " + eventTopicId + " topic");
+	if (eventTopicObject.schema != null) {
+		for each(var field in eventTopicObject.schema.fields) {
+			parametersReadOnly.put(field.id, field.readOnly);
+			if (field.readOnly == true) System.log("\t" + field.id + " cannot be changed by " + field.id + " worflow output parameter");
+			if (field.readOnly == false) {
+				System.log("\t" + field.id + " can be changed by the " + field.id + " workflow output parameter");
+				if (isWorkflowOutputParameter(field.id) == false) System.warn("The workflow is missing the output " + field.id);
+			}
+		}
+	}	
+}
+
+// Endpoint
+
+var endpointId = inputProperties.get("endpointId");
+
+if (endpointId != null) {
+    cloudAccount = VraEntitiesFinder.getCloudAccount(vraHost,endpointId);
+	if (cloudAccount != null) {
+    	System.log("Endpoint cloud account id : " + cloudAccount.id);
+        System.log("Endpoint cloud account name : " + cloudAccount.name);
+        System.log("Endpoint cloud account type : " + cloudAccount.cloudAccountType);
+        System.log("Endpoint enabled regions : ");
+
+        if (cloudAccount.cloudAccountType = "vsphere") vSphereCloudAccount = VraEntitiesFinder.getVsphereCloudAccount(vraHost,endpointId);
+        
+        cloudAccountEnabledRegions = new Array();
+        var getCloudZoneRegions = VraEntitiesFinder.getCloudZoneRegions(vraHost);
+        var externalRegionIdRegionIdProp = new Properties();
+        for each (var getCloudZoneRegion in getCloudZoneRegions) {
+            externalRegionIdRegionIdProp.put(getCloudZoneRegion.externalRegionId, getCloudZoneRegion.id);
+        }
+
+		for each (var enabledRegionId in cloudAccount.enabledRegionIds) {
+            System.log("\t Region ID" + enabledRegionId);            
+			var cloudAccountEnabledRegion = VraEntitiesFinder.getCloudZoneRegion(vraHost, externalRegionIdRegionIdProp.get(enabledRegionId)); 
+            cloudAccountEnabledRegions.push(cloudAccountEnabledRegion);
+            System.log("\t Region ID" + cloudAccountEnabledRegion.id);
+            System.log("\t Region name : " + cloudAccountEnabledRegion.name);
+        }
+	}
+}		
+
+tagList = new Array();
+var tagsProperties = inputProperties.get("tags");
+if (tagsProperties != null) {
+    for each (var key in tagsProperties.keys) {
+        tagList.push(VraEntitiesFinder.getTag(vraHost, key, tagsProperties.get(key)));
+    }
+}
+
+// Blueprint
+var blueprintId = inputProperties.get("blueprintId");
+if (blueprintId != null) {
+	var blueprintObject = getObjectFromUrl("/blueprint/api/blueprints/" + blueprintId);
+	if (blueprintObject != null) {
+        //System.debug("Blueprint\n" + getJson(blueprintObject));
+        System.log("Blueprint ID : " + blueprintObject.id);
+        System.log("Blueprint name : " + blueprintObject.name);
+        System.log("Blueprint description : " + blueprintObject.description);
+        System.log("Blueprint status : " + blueprintObject.status);
+        System.log("Blueprint total versions : " + blueprintObject.totalVersions);
+
+
+	}
+}
+
+// Catalog Item
+var catalogItemId = inputProperties.get("catalogItemId");
+if (catalogItemId != null && catalogItemId !="") {
+	var catalogItemObject = getObjectFromUrl("/catalog/api/items/" + catalogItemId);
+	if (catalogItemObject != null) {
+        //System.debug("Catalog Item\n" + getJson(catalogItemObject));
+        System.log("CatalogItem ID : " + catalogItemObject.id);
+        System.log("CatalogItem name : " + catalogItemObject.name);
+        System.log("CatalogItem description : " + catalogItemObject.description);
+        System.log("CatalogItem type name : " + catalogItemObject.type.name);
+        System.log("CatalogItem created By : " + catalogItemObject.createdBy);       
+	}
+}
+
+
+// Getting vCenterVM vSphere Machine so we can use vCenter workflows to do any operation we need
+try {
+	if (inputProperties.get("componentTypeId") == "Cloud.vSphere.Machine") {
+		var vcUUID = inputProperties.get("customProperties").get("vcUuid");
+		var vmUUIDs = inputProperties.get("externalIds");
+		for each(var vmUUID in vmUUIDs) {
+			vCenterVM = System.getModule("com.vmware.vra.extensibility").getVCenterVMByUUID(vcUUID, vmUUID);
+			if (vCenterVM != null) {
+				System.log("Got vCenter VM " + vCenterVM.name + " with ID " + vCenterVM.id);
+			}
+		}
+	}
+} catch (e) {
+	System.warn(e);
+}
+
+// Deployment
+var deploymentId = inputProperties.get("deploymentId");
+if (deploymentId != null) {
+	var deploymentObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId);
+	if (deploymentObject != null) {
+        //System.debug("Deployment\n" + getJson(deploymentObject));
+        System.log("Deployment ID : " + deploymentObject.id);
+        System.log("Deployment name : " + deploymentObject.name);
+        System.log("Deployment description : " + deploymentObject.description);
+        System.log("Deployment status : " + deploymentObject.status);
+        System.log("Deployment inputs\n" + getJson(deploymentObject.inputs));
+	}
+	// Deployment events
+	var deploymentEventsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/events");
+	if (deploymentEventsObject != null) {
+        //System.debug("Deployment Events\n" + getJson(deploymentEventsObject));
+        System.log("Deployment events : ");
+        for each (var deploymentEventObject in deploymentEventsObject.content) {
+            System.log("");
+            System.log("\tDeployment event ID : " + deploymentEventObject.id);
+            System.log("\tDeployment event name : " + deploymentEventObject.name);
+            System.log("\tDeployment event details : " + deploymentEventObject.details);
+            System.log("\tDeployment event status : " + deploymentEventObject.status);
+            System.log("\tDeployment event requestedBy : " + deploymentEventObject.requestedBy);
+            System.log("\tDeployment event requester : " + deploymentEventObject.requester);
+            System.log("\tDeployment event totalTasks : " + deploymentEventObject.totalTasks);
+        }
+	}
+	// Deployment actions
+	var deploymentActionsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/actions");
+	if (deploymentActionsObject != null) {
+        //System.debug("Deployment actions\n" + getJson(deploymentActionsObject));
+		System.log("Deployment actions :");
+		for each (var deploymentActionObject in deploymentActionsObject) {
+			System.log("\t" + deploymentActionObject.name);
+		}
+	}
+
+	// Deployment Request
+	var requestId = inputProperties.get("requestId");
+	if (requestId != null) {
+		var requestObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/requests/" + requestId);
+		if (requestObject != null) {
+            //System.debug("Deployment request\n" + getJson(requestObject));
+            System.log("Request ID : " + requestObject.id);
+            System.log("Request name : " + requestObject.name);
+            System.log("Request Completed tasks : " + requestObject.completedTasks);
+            System.log("Request total tasks : " + requestObject.totalTasks);
+            System.log("Request status : " + requestObject.status);
+		}
+
+		// Deployment request events
+		var requestEventsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/requests/" + requestId + "/events");
+		if (requestEventsObject != null) {
+            //System.debug("Deployment request events\n" + getJson(requestEventsObject));
+            System.log("Deployment request events : ");
+            for each (var reqEvent in requestEventsObject.content) {
+                System.log("");
+                System.log("\tDeployment request event name " + reqEvent.name);
+                System.log("\tDeployment request event details " + reqEvent.details);
+                System.log("\tDeployment request event resource type " + reqEvent.resourceType);
+                System.log("\tDeployment request event timestamp " + reqEvent.timestamp);          
+            }
+		}
+	}
+
+	// Check if resources are really deployed as we may get resource IDs before resources actually exist
+	var resourcesObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/");
+	if (resourcesObject != null) {
+		if (resourcesObject.numberOfElements > 0) {
+			// Deployment Resources
+			var resourceIds = inputProperties.get("resourceIds");
+			if (resourceIds != null) {
+				for each(var resourceId in resourceIds) {
+					var resourceObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/" + resourceId);
+					if (resourceObject != null) {
+                        //System.debug("Deployment resource\n" + getJson(resourceObject));
+                        System.log("Resource id : " + resourceObject.id);
+                        System.log("Resource name : " + resourceObject.name);
+                        System.log("Resource type : " + resourceObject.type);
+                        System.log("Resource state : " + resourceObject.state);
+                        System.log("Resource properties\n" + getJson(resourceObject.properties));
+					}
+					// Deployment resources actions
+					var resourceActionsObject = getObjectFromUrl("/deployment/api/deployments/" + deploymentId + "/resources/" + resourceId + "/actions");
+					if (resourceActionsObject != null) {
+                        //System.debug("Deployment resource actions\n" + getJson(resourceActionsObject));
+						System.log("Deployment resource actions :");
+						for each (var resourceActionObject in resourceActionsObject) {
+							System.log("\t" + resourceActionObject.name);
+						}	
+					}
+				}
+			}
+		}
+	}
+}
+
+// Zone
+var zoneId = inputProperties.get("zoneId");
+if (zoneId != null) {
+    zone = VraEntitiesFinder.getCloudZone(vraHost, zoneId);
+	//var zoneObject = getObjectFromUrl("/iaas/api/zones/" + zoneId);
+	if (zone != null) {
+        //System.debug("Zone\n" + getJson(zoneObject));
+        System.log("Zone ID : " + zone.id);
+        System.log("Zone Name : " + zone.name);
+        System.log("Zone description : " + zone.description);
+        System.log("Zone region ID : " + zone.externalRegionId);
+        System.log("Zone placement policy : " + zone.placementPolicy);
+        // How to get customProperties ?
+
+        //System.log("Zone custom properties\n" + getJson(zoneObject.customProperties));
+	}
+}
+
+// Project
+var projectId = inputProperties.get("projectId");
+if (projectId != null) {
+    project = VraEntitiesFinder.getProject(vraHost, projectId);
+	//var projectObject = getObjectFromUrl("/iaas/api/projects/" + projectId);
+	if (project != null) {
+        //System.debug("Project\n" + getJson(projectObject));        
+        System.log("Project ID : " + project.id);
+        System.log("Project Name : " + project.name);
+        System.log("Project description : " + project.description);
+        System.log("Project machineNamingTemplate : " + project.machineNamingTemplate);
+        System.log("Project sharedResources : " + project.sharedResources);
+	}
+	var projectResourceMetadataTags = VraEntitiesFinder.getProjectResourceMetadata(vraHost, projectId).tags;
+	System.log(projectResourceMetadataTags);
+
+	projectTags = new Array();
+
+	if (projectResourceMetadataTags != null) {
+		for each (var tag in projectResourceMetadataTags) {
+			projectTags.push(VraEntitiesFinder.getTag(vraHost, tag["key"], tag["value"]));
+		}
+	}	
+}
+
+
+// Subnets
+var subnetIds = inputProperties.get("subnetIds");
+if (subnetIds != null) {
+	for each(var subnetId in subnetIds) {
+		if (subnetId != "N/A") {
+			var subnetObject = getObjectFromUrl("/iaas/api/fabric-networks/" + subnetId);
+			if (subnetObject != null) {
+                //System.debug("Subnet\n" + getJson(subnetObject)); 
+				System.log("Subnet Selection ID : " + subnetObject.id);
+				System.log("Subnet Selection Name : " + subnetObject.name);
+				System.log("Subnet Selection externalId : " + subnetObject.externalId);
+				System.log("Subnet Selection CIDR : " + subnetObject.cidr);
+			}
+		}
+	}
+}
+
+// Host Selection
+var hostSelIds = inputProperties.get("hostSelectionIds");
+if (hostSelIds != null) {
+	for each(var hostSelId in hostSelIds) {
+		var hostSelectionObject = getObjectFromUrl("/iaas/api/fabric-computes/" + hostSelId);
+		if (hostSelectionObject != null) {
+            //System.debug("Host Selection\n" + getJson(hostSelectionObject)); 
+            System.log("Host ID : " + hostSelectionObject.id);
+            System.log("Host Name : " + hostSelectionObject.name);
+            System.log("Host external ID : " + hostSelectionObject.externalId);
+            System.log("Host custom properties\n" + getJson(hostSelectionObject.customProperties));
+		}
+	}
+}
+
+// Placement (Project - Zone) selection
+var placeIds = inputProperties.get("placementIds");
+if (placeIds != null) {
+	for each(var placeId in placeIds) {
+		var zoneId = placeId.replace(projectId + "-", "");
+        System.warn("************************* Zone ID " + zoneId);
+
+
+		//zoneObject = getObjectFromUrl("/iaas/api/zones/" + zoneId);
+        placementZone = VraEntitiesFinder.getCloudZone(vraHost, zoneId);
+
+		if (placementZone != null) {
+            //System.debug("Placement zone\n" + getJson(zoneObject));
+			System.log("Placement Zone ID : " + placementZone.id);
+			System.log("Placement Zone Name : " + placementZone.name);
+			System.log("Placement Zone description : " + placementZone.description);
+			System.log("Placement Zone region ID : " + placementZone.externalRegionId);
+			System.log("Placement Zone placement policy : " + placementZone.placementPolicy);
+            //System.log("Placement Zone custom properties\n" + getJson(zoneObject.customProperties));
+		}
+	}
+}
+
+// Resource Names
+var resNames = inputProperties.get("resourceNames");
+if (resNames != null) System.log("Resource Names : " + resNames);
+
+
+// For network events
+
+// Addresses
+var networkAdresses = inputProperties.get("addresses");
+if (networkAdresses != null) System.log("Addresses : " + networkAdresses);
+
+// Gateways
+var networkGateways = inputProperties.get("gateways");
+if (networkGateways != null) System.log("Gateways : " + networkGateways);
+
+// Domains
+var networkDomains = inputProperties.get("domains");
+if (networkDomains != null) System.log("Domains : " + networkDomains);
+
+
+// DNS Servers
+var networkDnsServers = inputProperties.get("dnsServers");
+if (networkDnsServers != null) System.log("DNS Servers : " + networkDnsServers);
+
+// CIDRs
+var networkCidrs = inputProperties.get("cidrs");
+if (networkCidrs != null) System.log("CIDRs : " + networkCidrs);
+
+// DNS search domains
+var networkDnsSearchDomains = inputProperties.get("dnsSearchDomains");
+if (networkDnsSearchDomains != null) System.log("DNS search domains : " + networkDnsSearchDomains);
+
+// skipIPAllocations
+var networkSkipIPAllocations = inputProperties.get("skipIPAllocations");
+if (networkSkipIPAllocations != null) System.log("Skip IP allocations : " + networkSkipIPAllocations);
+
+// Network Selection
+var networkSelIds = inputProperties.get("networkSelectionIds");
+if (networkSelIds != null) {
+	for each (var networkSelId in networkSelIds) {
+		var networkSelObject = getObjectFromUrl("/iaas/api/fabric-networks/" + networkSelId);
+		if (networkSelObject != null) {
+            //System.debug("Network SelectionIds\n" + getJson(networkSelObject));
+			System.log("Network Selection ID : " + networkSelObject.id);
+			System.log("Network Selection Name : " + networkSelObject.name);
+			System.log("Network Selection externalId : " + networkSelObject.externalId);
+			System.log("Network Selection CIDR : " + networkSelObject.cidr);
+		}
+	}
+}
+
+// Network Profile
+var networkProIds = inputProperties.get("networkProfileIds");
+if (networkProIds != null) {
+	for each(var networkProId in networkProIds) {
+		var networkProObject = getObjectFromUrl("/iaas/api/network-profiles/" + networkProId);
+		if (networkProObject != null) {
+        //System.debug("Network Profiles\n" + getJson(networkProObject));
+        System.log("Network Profile ID : " + networkProObject.id);
+        System.log("Network Profile Name : " + networkProObject.name);
+        System.log("Network Profile description : " + networkProObject.description);
+        System.log("Network Profile isolation type : " + networkProObject.isolationType);
+        System.log("Network Profile isolatedNetworkCIDRPrefix : " + networkProObject.isolatedNetworkCIDRPrefix);
+        System.log("Network Profiles tags\n" + getJson(networkProObject.tags));
+		}
+	}
+}
+
+// From here we are making changes in vRA objects
+// This only works when events are blocking
+// Display all of these before - put outputFields in properties. Use this properties to change property
+
+// To use for taging and custom properties
+var timeString = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+
+// Adding eventHistory custom property
+if (isParameterReadOnly("customProperties") == false) {
+	customProperties = inputProperties.get("customProperties");
+	if (customProperties != null) {
+		var eventHistory = customProperties.get("eventHistory");
+		if (eventHistory == null) var eventHistoryArray = new Array();
+		else eventHistoryArray = eventHistory.split(",");
+		eventHistoryArray.push(eventTopicId + " (" + timeString + ")");
+		eventHistory = eventHistoryArray.join(",");
+		System.log("Updating custom property eventHistory to : " + eventHistory);
+		customProperties.put("eventHistory", eventHistory);
+	}
+}
+
+// Adding TAG with enventTopic as key and timeString as value
+if (isParameterReadOnly("tags") == false) {
+	tags = inputProperties.get("tags");
+	if (tags == null) tags = new Properties();
+	System.log("Adding TAG " + eventTopicId + " set to " + timeString);
+	tags.put(eventTopicId, timeString);
+}
+
+// prefixing resource names with vRO-
+if (isParameterReadOnly("resourceNames") == false) {
+	resourceNames = new Array();
+	for each(var resName in resNames) {
+		System.log("Renaming resource " + resName + "  to " + "vRO-" + resName);
+		resourceNames.push("vRO-" + resName);
+	}
+}
+
+// Custom host selection
+// Select first host
+if (isParameterReadOnly("hostSelectionIds") == false) {
+	hostSelectionIds = new Array();
+	hostSelectionIds.push(hostSelIds[0]);
+}
+
+// Custom placement selection
+// Select first zone
+if (isParameterReadOnly("placementIds") == false) {
+	placementIds = new Array();
+	placementIds.push(placeIds[0]);
+}
+
+// Network
+// Passing inputs as outputs. Update below to change network parameters
+if (isParameterReadOnly("addresses") == false) {
+	if (networkAdresses != null) addresses = networkAdresses;
+	else addresses = new Array();
+}
+
+if (isParameterReadOnly("gateways") == false) {
+	if (networkGateways != null) gateways = networkGateways;
+	else gateways = new Array();
+}
+
+if (isParameterReadOnly("skipIPAllocations") == false) {
+	if (networkSkipIPAllocations != null) skipIPAllocations = networkSkipIPAllocations;
+	else skipIPAllocations = new Array();
+}
+
+if (isParameterReadOnly("domains") == false) {
+	if (networkDomains != null) domains = networkDomains;
+	else domains = new Array();
+}
+
+if (isParameterReadOnly("dnsServers") == false) {
+	if (networkDnsServers != null) dnsServers = networkDnsServers;
+	else dnsServers = new Array();
+}
+
+if (isParameterReadOnly("cidrs") == false) {
+	if (networkCidrs != null) cidrs = networkCidrs;
+	else cidrs = new Array();
+}
+
+if (isParameterReadOnly("dnsSearchDomains") == false) {
+	if (networkDnsSearchDomains != null) dnsSearchDomains = networkDnsSearchDomains;
+	else dnsSearchDomains = new Array();
+}
+
+if (isParameterReadOnly("networkProfileIds") == false) {
+	if (networkProIds != null) networkProfileIds = networkProIds;
+	else networkProfileIds = new Array();
+}
+
+if (isParameterReadOnly("networkSelectionIds") == false) {
+    if (networkSelIds != null) networkSelectionIds = networkSelIds;
+    else networkSelectionIds = new Array();
+}
+
+function isParameterReadOnly(parameter) {
+	// Returns null in case parameter is not found
+	if (parametersReadOnly == null) return true; 
+    return parametersReadOnly.get(parameter);
+}
+
+function isWorkflowOutputParameter(parameter) {
+	for each(var outParameter in workflow.rootWorkflow.outParameters) {
+		if (outParameter.name == parameter) return true;
+	}
+	return false;
+}
+
+function getObjectFromUrl(url) {
+	return System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost, url, null);
+}
+
+function getJson(object) {
+   return JSON.stringify(object,null,2); 
+}]]></script>
+    <in-binding>
+      <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+      <bind name="vraHost" type="VRA:Host" export-name="vraHost"/>
+    </in-binding>
+    <out-binding>
+      <bind name="vCenterVM" type="VC:VirtualMachine" export-name="vCenterVM"/>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+      <bind name="tags" type="Properties" export-name="tags"/>
+      <bind name="resourceNames" type="Array/string" export-name="resourceNames"/>
+      <bind name="addresses" type="Array/string" export-name="addresses"/>
+      <bind name="gateways" type="Array/string" export-name="gateways"/>
+      <bind name="networkSelectionIds" type="Array/Array" export-name="networkSelectionIds"/>
+      <bind name="skipIPAllocations" type="Array/boolean" export-name="skipIPAllocations"/>
+      <bind name="domains" type="Array/string" export-name="domains"/>
+      <bind name="dnsServers" type="Array/string" export-name="dnsServers"/>
+      <bind name="cidrs" type="Array/string" export-name="cidrs"/>
+      <bind name="dnsSearchDomains" type="Array/string" export-name="dnsSearchDomains"/>
+      <bind name="networkProfileIds" type="Array/string" export-name="networkProfileIds"/>
+      <bind name="placementIds" type="Array/string" export-name="placementIds"/>
+      <bind name="hostSelectionIds" type="Array/string" export-name="hostSelectionIds"/>
+      <bind name="vSphereCloudAccount" type="VRA:CloudAccountVsphere" export-name="vSphereCloudAccount"/>
+      <bind name="cloudAccountEnabledRegions" type="Array/VRA:Region" export-name="cloudAccountEnabledRegions"/>
+      <bind name="zone" type="VRA:Zone" export-name="zone"/>
+      <bind name="project" type="VRA:Project" export-name="project"/>
+      <bind name="placementZone" type="VRA:Zone" export-name="placementZone"/>
+      <bind name="tagList" type="Array/VRA:Tag" export-name="tagList"/>
+      <bind name="projectTags" type="Array/VRA:Tag" export-name="projectTags"/>
+      <bind name="cloudAccount" type="VRA:CloudAccount" export-name="cloudAccount"/>
+    </out-binding>
+    <position y="60.0" x="240.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

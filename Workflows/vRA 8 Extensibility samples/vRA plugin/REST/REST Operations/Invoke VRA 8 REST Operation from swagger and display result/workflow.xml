@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item4" object-name="workflow:name=generic" id="fc3f8fac-5f4c-4b47-9d71-bee56b9d0336" version="0.0.2" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item4" object-name="workflow:name=generic" id="fc3f8fac-5f4c-4b47-9d71-bee56b9d0336" version="0.0.3" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
   <display-name><![CDATA[Invoke VRA 8 REST Operation from swagger and display result]]></display-name>
   <description><![CDATA[Extensibility sample
 Designed to be started by vRO. Not compatible for running from vRA Service Broker]]></description>
@@ -13,7 +13,8 @@ Designed to be started by vRO. Not compatible for running from vRA Service Broke
     <param name="parameters" type="Array/string"/>
   </input>
   <attrib name="serviceSwaggerProp" type="Properties" read-only="false">
-    <value encoded="n"><![CDATA[{9:63:Blueprint=string#/blueprint/api/swagger/swagger-api-docs?group=2019-09-12
+    <value encoded="n"><![CDATA[{20:20:Orchestrator Gateway=string#/vro/api-docs
+9:63:Blueprint=string#/blueprint/api/swagger/swagger-api-docs?group=2019-09-12
 9:65:Approvals=string#/approval/api/swagger/swagger/v2/api-docs?group=2020-11-01
 19:41:Migration Assistant=string#/migration/api/swagger/v2/api-docs
 8:31:Branding=string#/userprofile/v2/api-docs
@@ -26,7 +27,7 @@ Designed to be started by vRO. Not compatible for running from vRA Service Broke
 15:56:Content Gateway=string#/content/api/swagger/v2/api-docs?group=2019-01-15
 8:32:Identity=string#/identity/doc/v3/api-docs
 10:46:Relocation=string#/relocation/api/swagger/ui/swagger.json
-27:25:Infrastructure as a Service=string#/iaas/api/swagger/
+27:46:Infrastructure As A Service=string#/iaas/api/swagger?apiVersion=2021-07-15
 }]]></value>
   </attrib>
   <attrib name="contentAsString" type="string" read-only="false">

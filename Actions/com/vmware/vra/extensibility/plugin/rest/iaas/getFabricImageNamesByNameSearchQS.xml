@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getFabricImageNamesByNameSearchQS" result-type="Array/string" api-version="6.0.0" id="9570a2e1-98c8-4d8a-82f3-51430205b85c" version="0.0.1" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="nameSearch" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+var url = "/iaas/api/fabric-images";
+// Query service parameter
+var nameFilter = "name eq '"+ nameSearch + "*'";
+var parameters = "$filter=" + encodeURIComponent(nameFilter).replace("'", "%27") + "&$select=name";
+var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+
+var namesProp = new Properties();
+for each (var fabricimage in object.content) {
+    namesProp.put(fabricimage.name);
+}
+return namesProp.keys.sort();]]></script>
+</dunes-script-module>

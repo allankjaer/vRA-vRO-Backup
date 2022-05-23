@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getFabricImageIdByExternalRegionIdAndByNameQS" result-type="string" api-version="6.0.0" id="1b993af9-7a08-48df-a524-d9be8245bd47" version="0.0.8" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="cloudAccountId" t="string"><![CDATA[]]></param>
+  <param n="externalRegionId" t="string"><![CDATA[]]></param>
+  <param n="name" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var url = "/iaas/api/fabric-images";
+// Query service parameter
+var nameFilter = "(externalRegionId eq '" + externalRegionId + "') and (name eq '"+ name + "')";
+var parameters = "$filter=" + encodeURIComponent(nameFilter).replace("'", "%27");// + "&$select=id"; Removed since we need cloudAccountIds
+var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+
+if (object.totalElements == 0) {
+    var cloudAccountName = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getCloudAccountNameCached(vraHost, cloudAccountId, 24 * 3600);
+    var regionName = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getRegionNameByExternalRegionIdCached(vraHost, externalRegionId, 24 * 3600);
+    throw name + " image not found in " + cloudAccountName + " / " + regionName;
+    /*
+    //vCenter does not set the externalRegionId ! May need to do the request a second time without externalRegionId  
+    var nameFilter = "name eq '" + name + "'";
+    var parameters = "$filter=" + encodeURIComponent(nameFilter).replace("'", "%27");// + "&$select=id";
+    var object = System.getModule("com.vmware.vra.extensibility.plugin.rest").getObjectFromUrl(vraHost,url, parameters);
+    if (object.totalElements == 0) throw name + " image not found in " + externalRegionId;
+    if (object.totalElements = 1) return object.content[0].id;
+   // if (object.totalElements > 1) throw object.totalElements + " " + name + " images found in " + externalRegionId;
+   */
+}
+
+if (object.totalElements >1) { 
+    var imageIds = new Array();
+    for each (var image in object.content) {
+        if (image.cloudAccountIds.indexOf(cloudAccountId) >-1) imageIds.push(image.id);
+    }
+    if (imageIds.length == 1) return imageIds[0];
+
+    var cloudAccountName = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getCloudAccountNameCached(vraHost, cloudAccountId, 24 * 3600);
+    var regionName = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getRegionNameByExternalRegionIdCached(vraHost, externalRegionId, 24 * 3600);
+
+    if (imageIds.length >1) {
+        System.warn(imageIds.length + " images found in " + cloudAccountName + " / " + regionName + "\n" + JSON.stringify(object));
+        System.warn("Returning the first one");
+        return imageIds[0];
+    }    
+    if (imageIds.length == 0)  throw name + " image not found in " + cloudAccountName + " / " + regionName;
+}
+
+return object.content[0].id;]]></script>
+</dunes-script-module>

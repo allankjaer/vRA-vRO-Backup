@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getRegionNameByExternalRegionIdCached" result-type="string" api-version="6.0.0" id="ee881eda-bfa2-4022-b63a-be7c72497527" version="0.0.3" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="regionId" t="string"><![CDATA[]]></param>
+  <param n="cacheTimeout" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+if (cacheTimeout == null) var ttl = 2*60; // 2 minutes cache timeout
+else var ttl = cacheTimeout;
+var objectId = "getRegionName_" + vraHost.name + "_" + regionId;
+
+var object = System.getModule("com.vmware.pve.utils").getFromCache(objectId, ttl); 
+if (object != null) {
+    System.debug("Got object " + objectId + " from cache");    
+    return object; 
+}
+try {
+    var regionName = System.getModule("com.vmware.vra.extensibility.plugin.rest.iaas").getRegionNameByExternalRegionIdQS(vraHost, regionId);
+} catch(e) {var regionName = regionId + " - getRegionNameByExternalRegionIdQS() failed"};
+
+System.getModule("com.vmware.pve.utils").putInCache(objectId, regionName, ttl); 
+return regionName;]]></script>
+</dunes-script-module>

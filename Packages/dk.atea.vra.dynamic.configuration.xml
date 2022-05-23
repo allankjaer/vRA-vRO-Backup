@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='c0975dea-fc0a-44d4-82de-751f8c965ae7'&dunesName='Action'&name='getEndpointDynamic'&category='dk.atea.vra.dynamic.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='69063ea1-6830-45bc-ac84-8e95778b384a'&dunesName='Action'&name='getEndpointDynamicFromCfgItem'&category='dk.atea.vra.dynamic.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='691c135a-1779-44cd-b324-802230bcc7a1'&dunesName='Action'&name='getConfigurationAttributeValue'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c14432b-1935-47e0-bf6f-b66631625faf'&dunesName='Action'&name='getConfigurationElement'&category='dk.atea.vro.configurationsItems']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='b30b069b-78cc-4890-bdb3-aa026911b115'&dunesName='Action'&name='getInstaceType'&category='dk.atea.vra.dynamic.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='4c3a2fe5-58a7-491f-bfaf-2541d09e74d6'&dunesName='Action'&name='getRestoperationsDynamicFromCfgItem'&category='dk.atea.vra.dynamic.configuration']]></elm>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='75fbff09-d52f-4135-8ed0-3a45a0cd97e6'&dunesName='Action'&name='getRestoperationsDynamic'&category='dk.atea.vra.dynamic.configuration']]></elm>
+</package>

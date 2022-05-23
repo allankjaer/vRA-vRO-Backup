@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getExtensionAsProperties" result-type="Properties" api-version="6.0.0" id="aa724b9d-dd99-467d-bf4d-7d60bbe54b7a" version="0.0.0" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin">
+  <param n="object" t="VRA:Project"><![CDATA[]]></param>
+  <param n="extensionProperty" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var extension = object[extensionProperty];
+var properties = new Properties();
+properties = JSON.parse(extension);
+return properties;]]></script>
+</dunes-script-module>

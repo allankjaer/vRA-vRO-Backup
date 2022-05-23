@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dunes-script-module name="getConfigurationAttributeValue" result-type="Any" api-version="6.0.0" id="691c135a-1779-44cd-b324-802230bcc7a1" version="0.1.0" category-name="dk.atea.vro.configurationsItems">
+<dunes-script-module name="getConfigurationAttributeValue" result-type="Any" api-version="6.0.0" id="691c135a-1779-44cd-b324-802230bcc7a1" version="0.1.1" allowed-operations="vef" category-name="dk.atea.vro.configurationsItems">
   <param n="configurationCategoryPath" t="string"><![CDATA[]]></param>
   <param n="configurationName" t="string"><![CDATA[]]></param>
   <param n="attributeName" t="string"><![CDATA[]]></param>
@@ -7,13 +7,13 @@
 var configElement = System.getModule("dk.atea.vro.configurationsItems").getConfigurationElement(configurationCategoryPath, configurationName);
 
 if (!configElement) {
-	throw "Missing configuration element " + configurationCategoryPath + "/" + configurationName;
+ throw "Missing configuration element " + configurationCategoryPath + "/" + configurationName;
 }
 
 attribute = configElement.getAttributeWithKey(attributeName);
 
 if (attribute) {
-	return attribute.value;
+ return attribute.value;
 }
 
 System.warn("Cannot find attribute " + attribute + " in " + configurationCategoryPath + "/" + configurationName + " configuration element");

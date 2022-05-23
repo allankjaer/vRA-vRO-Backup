@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workflow xmlns="http://vmware.com/vco/workflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://vmware.com/vco/workflow http://vmware.com/vco/workflow/Workflow-v4.xsd" root-name="item7" object-name="workflow:name=generic" id="117a5ba6-7f13-4c6c-9b6e-96f95ef75572" version="0.0.3" api-version="6.0.0" allowed-operations="vfe" editor-version="2.0" restartMode="1" resumeFromFailedMode="0">
+  <display-name><![CDATA[Edit machine custom properties]]></display-name>
+  <position y="50.0" x="100.0"/>
+  <input>
+    <param name="customProperties" type="Properties"/>
+    <param name="machine" type="VRA:Machine"/>
+  </input>
+  <workflow-item name="item0" type="end" end-mode="0">
+    <in-binding/>
+    <position y="50.0" x="720.0"/>
+  </workflow-item>
+  <workflow-item name="item7" out-name="item0" type="task">
+    <display-name><![CDATA[Set new custom properties]]></display-name>
+    <script encoded="false"><![CDATA[var existingCustomPropertiesObject = JSON.parse(machine.customPropertiesExtension);
+var updateMachineSpec = new VraUpdateMachineSpecification();
+
+for each (var key in customProperties.keys) {
+    // Adding new or changed properties
+    if (customProperties.get(key) !=  existingCustomPropertiesObject[key]) {
+        System.debug("Adding " + key + " : " + customProperties.get(key));
+        updateMachineSpec.putCustomPropertiesItem(key, customProperties.get(key));
+    }    
+}
+
+for (var key in existingCustomPropertiesObject) {
+    // Removing properties that have been removed
+    if (customProperties.get(key) == null) {
+        System.debug("Removing " + key);
+        updateMachineSpec.putCustomPropertiesItem(key, null);
+    }
+}
+
+var machineService = machine.host.createInfrastructureClient().createMachineService();
+machineService.updateMachine(machine, updateMachineSpec);
+
+]]></script>
+    <in-binding>
+      <bind name="customProperties" type="Properties" export-name="customProperties"/>
+      <bind name="machine" type="VRA:Machine" export-name="machine"/>
+    </in-binding>
+    <out-binding/>
+    <description><![CDATA[Simple task with custom script capability.]]></description>
+    <position y="60.0" x="340.0"/>
+  </workflow-item>
+  <presentation/>
+</workflow>

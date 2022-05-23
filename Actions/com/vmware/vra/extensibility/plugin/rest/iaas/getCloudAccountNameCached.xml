@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getCloudAccountNameCached" result-type="string" api-version="6.0.0" id="052195ac-ae98-47d4-90fc-b64486c88d15" version="0.0.3" allowed-operations="vfe" category-name="com.vmware.vra.extensibility.plugin.rest.iaas">
+  <param n="vraHost" t="VRA:Host"><![CDATA[]]></param>
+  <param n="cloudAccountId" t="string"><![CDATA[]]></param>
+  <param n="cacheTimeout" t="number"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[if (vraHost == null) return null;
+
+if (cacheTimeout == null) var ttl = 2*60; // 2 minutes cache timeout
+else var ttl = cacheTimeout;
+
+var objectId = "getCloudAccountName_" + vraHost.name + "_" + cloudAccountId;
+
+var object = System.getModule("com.vmware.pve.utils").getFromCache(objectId, ttl); 
+if (object != null) {
+    System.debug("Got object " + objectId + " from cache");    
+    return object; 
+}
+
+try {
+    var cloudAccount = VraEntitiesFinder.getCloudAccount(vraHost, cloudAccountId);
+    var cloudAccountName = cloudAccount.name;
+} catch(e) {var cloudAccountName = cloudAccountId + " - getCloudAccount() failed"};
+
+
+
+System.getModule("com.vmware.pve.utils").putInCache(objectId, cloudAccountName, ttl); 
+return cloudAccountName;]]></script>
+</dunes-script-module>
