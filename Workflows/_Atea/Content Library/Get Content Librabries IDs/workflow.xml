@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="59fab262-bef3-4cfa-8130-33d49e4b5278" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Content Librabries IDs</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="contentLibraries" type="Properties"/>
+    </output>
+    <attrib name="vcRestHost" type="REST:RESTHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&amp;dunesName='REST:RESTHost'</value>
+    </attrib>
+    <attrib name="vcRestApiSession" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="get" type="string">
+        <value encoded="n">GET</value>
+    </attrib>
+    <attrib name="getContentLibraryUrl" type="string">
+        <value encoded="n">/api/content/library</value>
+    </attrib>
+    <attrib name="requestContent" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="requestContentType" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="result" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="800.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" script-module="dk.atea.vc.rest/createVcApiSession" comparator="0">
+        <display-name>createVcApiSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").createVcApiSession(restHost);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="vcRestHost"/>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="vcRestApiSession"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="200.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="task" script-module="dk.atea.vc.rest/invokeVcRest" comparator="0">
+        <display-name>invokeVcRest</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").invokeVcRest(restHost,requestContentType,requestContent,operationUrl,requestType,apiSessionId);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="vcRestHost">
+                <description></description>
+            </bind>
+            <bind name="requestContentType" type="string" export-name="requestContentType">
+                <description></description>
+            </bind>
+            <bind name="requestContent" type="string" export-name="requestContent">
+                <description></description>
+            </bind>
+            <bind name="operationUrl" type="string" export-name="getContentLibraryUrl">
+                <description></description>
+            </bind>
+            <bind name="requestType" type="string" export-name="get">
+                <description></description>
+            </bind>
+            <bind name="apiSessionId" type="string" export-name="vcRestApiSession">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="Properties" export-name="result"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="320.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item0" type="task" script-module="dk.atea.vc.rest/deleteVcApiSession" comparator="0">
+        <display-name>deleteVcApiSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,apiSessionId);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="vcRestHost">
+                <description></description>
+            </bind>
+            <bind name="apiSessionId" type="string" export-name="vcRestApiSession">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="vcRestApiSession"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="640.0"/>
+    </workflow-item>
+</ns2:workflow>

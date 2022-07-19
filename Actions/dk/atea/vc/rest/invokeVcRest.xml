@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="invokeVcRest" result-type="Properties" api-version="6.0.0" id="dccf37dd-f263-40d0-8b01-c8a7b95ecc69" version="0.0.1" category-name="dk.atea.vc.rest">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <param n="requestContentType" t="string"><![CDATA[]]></param>
+  <param n="requestContent" t="string"><![CDATA[]]></param>
+  <param n="operationUrl" t="string"><![CDATA[]]></param>
+  <param n="requestType" t="string"><![CDATA[]]></param>
+  <param n="apiSessionId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.log("Host: " + restHost + ", operation: " + operationUrl + ", Request Type: " + requestType.name);
+
+if (!apiSessionId) {
+    var apiSessionId = System.getModule("dk.atea.vc.rest").createVcApiSession(restHost);
+    var deleteApiSession = true;
+} else {
+    deleteApiSession = false;
+}
+
+var request = restHost.createRequest(requestType, operationUrl, requestContent, requestContentType);
+request.contentType = requestContentType;
+//var header = request.setHeader("vmware-api-session-id",apiSessionId)
+request.setHeader("vmware-api-session-id",apiSessionId)
+System.log("request: " + request.fullUrl);
+var response = request.execute();
+System.log("response: " + response.contentAsString);
+result = new Properties();
+result.put("statusCode", response.statusCode);
+result.put("contentLength", response.contentLength);
+result.put("headers", response.getAllHeaders());
+result.put("contentAsString", response.contentAsString);
+
+if (deleteApiSession) {
+    System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,apiSessionId);
+}
+return(result);]]></script>
+</dunes-script-module>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="5f68ce8b-43ca-4467-ae88-ed95b488f758" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>custom Naming Random</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output>
+        <param name="resourceNames" type="Array/string"/>
+    </output>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var resourceNames = new Array();&#13;
+resourceNames[0] = "vra-test-" + Math.floor(Math.random()*(10000 - 1)+1);&#13;
+</script>
+        <in-binding/>
+        <out-binding>
+            <bind name="resourceNames" type="Array/string" export-name="resourceNames"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+</ns2:workflow>

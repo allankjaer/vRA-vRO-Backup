@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="createVcApiSession" result-type="string" api-version="6.0.0" id="7302501d-630d-40be-9c09-03dcedcde6c1" version="0.0.0" category-name="dk.atea.vc.rest">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var request = restHost.createRequest("POST", "/api/session");
+var response = request.execute();
+if (response.statusCode != 201) throw "Status code " + statusCode + "\n" + response.contentAsString;
+return(response.contentAsString.replace(/"/g,""));]]></script>
+</dunes-script-module>

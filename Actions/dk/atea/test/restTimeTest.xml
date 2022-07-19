@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="restTimeTest" result-type="string" api-version="6.0.0" id="28d911cc-4534-4935-baf2-8a2e6783fc31" version="0.0.0" category-name="dk.atea.test">
+  <param n="type" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[System.sleep(10*1000);]]></script>
+</dunes-script-module>

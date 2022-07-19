@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="deleteVcApiSession" result-type="string" api-version="6.0.0" id="ecce7748-6f86-45ad-82c2-8a579003de35" version="0.0.0" category-name="dk.atea.vc.rest">
+  <param n="restHost" t="REST:RESTHost"><![CDATA[]]></param>
+  <param n="apiSessionId" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[    
+var request = restHost.createRequest("DELETE", "/api/session");
+var header = request.setHeader("vmware-api-session-id",apiSessionId)
+var response = request.execute();
+if (response.statusCode != 204) throw "Status code " + statusCode + "\n" + response.contentAsString;]]></script>
+</dunes-script-module>

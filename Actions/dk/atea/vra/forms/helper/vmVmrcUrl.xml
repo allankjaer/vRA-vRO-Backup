@@ -17,6 +17,7 @@ var content = '{ \
 
 var request = restHost.createRequest("POST", "vcenter/vm/" + vm.id + "/console/tickets", content);
 request.contentType = "application\/json";
+System.log(request.url);
 var response = request.execute();
 var reqProperties = JSON.parse(response.contentAsString).value;
 
