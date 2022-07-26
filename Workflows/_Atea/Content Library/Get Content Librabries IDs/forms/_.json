@@ -1,1 +1,1 @@
-{"schema":{},"layout":{"pages":[]},"itemId":""}
+{"schema":{"contentLibrayName":{"id":"contentLibrayName","type":{"dataType":"string"},"label":"contentLibrayName","constraints":{"required":false}}},"layout":{"pages":[{"id":"page_1fabfhnu","title":"General","sections":[{"id":"section_48tkw6zi","fields":[{"id":"contentLibrayName","display":"textField","signpostPosition":"right-middle","state":{"visible":true,"read-only":false}}]}]}]},"itemId":""}

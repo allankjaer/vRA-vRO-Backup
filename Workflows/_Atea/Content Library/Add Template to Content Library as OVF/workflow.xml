@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="01b6e6ea-91c3-4d05-8c4c-c132157e58e0" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Add Template to Content Library as OVF</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+        <param name="contentLibrayName" type="string"/>
+        <param name="contentLibraryItemName" type="string"/>
+    </input>
+    <output/>
+    <attrib name="addOvfItemToContentLibraryUrl" type="string">
+        <value encoded="n">/api/vcenter/ovf/library-item</value>
+    </attrib>
+    <attrib name="post" type="string">
+        <value encoded="n">POST</value>
+    </attrib>
+    <attrib name="contentLibraryId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="contentLibraryItemId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="restHost" type="REST:RESTHost">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&amp;dunesName='REST:RESTHost'</value>
+    </attrib>
+    <attrib name="requestContentType" type="string">
+        <value encoded="n">application/json</value>
+    </attrib>
+    <attrib name="requestContent" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="result" type="Properties">
+        <value encoded="n">{}</value>
+    </attrib>
+    <attrib name="vcApiSessionId" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="820.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="link" linked-workflow-id="f2bf4ac8-acda-4b4a-9898-2c912c6d5c68" comparator="0">
+        <display-name>Get Content Librabries IDs</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="contentLibrayName" type="string" export-name="contentLibrayName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+    <workflow-item name="item2" out-name="item3" type="link" linked-workflow-id="95552914-cdd0-4583-9f27-1668eeba524a" comparator="0">
+        <display-name>Get Content Librabry Item ID</display-name>
+        <script encoded="false"></script>
+        <in-binding>
+            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
+            <bind name="ContentLibraryItemName" type="string" export-name="contentLibraryItemName"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentLibraryItemId" type="string" export-name="contentLibraryItemId"/>
+        </out-binding>
+        <description> </description>
+        <position y="60.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item5" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var contentLibraryContent = "";&#13;
+if (contentLibraryItemId) {&#13;
+    var contentLibraryContent = ', \&#13;
+    "library_item_id": "' + contentLibraryItemId +'" ';&#13;
+}&#13;
+&#13;
+&#13;
+requestContent = '{ \&#13;
+    "create_spec": { \&#13;
+        "description": "", \&#13;
+        "flags": [ "" ], \&#13;
+        "name": "' + contentLibraryItemName + '" \&#13;
+    }, \&#13;
+    "source": { \&#13;
+        "id": "' + vm.id + '", \&#13;
+        "type": "VirtualMachine" \&#13;
+    }, \&#13;
+    "target": { \&#13;
+        "library_id": "' + contentLibraryId + '" ' + contentLibraryContent + ' \&#13;
+    } \&#13;
+}';</script>
+        <in-binding>
+            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+            <bind name="contentLibraryItemName" type="string" export-name="contentLibraryItemName"/>
+            <bind name="contentLibraryItemId" type="string" export-name="contentLibraryItemId"/>
+        </in-binding>
+        <out-binding>
+            <bind name="requestContent" type="string" export-name="requestContent"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="380.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item6" type="task" script-module="dk.atea.vc.rest/invokeVcRest" comparator="0">
+        <display-name>invokeVcRest</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").invokeVcRest(restHost,requestContentType,requestContent,operationUrl,requestType,apiSessionId);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+            <bind name="requestContentType" type="string" export-name="requestContentType">
+                <description></description>
+            </bind>
+            <bind name="requestContent" type="string" export-name="requestContent">
+                <description></description>
+            </bind>
+            <bind name="operationUrl" type="string" export-name="addOvfItemToContentLibraryUrl">
+                <description></description>
+            </bind>
+            <bind name="requestType" type="string" export-name="post">
+                <description></description>
+            </bind>
+            <bind name="apiSessionId" type="string" export-name="vcApiSessionId">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="Properties" export-name="result"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="580.0"/>
+    </workflow-item>
+    <workflow-item name="item5" out-name="item4" type="task" script-module="dk.atea.vc.rest/createVcApiSession" comparator="0">
+        <display-name>createVcApiSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").createVcApiSession(restHost);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name="vcApiSessionId"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="470.0"/>
+    </workflow-item>
+    <workflow-item name="item6" out-name="item0" type="task" script-module="dk.atea.vc.rest/deleteVcApiSession" comparator="0">
+        <display-name>deleteVcApiSession</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,apiSessionId);
+</script>
+        <in-binding>
+            <bind name="restHost" type="REST:RESTHost" export-name="restHost">
+                <description></description>
+            </bind>
+            <bind name="apiSessionId" type="string" export-name="vcApiSessionId">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="string" export-name=""/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="60.0" x="680.0"/>
+    </workflow-item>
+</ns2:workflow>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="449727c1-2126-443c-b6d1-7e16f283de9a" editor-version="2.0" version="0.0.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Deploy VM from Template v1</display-name>
+    <position y="50.0" x="100.0"/>
+    <input/>
+    <output/>
+    <attrib name="vcenter" type="VC:SdkConnection">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan'&amp;dunesName='VC:SdkConnection'</value>
+    </attrib>
+    <attrib name="specName" type="string">
+        <value encoded="n">Management - VLAN 1 - in domain</value>
+    </attrib>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var cms = vcenter.customizationSpecManager;&#13;
+var customSpecExists = cms.doesCustomizationSpecExist(specName); &#13;
+&#13;
+var storageSpec = new VcStoragePlacementSpec();&#13;
+storageSpec.folder = Server.findForType("VC:Folder", vcenter.id + "/group-v224");&#13;
+storageSpec.vm = Server.findForType("VC:VirtualMachine", vcenter.id + "/vm-622");&#13;
+storageSpec.podSelectionSpec = new VcStorageDrsPodSelectionSpec();&#13;
+storageSpec.podSelectionSpec.storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+var initialVmConfig = new Array();&#13;
+initialVmConfig[0] = new VcVmPodConfigForPlacement();&#13;
+var disk = new Array();&#13;
+initialVmConfig[0].disk = disk;&#13;
+initialVmConfig[0].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+initialVmConfig[1] = new VcVmPodConfigForPlacement();&#13;
+var disk = new Array();&#13;
+disk[0] = new VcPodDiskLocator();&#13;
+disk[0].diskId = 2000;&#13;
+initialVmConfig[1].disk = disk;&#13;
+initialVmConfig[1].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+storageSpec.podSelectionSpec.initialVmConfig = initialVmConfig;&#13;
+storageSpec.cloneName = 'ank-test0001';&#13;
+storageSpec.type = 'clone';&#13;
+storageSpec.cloneSpec = new VcVirtualMachineCloneSpec();&#13;
+storageSpec.cloneSpec.template = false;&#13;
+storageSpec.cloneSpec.powerOn = false;&#13;
+storageSpec.cloneSpec.customization = new VcCustomizationSpec();&#13;
+var nicSettingMap = new Array();&#13;
+nicSettingMap[0] = new VcCustomizationAdapterMapping();&#13;
+nicSettingMap[0].adapter = new VcCustomizationIPSettings();&#13;
+var dnsServerList = new Array();&#13;
+dnsServerList[0] = '10.20.0.71';&#13;
+nicSettingMap[0].adapter.dnsServerList = dnsServerList;&#13;
+nicSettingMap[0].adapter.primaryWINS = '';&#13;
+nicSettingMap[0].adapter.secondaryWINS = '';&#13;
+nicSettingMap[0].adapter.ip = new VcCustomizationFixedIp();&#13;
+nicSettingMap[0].adapter.ip.ipAddress = '10.20.0.223';&#13;
+nicSettingMap[0].adapter.subnetMask = '255.255.254.0';&#13;
+var gateway = new Array();&#13;
+gateway[0] = '10.20.0.1';&#13;
+nicSettingMap[0].adapter.gateway = gateway;&#13;
+storageSpec.cloneSpec.customization.nicSettingMap = nicSettingMap;&#13;
+storageSpec.cloneSpec.customization.identity = new VcCustomizationSysprep();&#13;
+storageSpec.cloneSpec.customization.identity.licenseFilePrintData = new VcCustomizationLicenseFilePrintData();&#13;
+storageSpec.cloneSpec.customization.identity.licenseFilePrintData.autoMode = VcCustomizationLicenseDataMode.perSeat;&#13;
+storageSpec.cloneSpec.customization.identity.identification = new VcCustomizationIdentification();&#13;
+storageSpec.cloneSpec.customization.identity.identification.domainAdminPassword = new VcCustomizationPassword();&#13;
+storageSpec.cloneSpec.customization.identity.identification.domainAdminPassword.plainText = false;&#13;
+storageSpec.cloneSpec.customization.identity.identification.domainAdminPassword.value = 'Sensitive data is not recorded';&#13;
+storageSpec.cloneSpec.customization.identity.identification.domainAdmin = 'administrator';&#13;
+storageSpec.cloneSpec.customization.identity.identification.joinDomain = 'adc.lan';&#13;
+storageSpec.cloneSpec.customization.identity.userData = new VcCustomizationUserData();&#13;
+storageSpec.cloneSpec.customization.identity.userData.orgName = 'Atea A/S';&#13;
+storageSpec.cloneSpec.customization.identity.userData.productId = '';&#13;
+storageSpec.cloneSpec.customization.identity.userData.computerName = new VcCustomizationVirtualMachineName();&#13;
+storageSpec.cloneSpec.customization.identity.userData.fullName = 'ADC';&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended = new VcCustomizationGuiUnattended();&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.password = new VcCustomizationPassword();&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.password.plainText = false;&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.password.value = 'Sensitive data is not recorded';&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.autoLogon = false;&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.autoLogonCount = 0;&#13;
+storageSpec.cloneSpec.customization.identity.guiUnattended.timeZone = 105;&#13;
+storageSpec.cloneSpec.customization.options = new VcCustomizationWinOptions();&#13;
+storageSpec.cloneSpec.customization.options.changeSID = true;&#13;
+storageSpec.cloneSpec.customization.options.deleteAccounts = false;&#13;
+&#13;
+storageSpec.cloneSpec.customization.globalIPSettings = new VcCustomizationGlobalIPSettings();&#13;
+storageSpec.cloneSpec.location = new VcVirtualMachineRelocateSpec();&#13;
+var disk = new Array();&#13;
+storageSpec.cloneSpec.location.disk = disk;&#13;
+var deviceChange = new Array();&#13;
+deviceChange[0] = new VcVirtualDeviceConfigSpec();&#13;
+deviceChange[0].device = new VcVirtualVmxnet3();&#13;
+deviceChange[0].device.macAddress = '00:50:56:81:79:7f';&#13;
+deviceChange[0].device.resourceAllocation = new VcVirtualEthernetCardResourceAllocation();&#13;
+deviceChange[0].device.resourceAllocation.limit = -1;&#13;
+deviceChange[0].device.resourceAllocation.reservation = 0;&#13;
+deviceChange[0].device.resourceAllocation.share = new VcSharesInfo();&#13;
+deviceChange[0].device.resourceAllocation.share.shares = 50;&#13;
+deviceChange[0].device.resourceAllocation.share.level = VcSharesLevel.normal;&#13;
+deviceChange[0].device.connectable = new VcVirtualDeviceConnectInfo();&#13;
+deviceChange[0].device.connectable.connected = false;&#13;
+deviceChange[0].device.connectable.allowGuestControl = true;&#13;
+deviceChange[0].device.connectable.startConnected = true;&#13;
+deviceChange[0].device.connectable.status = 'untried';&#13;
+deviceChange[0].device.backing = new VcVirtualEthernetCardOpaqueNetworkBackingInfo();&#13;
+deviceChange[0].device.backing.opaqueNetworkId = '2ba6c623-2747-439b-af5c-c0d2ef63b221';&#13;
+deviceChange[0].device.backing.opaqueNetworkType = 'nsx.LogicalSwitch';&#13;
+deviceChange[0].device.addressType = 'assigned';&#13;
+deviceChange[0].device.controllerKey = 100;&#13;
+deviceChange[0].device.unitNumber = 7;&#13;
+deviceChange[0].device.wakeOnLanEnabled = true;&#13;
+deviceChange[0].device.slotInfo = new VcVirtualDevicePciBusSlotInfo();&#13;
+deviceChange[0].device.slotInfo.pciSlotNumber = 192;&#13;
+deviceChange[0].device.uptCompatibilityEnabled = true;&#13;
+deviceChange[0].device.deviceInfo = new VcDescription();&#13;
+deviceChange[0].device.deviceInfo.summary = 'DVSwitch: fb 30 01 50 20 65 e6 69-51 d5 87 dc 46 32 3a 3b';&#13;
+deviceChange[0].device.deviceInfo.label = 'Network adapter 1';&#13;
+deviceChange[0].device.key = 4000;&#13;
+deviceChange[0].operation = VcVirtualDeviceConfigSpecOperation.edit;&#13;
+storageSpec.cloneSpec.location.deviceChange = deviceChange;&#13;
+storageSpec.cloneSpec.location.pool = Server.findForType("VC:ResourcePool", vcenter.id + "/resgroup-146021");&#13;
+storageSpec.cloneSpec.config = new VcVirtualMachineConfigSpec();&#13;
+var deviceChange = new Array();&#13;
+deviceChange[0] = new VcVirtualDeviceConfigSpec();&#13;
+deviceChange[0].device = new VcVirtualDisk();&#13;
+deviceChange[0].device.shares = new VcSharesInfo();&#13;
+deviceChange[0].device.shares.shares = 1000;&#13;
+deviceChange[0].device.shares.level = VcSharesLevel.normal;&#13;
+deviceChange[0].device.capacityInBytes = 42949672960;&#13;
+deviceChange[0].device.storageIOAllocation = new VcStorageIOAllocationInfo();&#13;
+deviceChange[0].device.storageIOAllocation.shares = new VcSharesInfo();&#13;
+deviceChange[0].device.storageIOAllocation.shares.shares = 1000;&#13;
+deviceChange[0].device.storageIOAllocation.shares.level = VcSharesLevel.normal;&#13;
+deviceChange[0].device.storageIOAllocation.limit = -1;&#13;
+deviceChange[0].device.storageIOAllocation.reservation = 0;&#13;
+deviceChange[0].device.backing = new VcVirtualDiskFlatVer2BackingInfo();&#13;
+deviceChange[0].device.backing.backingObjectId = '';&#13;
+deviceChange[0].device.backing.fileName = '[VNX_DS02] w2k8r2-Template/w2k8r2-Template.vmdk';&#13;
+deviceChange[0].device.backing.split = false;&#13;
+deviceChange[0].device.backing.writeThrough = false;&#13;
+deviceChange[0].device.backing.contentId = '1eb7acd068293d8f2c48a997894d32fc';&#13;
+deviceChange[0].device.backing.thinProvisioned = true;&#13;
+deviceChange[0].device.backing.diskMode = 'persistent';&#13;
+deviceChange[0].device.backing.digestEnabled = false;&#13;
+deviceChange[0].device.backing.sharing = 'sharingNone';&#13;
+deviceChange[0].device.backing.uuid = '6000C292-d543-4d8a-f216-b1ab3be7eca4';&#13;
+deviceChange[0].device.controllerKey = 1000;&#13;
+deviceChange[0].device.unitNumber = 0;&#13;
+deviceChange[0].device.capacityInKB = 41943040;&#13;
+deviceChange[0].device.deviceInfo = new VcDescription();&#13;
+deviceChange[0].device.deviceInfo.summary = '0 KB';&#13;
+deviceChange[0].device.deviceInfo.label = 'Hard disk 1';&#13;
+deviceChange[0].device.diskObjectId = '169-2000';&#13;
+deviceChange[0].device.key = 2000;&#13;
+deviceChange[0].operation = VcVirtualDeviceConfigSpecOperation.edit;&#13;
+storageSpec.cloneSpec.config.deviceChange = deviceChange;&#13;
+storageSpec.cloneSpec.config.cpuAffinity = new VcVirtualMachineAffinityInfo();&#13;
+var affinitySet = new Array();&#13;
+storageSpec.cloneSpec.config.cpuAffinity.affinitySet = affinitySet;&#13;
+var cpuFeatureMask = new Array();&#13;
+storageSpec.cloneSpec.config.cpuFeatureMask = cpuFeatureMask;&#13;
+var storageResourceManager = vcenter.storageResourceManager;&#13;
+var test = storageResourceManager.recommendDatastores(storageSpec)&#13;
+&#13;
+System.log ("t1: " +test.recommendations[0].key);&#13;
+var key = new Array();&#13;
+key[0] = test.recommendations[0].key;&#13;
+storageResourceManager.applyStorageDrsRecommendation_Task(key);</script>
+        <in-binding>
+            <bind name="vcenter" type="VC:SdkConnection" export-name="vcenter"/>
+            <bind name="specName" type="string" export-name="specName"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+</ns2:workflow>

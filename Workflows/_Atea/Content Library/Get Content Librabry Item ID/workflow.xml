@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="f2bf4ac8-acda-4b4a-9898-2c912c6d5c68" editor-version="2.0" version="0.0.1" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
-    <display-name>Get Content Librabries IDs</display-name>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="95552914-cdd0-4583-9f27-1668eeba524a" editor-version="2.0" version="0.0.1" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Content Librabry Item ID</display-name>
     <position y="50.0" x="100.0"/>
     <input>
-        <param name="contentLibrayName" type="string"/>
+        <param name="contentLibraryId" type="string"/>
+        <param name="ContentLibraryItemName" type="string"/>
     </input>
     <output>
-        <param name="contentLibraryId" type="string"/>
+        <param name="contentLibraryItemId" type="string"/>
     </output>
     <attrib name="vcRestHost" type="REST:RESTHost">
         <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&amp;dunesName='REST:RESTHost'</value>
@@ -15,7 +16,7 @@
         <value encoded="n"></value>
     </attrib>
     <attrib name="getContentLibraryUrl" type="string">
-        <value encoded="n">/api/content/library?action=find</value>
+        <value encoded="n">/api/content/library/item?action=find</value>
     </attrib>
     <attrib name="requestContent" type="string">
         <value encoded="n"></value>
@@ -101,11 +102,12 @@ actionResult = System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,a
     <workflow-item name="item4" out-name="item2" type="task" comparator="0">
         <display-name>Scriptable task</display-name>
         <script encoded="false">var requestContent = '{ \&#13;
-    "name": "' + contentLibrayName + '", \&#13;
-    "type": "LOCAL" \&#13;
+    "library_id":"' + contentLibraryId + '", \&#13;
+    "name":"' + ContentLibraryItemName + '" \&#13;
 }';</script>
         <in-binding>
-            <bind name="contentLibrayName" type="string" export-name="contentLibrayName"/>
+            <bind name="ContentLibraryItemName" type="string" export-name="ContentLibraryItemName"/>
+            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
         </in-binding>
         <out-binding>
             <bind name="requestContent" type="string" export-name="requestContent"/>
@@ -116,12 +118,12 @@ actionResult = System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,a
     <workflow-item name="item5" out-name="item3" type="task" comparator="0">
         <display-name>Scriptable task</display-name>
         <script encoded="false">var bodyObj = JSON.parse(result.contentAsString);&#13;
-contentLibraryId = bodyObj[0];</script>
+contentLibraryItemId = bodyObj[0];</script>
         <in-binding>
             <bind name="result" type="Properties" export-name="result"/>
         </in-binding>
         <out-binding>
-            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
+            <bind name="contentLibraryItemId" type="string" export-name="contentLibraryItemId"/>
         </out-binding>
         <description>Simple task with custom script capability.</description>
         <position y="60.0" x="560.0"/>
