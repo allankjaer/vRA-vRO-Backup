@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="46fa6dfd-ab41-40a1-a746-8f79a1569f15" editor-version="2.0" version="0.0.2" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
-    <display-name>Deploy VM from Template</display-name>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="46fa6dfd-ab41-40a1-a746-8f79a1569f15" editor-version="2.0" version="0.0.3" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Deploy VM from Template With Customization</display-name>
     <position y="50.0" x="100.0"/>
     <input>
         <param name="vmName" type="string"/>
         <param name="ipAddress" type="string"/>
+        <param name="template" type="VC:VirtualMachine"/>
     </input>
     <output/>
     <attrib name="vcenter" type="VC:SdkConnection">
@@ -12,6 +13,21 @@
     </attrib>
     <attrib name="specName" type="string">
         <value encoded="n">Management - VLAN 1 - in domain</value>
+    </attrib>
+    <attrib name="folder" type="VC:Folder">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:group-v37925'&amp;dunesName='VC:Folder'</value>
+    </attrib>
+    <attrib name="datastoreCluster" type="VC:DatastoreFolder">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:group-p2762'&amp;dunesName='VC:DatastoreFolder'</value>
+    </attrib>
+    <attrib name="resourcePool" type="VC:ResourcePool">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:resgroup-27'&amp;dunesName='VC:ResourcePool'</value>
+    </attrib>
+    <attrib name="distributedSwitch" type="VC:VmwareDistributedVirtualSwitch">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:dvs-164'&amp;dunesName='VC:VmwareDistributedVirtualSwitch'</value>
+    </attrib>
+    <attrib name="portGroup" type="VC:DistributedVirtualPortgroup">
+        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='adc-vc.adc.lan%2Cid:dvportgroup-166'&amp;dunesName='VC:DistributedVirtualPortgroup'</value>
     </attrib>
     <workflow-item name="item0" type="end" end-mode="0" comparator="0">
         <in-binding/>
@@ -24,28 +40,37 @@
 var customSpec = cms.getCustomizationSpec(specName); &#13;
 System.log("t2: " + customSpec.spec.nicSettingMap[0].adapter.ip[0]);&#13;
 &#13;
+// Folder Placement&#13;
 var storageSpec = new VcStoragePlacementSpec();&#13;
-storageSpec.folder = Server.findForType("VC:Folder", vcenter.id + "/group-v224");&#13;
-storageSpec.vm = Server.findForType("VC:VirtualMachine", vcenter.id + "/vm-622");&#13;
+storageSpec.folder = Server.findForType("VC:Folder", vcenter.id + "/" + folder.id);&#13;
+&#13;
+// Set Template&#13;
+storageSpec.vm = Server.findForType("VC:VirtualMachine", vcenter.id + "/" + template.id);&#13;
+&#13;
+// COnfigure storage Placement&#13;
 storageSpec.podSelectionSpec = new VcStorageDrsPodSelectionSpec();&#13;
-storageSpec.podSelectionSpec.storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+storageSpec.podSelectionSpec.storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/" +  datastoreCluster.id);&#13;
 var initialVmConfig = new Array();&#13;
 initialVmConfig[0] = new VcVmPodConfigForPlacement();&#13;
 var disk = new Array();&#13;
 initialVmConfig[0].disk = disk;&#13;
-initialVmConfig[0].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+initialVmConfig[0].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/" +  datastoreCluster.id);&#13;
 initialVmConfig[1] = new VcVmPodConfigForPlacement();&#13;
 var disk = new Array();&#13;
 disk[0] = new VcPodDiskLocator();&#13;
 disk[0].diskId = 2000;&#13;
 initialVmConfig[1].disk = disk;&#13;
-initialVmConfig[1].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/group-p2762");&#13;
+initialVmConfig[1].storagePod = Server.findForType("VC:StoragePod", vcenter.id + "/" +  datastoreCluster.id);&#13;
 storageSpec.podSelectionSpec.initialVmConfig = initialVmConfig;&#13;
+&#13;
+// Configure Deploymeent Settings&#13;
 storageSpec.cloneName = vmName;&#13;
 storageSpec.type = 'clone';&#13;
 storageSpec.cloneSpec = new VcVirtualMachineCloneSpec();&#13;
 storageSpec.cloneSpec.template = false;&#13;
-storageSpec.cloneSpec.powerOn = false;&#13;
+storageSpec.cloneSpec.powerOn = true;&#13;
+&#13;
+// Set Configuration Specifications Settings&#13;
 storageSpec.cloneSpec.customization = new VcCustomizationSpec()&#13;
 storageSpec.cloneSpec.customization = customSpec.spec;&#13;
 var ip = new VcCustomizationFixedIp();&#13;
@@ -57,9 +82,9 @@ var disk = new Array();&#13;
 storageSpec.cloneSpec.location.disk = disk;&#13;
 var deviceChange = new Array();&#13;
 storageSpec.cloneSpec.location.deviceChange = deviceChange;&#13;
-storageSpec.cloneSpec.location.pool = Server.findForType("VC:ResourcePool", vcenter.id + "/resgroup-146021");&#13;
+storageSpec.cloneSpec.location.pool = Server.findForType("VC:ResourcePool", vcenter.id + "/" + resourcePool.id);&#13;
 &#13;
-&#13;
+// Configure Network&#13;
 var deviceChange = new Array();&#13;
 deviceChange[0] = new VcVirtualDeviceConfigSpec();&#13;
 deviceChange[0].device = new VcVirtualVmxnet3();&#13;
@@ -75,9 +100,10 @@ deviceChange[0].device.connectable.connected = false;&#13;
 deviceChange[0].device.connectable.allowGuestControl = true;&#13;
 deviceChange[0].device.connectable.startConnected = true;&#13;
 deviceChange[0].device.connectable.status = 'untried';&#13;
-deviceChange[0].device.backing = new VcVirtualEthernetCardOpaqueNetworkBackingInfo();&#13;
-deviceChange[0].device.backing.opaqueNetworkId = '2ba6c623-2747-439b-af5c-c0d2ef63b221';&#13;
-deviceChange[0].device.backing.opaqueNetworkType = 'nsx.LogicalSwitch';&#13;
+deviceChange[0].device.backing = new VcVirtualEthernetCardDistributedVirtualPortBackingInfo();&#13;
+deviceChange[0].device.backing.port = new VcDistributedVirtualSwitchPortConnection();&#13;
+deviceChange[0].device.backing.port.switchUuid = distributedSwitch.uuid;&#13;
+deviceChange[0].device.backing.port.portgroupKey = portGroup.id;&#13;
 deviceChange[0].device.addressType = 'assigned';&#13;
 deviceChange[0].device.controllerKey = 100;&#13;
 deviceChange[0].device.unitNumber = 7;&#13;
@@ -86,18 +112,17 @@ deviceChange[0].device.slotInfo = new VcVirtualDevicePciBusSlotInfo();&#13;
 deviceChange[0].device.slotInfo.pciSlotNumber = 192;&#13;
 deviceChange[0].device.uptCompatibilityEnabled = true;&#13;
 deviceChange[0].device.deviceInfo = new VcDescription();&#13;
-deviceChange[0].device.deviceInfo.summary = 'DVSwitch: fb 30 01 50 20 65 e6 69-51 d5 87 dc 46 32 3a 3b';&#13;
+deviceChange[0].device.deviceInfo.summary = 'DVSwitch: ' + distributedSwitch.uuid;&#13;
 deviceChange[0].device.deviceInfo.label = 'Network adapter 1';&#13;
 deviceChange[0].device.key = 4000;&#13;
 deviceChange[0].operation = VcVirtualDeviceConfigSpecOperation.edit;&#13;
 storageSpec.cloneSpec.location.deviceChange = deviceChange;&#13;
 &#13;
-&#13;
-&#13;
+// Create a Storage Resource Manager Task for the deployment&#13;
 var storageResourceManager = vcenter.storageResourceManager;&#13;
 var test = storageResourceManager.recommendDatastores(storageSpec)&#13;
 &#13;
-//System.log ("t1: " +test.recommendations[0].key);&#13;
+// Initiate the deployment task&#13;
 var key = new Array();&#13;
 key[0] = test.recommendations[0].key;&#13;
 storageResourceManager.applyStorageDrsRecommendation_Task(key);</script>
@@ -106,6 +131,12 @@ storageResourceManager.applyStorageDrsRecommendation_Task(key);</script>
             <bind name="specName" type="string" export-name="specName"/>
             <bind name="vmName" type="string" export-name="vmName"/>
             <bind name="ipAddress" type="string" export-name="ipAddress"/>
+            <bind name="folder" type="VC:Folder" export-name="folder"/>
+            <bind name="template" type="VC:VirtualMachine" export-name="template"/>
+            <bind name="datastoreCluster" type="VC:DatastoreFolder" export-name="datastoreCluster"/>
+            <bind name="resourcePool" type="VC:ResourcePool" export-name="resourcePool"/>
+            <bind name="distributedSwitch" type="VC:VmwareDistributedVirtualSwitch" export-name="distributedSwitch"/>
+            <bind name="portGroup" type="VC:DistributedVirtualPortgroup" export-name="portGroup"/>
         </in-binding>
         <out-binding/>
         <description>Simple task with custom script capability.</description>
