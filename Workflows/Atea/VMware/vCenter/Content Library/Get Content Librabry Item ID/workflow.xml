@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="99523ed1-134e-414a-851d-e1c10e3f34cd" editor-version="2.0" version="0.0.1" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
-    <display-name>Delete Content Librabry Item</display-name>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="95552914-cdd0-4583-9f27-1668eeba524a" editor-version="2.0" version="0.0.1" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Get Content Librabry Item ID</display-name>
     <position y="50.0" x="100.0"/>
     <input>
-        <param name="contentLibraryItemId" type="string"/>
+        <param name="contentLibraryId" type="string"/>
+        <param name="ContentLibraryItemName" type="string"/>
     </input>
-    <output/>
+    <output>
+        <param name="contentLibraryItemId" type="string"/>
+    </output>
     <attrib name="vcRestHost" type="REST:RESTHost">
         <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&amp;dunesName='REST:RESTHost'</value>
     </attrib>
     <attrib name="vcRestApiSession" type="string">
         <value encoded="n"></value>
     </attrib>
-    <attrib name="deleteContentLibraryItemUrl" type="string">
-        <value encoded="n">/api/content/library/item/</value>
+    <attrib name="getContentLibraryUrl" type="string">
+        <value encoded="n">/api/content/library/item?action=find</value>
     </attrib>
     <attrib name="requestContent" type="string">
         <value encoded="n"></value>
@@ -24,13 +27,13 @@
     <attrib name="result" type="Properties">
         <value encoded="n">{}</value>
     </attrib>
-    <attrib name="delete" type="string">
-        <value encoded="n">DELETE</value>
+    <attrib name="post" type="string">
+        <value encoded="n">POST</value>
     </attrib>
     <workflow-item name="item0" type="end" end-mode="0" comparator="0">
         <in-binding/>
         <out-binding/>
-        <position y="50.0" x="700.0"/>
+        <position y="50.0" x="880.0"/>
     </workflow-item>
     <workflow-item name="item1" out-name="item4" type="task" script-module="dk.atea.vc.rest/createVcApiSession" comparator="0">
         <display-name>createVcApiSession</display-name>
@@ -46,7 +49,7 @@ actionResult = System.getModule("dk.atea.vc.rest").createVcApiSession(restHost);
         <description>Add a note to the workflow schema.</description>
         <position y="60.0" x="180.0"/>
     </workflow-item>
-    <workflow-item name="item2" out-name="item3" type="task" script-module="dk.atea.vc.rest/invokeVcRest" comparator="0">
+    <workflow-item name="item2" out-name="item5" type="task" script-module="dk.atea.vc.rest/invokeVcRest" comparator="0">
         <display-name>invokeVcRest</display-name>
         <script encoded="false">//Auto generated script, cannot be modified !
 actionResult = System.getModule("dk.atea.vc.rest").invokeVcRest(restHost,requestContentType,requestContent,operationUrl,requestType,apiSessionId);
@@ -61,10 +64,10 @@ actionResult = System.getModule("dk.atea.vc.rest").invokeVcRest(restHost,request
             <bind name="requestContent" type="string" export-name="requestContent">
                 <description></description>
             </bind>
-            <bind name="operationUrl" type="string" export-name="deleteContentLibraryItemUrl">
+            <bind name="operationUrl" type="string" export-name="getContentLibraryUrl">
                 <description></description>
             </bind>
-            <bind name="requestType" type="string" export-name="delete">
+            <bind name="requestType" type="string" export-name="post">
                 <description></description>
             </bind>
             <bind name="apiSessionId" type="string" export-name="vcRestApiSession">
@@ -94,19 +97,35 @@ actionResult = System.getModule("dk.atea.vc.rest").deleteVcApiSession(restHost,a
             <bind name="actionResult" type="string" export-name="vcRestApiSession"/>
         </out-binding>
         <description>Add a note to the workflow schema.</description>
-        <position y="60.0" x="540.0"/>
+        <position y="60.0" x="720.0"/>
     </workflow-item>
     <workflow-item name="item4" out-name="item2" type="task" comparator="0">
-        <display-name>Scriptable task</display-name>
-        <script encoded="false">deleteContentLibraryItemUrl = deleteContentLibraryItemUrl + contentLibraryItemId;</script>
+        <display-name>Create Content for Request</display-name>
+        <script encoded="false">var requestContent = '{ \&#13;
+    "library_id":"' + contentLibraryId + '", \&#13;
+    "name":"' + ContentLibraryItemName + '" \&#13;
+}';</script>
         <in-binding>
-            <bind name="contentLibraryItemId" type="string" export-name="contentLibraryItemId"/>
-            <bind name="deleteContentLibraryItemUrl" type="string" export-name="deleteContentLibraryItemUrl"/>
+            <bind name="ContentLibraryItemName" type="string" export-name="ContentLibraryItemName"/>
+            <bind name="contentLibraryId" type="string" export-name="contentLibraryId"/>
         </in-binding>
         <out-binding>
-            <bind name="deleteContentLibraryItemUrl" type="string" export-name="deleteContentLibraryItemUrl"/>
+            <bind name="requestContent" type="string" export-name="requestContent"/>
         </out-binding>
         <description>Simple task with custom script capability.</description>
         <position y="60.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item5" out-name="item3" type="task" comparator="0">
+        <display-name>Get Content Library Item ID from Content</display-name>
+        <script encoded="false">var bodyObj = JSON.parse(result.contentAsString);&#13;
+contentLibraryItemId = bodyObj[0];</script>
+        <in-binding>
+            <bind name="result" type="Properties" export-name="result"/>
+        </in-binding>
+        <out-binding>
+            <bind name="contentLibraryItemId" type="string" export-name="contentLibraryItemId"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="560.0"/>
     </workflow-item>
 </ns2:workflow>

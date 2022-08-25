@@ -35,7 +35,7 @@
         <position y="50.0" x="300.0"/>
     </workflow-item>
     <workflow-item name="item1" out-name="item0" type="task" comparator="0">
-        <display-name>Scriptable task</display-name>
+        <display-name>Deploy VM from Template With Customization</display-name>
         <script encoded="false">var cms = vcenter.customizationSpecManager;&#13;
 var customSpec = cms.getCustomizationSpec(specName); &#13;
 System.log("t2: " + customSpec.spec.nicSettingMap[0].adapter.ip[0]);&#13;

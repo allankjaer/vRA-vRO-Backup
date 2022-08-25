@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dunes-script-module name="getIsoItems" result-type="Properties" api-version="6.0.0" id="3ef626ae-bed1-45fc-a394-8912e32b1772" version="0.0.1" category-name="dk.atea.vc.contentlibrary">
+  <param n="contentLibraryName" t="string"><![CDATA[]]></param>
+  <script encoded="false"><![CDATA[var vcRestHost = System.getModule("dk.atea.vro.configurationsItems").getConfigurationAttributeValue("Atea","VC Content Library","vcRestHost");
+
+var vcApiSessionId = System.getModule("dk.atea.vc.rest").createVcApiSession(vcRestHost);
+System.log(vcApiSessionId);
+
+var requestContent = '{ \
+    "name": "' + contentLibraryName + '", \
+    "type": "LOCAL" \
+}';
+try {
+    var content = System.getModule("dk.atea.vc.rest").invokeVcRest(vcRestHost,"application/json",requestContent,"/api/content/library?action=find","POST",vcApiSessionId);
+} catch (error) {
+    var output = System.getModule("dk.atea.vc.rest").deleteVcApiSession(vcRestHost,vcApiSessionId);
+}
+
+var contentLibraryId = JSON.parse(content.contentAsString)[0];
+//var contentLibraryId = bodyObj[0];
+
+try {
+    var content = System.getModule("dk.atea.vc.rest").invokeVcRest(vcRestHost,"application/json","","https://adc-vc.adc.lan/api/content/library/item?library_id="+contentLibraryId,"GET",vcApiSessionId);
+} catch (error) {
+    var output = System.getModule("dk.atea.vc.rest").deleteVcApiSession(vcRestHost,vcApiSessionId);
+}
+
+var isoItems = new Properties();
+var contentItemIds = JSON.parse(content.contentAsString);
+for each (contentItemId in contentItemIds) {
+        try {
+        var content = System.getModule("dk.atea.vc.rest").invokeVcRest(vcRestHost,"application/json","","https://adc-vc.adc.lan/api/content/library/item/"+contentItemId,"GET",vcApiSessionId);
+    } catch (error) {
+        var output = System.getModule("dk.atea.vc.rest").deleteVcApiSession(vcRestHost,vcApiSessionId);
+    }
+    var bodyObj = JSON.parse(content.contentAsString);
+    System.log("test: " + bodyObj.name + " :: " + bodyObj.id + " :: " + bodyObj.type);
+    if (bodyObj.type == "iso") {
+        isoItems.put(bodyObj.id,bodyObj.name);
+    }
+}
+
+var output = System.getModule("dk.atea.vc.rest").deleteVcApiSession(vcRestHost,vcApiSessionId);
+
+return isoItems;]]></script>
+</dunes-script-module>

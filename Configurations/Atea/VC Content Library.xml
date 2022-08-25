@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<config-element id="5a321a9f-ad3d-4ec4-9e51-ff72221df7a5" version="0.0.0">
+  <display-name><![CDATA[VC Content Library]]></display-name>
+  <atts>
+    <att name="vcRestHost" type="REST:RESTHost" read-only="false">
+      <value encoded="n"><![CDATA[dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&dunesName='REST:RESTHost']]></value>
+    </att>
+  </atts>
+</config-element>

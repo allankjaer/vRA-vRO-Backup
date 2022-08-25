@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="6a1b1c53-4ab3-4c75-804f-b0a96b349fbb" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>cvzsdfv</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">var spec = new VcVirtualMachineConfigSpec();&#13;
+var deviceChange = new Array();&#13;
+deviceChange[0] = new VcVirtualDeviceConfigSpec();&#13;
+deviceChange[0].device = new VcVirtualCdrom();&#13;
+deviceChange[0].device.backing = new VcVirtualCdromRemotePassthroughBackingInfo();&#13;
+deviceChange[0].device.backing.useAutoDetect = false;&#13;
+deviceChange[0].device.backing.exclusive = false;&#13;
+deviceChange[0].device.backing.deviceName = '';&#13;
+deviceChange[0].device.controllerKey = 15000;&#13;
+deviceChange[0].device.unitNumber = 0;&#13;
+deviceChange[0].device.deviceInfo = new VcDescription();&#13;
+deviceChange[0].device.deviceInfo.summary = 'Remote device';&#13;
+deviceChange[0].device.deviceInfo.label = 'CD/DVD drive 1';&#13;
+deviceChange[0].device.key = 16000;&#13;
+deviceChange[0].operation = VcVirtualDeviceConfigSpecOperation.remove;&#13;
+deviceChange[1] = new VcVirtualDeviceConfigSpec();&#13;
+deviceChange[1].device = new VcVirtualCdrom();&#13;
+deviceChange[1].device.backing = new VcVirtualCdromRemotePassthroughBackingInfo();&#13;
+deviceChange[1].device.backing.useAutoDetect = false;&#13;
+deviceChange[1].device.backing.exclusive = false;&#13;
+deviceChange[1].device.backing.deviceName = '';&#13;
+deviceChange[1].device.controllerKey = 15000;&#13;
+deviceChange[1].device.unitNumber = 1;&#13;
+deviceChange[1].device.deviceInfo = new VcDescription();&#13;
+deviceChange[1].device.deviceInfo.summary = 'Remote device';&#13;
+deviceChange[1].device.deviceInfo.label = 'CD/DVD drive 2';&#13;
+deviceChange[1].device.key = 16001;&#13;
+deviceChange[1].operation = VcVirtualDeviceConfigSpecOperation.remove;&#13;
+spec.deviceChange = deviceChange;&#13;
+var cpuFeatureMask = new Array();&#13;
+spec.cpuFeatureMask = cpuFeatureMask;&#13;
+&#13;
+for each (specInfo in deviceChange) {&#13;
+    System.log(specInfo);&#13;
+}&#13;
+vm.reconfigVM_Task(spec);   // VirtualMachine-vm-155057&#13;
+&#13;
+</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="160.0"/>
+    </workflow-item>
+</ns2:workflow>

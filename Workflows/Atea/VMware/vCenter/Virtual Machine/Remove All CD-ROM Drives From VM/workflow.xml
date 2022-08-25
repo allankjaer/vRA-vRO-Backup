@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="995fa9c0-24b7-428d-81ba-a251da304175" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Remove All CD-ROM Drives From VM</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="VC:VirtualMachine"/>
+    </input>
+    <output/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="380.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Remove All CD-ROM from VM</display-name>
+        <script encoded="false">var configSpec = new VcVirtualMachineConfigSpec();&#13;
+var deviceConfigSpecs = new Array();&#13;
+//var deviceConfigSpec = new VcVirtualDeviceConfigSpec();&#13;
+var devices = vm.config.hardware.device;&#13;
+ &#13;
+for each (device in devices) {&#13;
+    if ( device instanceof VcVirtualCdrom) {&#13;
+        //System.log("test: " + device);&#13;
+        var deviceConfigSpec = new VcVirtualDeviceConfigSpec();&#13;
+        deviceConfigSpec.device = device;&#13;
+        deviceConfigSpec.device.connectable = null;&#13;
+        deviceConfigSpec.operation = VcVirtualDeviceConfigSpecOperation.remove;&#13;
+        deviceConfigSpecs.push(deviceConfigSpec);&#13;
+    }&#13;
+}&#13;
+&#13;
+configSpec.deviceChange = deviceConfigSpecs;&#13;
+vm.reconfigVM_Task(configSpec);</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm"/>
+        </in-binding>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="180.0"/>
+    </workflow-item>
+</ns2:workflow>
