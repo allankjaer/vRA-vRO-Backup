@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="01b6e6ea-91c3-4d05-8c4c-c132157e58e0" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="01b6e6ea-91c3-4d05-8c4c-c132157e58e0" editor-version="2.0" version="0.0.1" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
     <display-name>Add Template to Content Library as OVF</display-name>
     <position y="50.0" x="100.0"/>
     <input>
@@ -20,9 +20,7 @@
     <attrib name="contentLibraryItemId" type="string">
         <value encoded="n"></value>
     </attrib>
-    <attrib name="restHost" type="REST:RESTHost">
-        <value encoded="n">dunes://service.dunes.ch/CustomSDKObject?id='def3e50a-678d-48fe-848b-8f43f31299c3'&amp;dunesName='REST:RESTHost'</value>
-    </attrib>
+    <attrib name="restHost" type="REST:RESTHost" conf-id="5a321a9f-ad3d-4ec4-9e51-ff72221df7a5" conf-key="vcRestHost"/>
     <attrib name="requestContentType" type="string">
         <value encoded="n">application/json</value>
     </attrib>
